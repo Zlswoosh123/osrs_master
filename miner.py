@@ -12,6 +12,7 @@ from functions import drop_item
 from functions import Image_to_Text
 from functions import invent_crop
 from functions import resizeImage
+from functions import resize_quick
 from PIL import ImageGrab
 
 from functions import random_combat
@@ -37,6 +38,9 @@ global timer_break
 global ibreak
 import slyautomation_title
 
+inv_cap = random.uniform(15, 20)
+print(f'Dropping ore at {inv_cap}')
+
 class bcolors:
     OK = '\033[92m' #GREEN
     WARNING = '\033[93m' #YELLOW
@@ -50,7 +54,7 @@ def gfindWindow(data):  # find window name returns PID of the window
     #print('findWindow:', hwnd)
     win32gui.SetActiveWindow(hwnd)
     # win32gui.ShowWindow(hwnd)
-    win32gui.MoveWindow(hwnd, 0, 0, 865, 830, True)
+    win32gui.MoveWindow(hwnd, 875, 0, 1000, 830, True) #(hwnd, 0, 0, 865, 830, True)
 
 
 with open("pybot-config.yaml", "r") as yamlfile:
@@ -75,9 +79,9 @@ def random_break(start, c):
     startTime = time.time()
     # 1200 = 20 minutes
     a = random.randrange(0, 4)
-    if startTime - start > c:
-        options[a]()
-        newTime_break = True
+    # if startTime - start > c:
+    #     options[a]()
+    #     newTime_break = True
 
 def randomizer(timer_breaks, ibreaks):
     global newTime_break
@@ -102,17 +106,17 @@ def random_pause():
     newTime_break = True
 
 
-options = {0: random_inventory,
-           1: random_combat,
-           2: random_skills,
-           3: random_quests,
-           4: random_pause}
+# options = {0: random_inventory,
+#            1: random_combat,
+#            2: random_skills,
+#            3: random_quests,
+#            4: random_pause}
 
 def Miner_Image_quick():
-    left = 150
+    left = 1000
     top = 150
-    right = 600
-    bottom = 750
+    right = 1850
+    bottom = 850
 
     im = ImageGrab.grab(bbox=(left, top, right, bottom))
     im.save('images/miner_img.png', 'png')
@@ -130,6 +134,8 @@ def drop_ore():
     image_Rec_clicker(r'coal_ore.png', 'dropping item', threshold=0.8, playarea=False)
     image_Rec_clicker(r'iron_ore.png', 'dropping item', threshold=0.8, playarea=False)
     image_Rec_clicker(r'tin_ore.png', 'dropping item', threshold=0.8, playarea=False)
+    image_Rec_clicker(r'gem_icon.png', 'dropping item', threshold=0.8, playarea=False)
+    image_Rec_clicker(r'gem_icon2.png', 'dropping item', threshold=0.8, playarea=False)
     release_drop_item()
     #print("dropping ore done")
     return "drop ore done"
@@ -218,6 +224,7 @@ def print_progress(time_left, spot, mined_text, powerlist, ore, actions):
         end='')
 
 def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
+    global inv_cap
     global spot, mined_text, time_left, powerlist, actions, powerlist, t_end, gem_count, ore_count, clue_count
     powerlist = ['tin', 'copper', 'coal', 'iron', 'gold', 'clay', 'red', 'green', 'amber']
     print("Will break in: %.2f" % (ibreak / 60) + " minutes |", "Mine Ore Selected:", powerlist[ore])
@@ -229,10 +236,20 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
 
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
     while time.time() < t_end:
-        invent = invent_enabled()
+        invent = int(inv_count(powerlist[ore]))
         if invent == 0:
             actions = 'opening inventory'
-            pyautogui.press('esc')
+            try:
+                window = win32gui.FindWindow(None, runelite)
+                win32gui.ShowWindow(window, 5)
+                win32gui.SetForegroundWindow(window)  # Set it as the foreground window
+                win32gui.SetActiveWindow(window)
+                pyautogui.press('esc')
+                time.sleep(random.uniform(2, 6))
+            except Exception as err:
+                print(f"An exception occurred: {err}")
+                time.sleep(7)
+                pass
         time_left = str(datetime.timedelta(seconds=round(t_end - time.time(), 0)))
         actions = 'None'
         randomizer(timer_break, ibreak)
@@ -243,19 +260,24 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
         #inventory = int(inv_count(powerlist[ore])) + int(count_gems()) + int(count_gems2()) + int(count_geo())
         inventory = gem_count + ore_count + clue_count
         #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
-        if inventory > 27:
+
+        if inventory > 18:
             actions = 'dropping ore starting...'
             #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
             actions = drop_ore()
             #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
             random_breaks(0.2, 0.7)
+            inv_cap = random.uniform(15, 20)
+            print(f'Dropping ore at {inv_cap}')
+        resize_quick()
+        resizeImage()
         mined_text = Image_to_Text('thresh', 'textshot.png')
         #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
         if mined_text.strip().lower() != 'mining' and mined_text.strip().lower() != 'mininq':
             mined_text = 'Not Mining'
             #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
             #random_breaks(0.05, 0.1)
-            spot = findarea_single(num, 150, 150)
+            spot = findarea_single(num, 1000, 150)
             if Take_Human_Break:
                 c = random.triangular(0.05, 6, 0.5)
                 time.sleep(c)
@@ -300,9 +322,9 @@ if __name__ == "__main__":
     amber = 8
 
     # --------- CHANGE TO RUN FOR AMOUNT OF HOURS ----------------
-    Run_Duration_hours = 0.1
+    Run_Duration_hours = 4.5
 
                 # | ore | marker color | take break | how long to run for in hours
-    powerminer_text(copper, red, Take_Human_Break=True, Run_Duration_hours=Run_Duration_hours)
+    powerminer_text(tin, red, Take_Human_Break=True, Run_Duration_hours=Run_Duration_hours)
 
     #os.system('shutdown -s -f')

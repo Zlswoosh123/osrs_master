@@ -21,10 +21,7 @@ from functions import drop_item
 from functions import Image_to_Text
 from functions import random_breaks
 from functions import invent_crop
-from functions import Image_Rec_single
 from functions import resizeImage
-from functions import skill_lvl_up
-from functions import spaces
 from functions import random_combat
 from functions import random_quests
 from functions import random_skills
@@ -138,17 +135,8 @@ def drop_fish():
     time.sleep(c)
 
     # Get runelite window
-    try:
-        window = win32gui.FindWindow(None, runelite)
-        win32gui.ShowWindow(window, 5)
-        win32gui.SetForegroundWindow(window)  # Set it as the foreground window
-        win32gui.SetActiveWindow(window)
-    except Exception as err:
-        print(f"An exception occurred: {err}")
-        time.sleep(7)
-        pass
+    screen_front(runelite)
     time.sleep(d)
-
     image_eel_clicker(r'hammer.png', 'Clicking hammer', 5, 5, 0.8, 'left', 10, False, True)
     time.sleep(random.uniform(.1, .3))
     image_eel_clicker(r'infernal_eel.png', 'Clicking Eel', 5, 5, 0.7, 'left', 10, False, True)
@@ -211,6 +199,11 @@ def timer_countdown():
             print(bcolors.OK + f'\r[%-10s] %d%%' % ('='*round((i/final)*10), round((i/final)*100)), f'time left: {(t_end - time.time())/60 :.2f} mins | coords: {coords} | status: {fishing_text} | fish: {fish_count} | clues: {clue_count} | {actions}| Drop at: {inv_cap}', end='')
         timer_log += 1
         time.sleep(1)
+        if timer_log % 15 == 0:
+            functions.screen_Image(0, 0, 800, 800)
+            # left=875, top=0, right=1500, bottom=800
+            # Window 1: 0, 0, 800, 800 todo test and confirm
+            # Window 2: 875, 0, 1500, 800 todo test and confirm
 
 def powerfisher(fish_type, Run_Duration_hours=6):
     global ibreak, coords, fishing_text, time_left, powerlist, actions, t_end, fish_count, clue_count, invent_count
@@ -229,6 +222,7 @@ def powerfisher(fish_type, Run_Duration_hours=6):
             random_breaks(0.2, 3)
             pick_random_fishing_spot(fish_type)
             random_breaks(5, 10)
+            resizeImage()
         # if skill_lvl_up() != 0: todo revisit
         #     actions = 'level up'
         #     random_breaks(0.2, 3)
@@ -248,17 +242,15 @@ def powerfisher(fish_type, Run_Duration_hours=6):
         print(f'fish count is: {fish_count}')
         invent = fish_count
         if invent == 0:
-            global runelite
             actions = 'opening inventory'
             screen_front(runelite)
             pyautogui.press('esc')
             time.sleep(random.randint(3, 6))
-        if invent >= inv_cap:
-            # invent = functions.invent_enabled() -- Not called, remove?
+        if invent >= 5:# inv_cap:
             random_breaks(0.2, 0.7)
             drop_fish()
             random_breaks(0.2, 0.7)
-            inv_cap = random.randint(17, 21)
+            # inv_cap = random.randint(17, 21)
 
 
 
@@ -282,6 +274,8 @@ if __name__ == "__main__":
     time.sleep(2)
     resizeImage()
     x = random.randrange(900, 1250)
+    # X window 1: 100, 250
+    # X window 2: 900, 1250
     y = random.randrange(400, 500)
     pyautogui.click(x, y, button='right')
     ibreak = random.randrange(300, 2000)

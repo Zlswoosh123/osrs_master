@@ -1,7 +1,8 @@
 from threading import Thread
-
 import pywintypes
+import win32con
 import win32gui
+import win32api
 import numpy as np
 import cv2
 import pyautogui
@@ -30,8 +31,7 @@ from functions import random_breaks
 from functions import image_eel_clicker
 from functions import screen_front
 
-
-# Vars
+# Variables
 global hwnd
 global iflag
 global icoord
@@ -44,6 +44,37 @@ global ibreak
 timer_log = 0
 runelite = functions.runelite
 inv_cap = random.randint(17, 21) # init inv cap to read in status
+window = functions.window
+print(f'Window is {window}')
+iflag = False
+global top, left, right, bottom
+# options = {0: random_inventory,
+#            1: random_combat,
+#            2: random_skills,
+#            3: random_quests,
+#            4: random_pause}
+# Setting window params todo move to top
+if window == 2:
+    left = 875
+    top = 0
+    right = 875+800
+    bottom = 800
+elif window == 3: # URGENT todo fix coords
+    left = 1921
+    top = 0
+    right = 2720
+    bottom = 800
+    print('Window is 3')
+elif window == 4: # URGENT todo fix coords
+    left = 1920+875+800
+    top = 0
+    right = 875+800
+    bottom = 800
+else:
+    left = 0
+    top = 0
+    right = 800
+    bottom = 800
 
 class bcolors:
     OK = '\033[92m' #GREEN
@@ -51,14 +82,28 @@ class bcolors:
     FAIL = '\033[91m' #RED
     RESET = '\033[0m' #RESET COLOR
 
+# Funcs
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
+    global window
     hwnd = win32gui.FindWindow(None, data)
     win32gui.SetActiveWindow(hwnd)
-    win32gui.MoveWindow(hwnd, 875, 0, 1000, 830, True)
+    win = win32gui.GetForegroundWindow()
+
+    # [(0, 0, 1920, 1080), (1920, 0, 3840, 1080)]
+    if window == 2:
+        win32gui.MoveWindow(hwnd, 875, 0, 1000, 830, True)
+    elif window == 3:
+        # URGENT todo fix coords
+        win32gui.MoveWindow(hwnd, 1920, 0, 865, 830, True)
+    elif window == 4:
+        win32gui.MoveWindow(hwnd, 875 + 1920, 0, 1000, 830, True)
+        # URGENT todo fix coords
+    else:
+        win32gui.MoveWindow(hwnd, 0, 0, 865, 830, True)
+
     # window 1: (hwnd, 0, 0, 865, 830, True)
     # window 2: (hwnd, 875, 0, 1000, 830, True)
-
 
 with open("pybot-config.yaml", "r") as yamlfile:
     data = yaml.load(yamlfile, Loader=yaml.FullLoader)
@@ -68,6 +113,7 @@ try:
 except BaseException:
     print("Unable to find window:", data[0]['Config']['client_title'], "| Please see list of window names below:")
     core.printWindows()
+    print(BaseException)
     pass
 
 try:
@@ -75,16 +121,16 @@ try:
 except BaseException:
     print("Unable to find window:", data[0]['Config']['client_title'], "| Please see list of window names below:")
     core.printWindows()
+    print(BaseException)
     pass
-
 def random_break(start, c): # todo rename C var
     global newTime_break
     startTime = time.time()
     # 1200 = 20 minutes
     a = random.randrange(0, 4)
-    if startTime - start > c:
-        options[a]()
-        newTime_break = True
+    # if startTime - start > c: todo fix
+    #     options[a]()
+    #     newTime_break = True
 
 
 def randomizer(timer_breaks, ibreaks):
@@ -111,15 +157,6 @@ def random_pause():
     time.sleep(b)
     newTime_break = True
 
-
-iflag = False
-
-options = {0: random_inventory,
-           1: random_combat,
-           2: random_skills,
-           3: random_quests,
-           4: random_pause}
-
 def drop_fish():
     print('Starting drop_fish which should click hammer and eel!')
     global actions
@@ -135,34 +172,35 @@ def drop_fish():
     time.sleep(c)
 
     # Get runelite window
-    try:
-        window = win32gui.FindWindow(None, runelite)
-        win32gui.ShowWindow(window, 5)
-        win32gui.SetForegroundWindow(window)  # Set it as the foreground window
-        win32gui.SetActiveWindow(window)
-    except Exception as err:
-        print(f"An exception occurred: {err}")
-        time.sleep(7)
-        pass
+    screen_front(runelite)
     time.sleep(d)
-
-    image_eel_clicker(r'hammer.png', 'Clicking hammer', 5, 5, 0.8, 'left', 10, False, True)
-    time.sleep(random.uniform(.1, .3))
-    image_eel_clicker(r'infernal_eel.png', 'Clicking Eel', 5, 5, 0.7, 'left', 10, False, True)
-    eel_wait = functions.invent_count(fish_type + '.png', .95) * 3 * .6
-    sleep = min(40, random.uniform(eel_wait + 1, eel_wait + 10))
-    print(f'Waiting for {sleep}s while eels breakdown')
-    time.sleep(sleep)
-
-
-
+    # Drop click items
+    if fish_type == 'infernal_eel':
+        hammer = functions.invent_count('hammer.png', .85) + functions.invent_count('hammer2.png', .85)
+        print(f'Hammer count is {hammer}')
+        if functions.invent_count('hammer.png', .85) >= 1:
+            image_eel_clicker(r'hammer.png', 'Clicking hammer', 5, 5, 0.8, 'left', 10, False, True)
+        elif functions.invent_count('hammer2.png', .85) >= 1:
+            image_eel_clicker(r'hammer2.png', 'Clicking hammer', 5, 5, 0.8, 'left', 10, False, True)
+        else:
+            pass
+        time.sleep(random.uniform(.1, .3))
+        image_eel_clicker(r'infernal_eel.png', 'Clicking Eel', 5, 5, 0.7, 'left', 10, False, True)
+        image_eel_clicker(r'infernal_eel2.png', 'Clicking Eel', 5, 5, 0.7, 'left', 10, False, True)
+        eel_wait = functions.invent_count(fish_type + '.png', .9) * 3 * .6
+        sleep = min(40, int(random.uniform(eel_wait + 1, eel_wait + 10)))
+        print(f'Waiting for {sleep}s while eels breakdown')
+        time.sleep(sleep)
+    image_Rec_clicker(r'prawn_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
+    image_Rec_clicker(r'trout_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
+    image_Rec_clicker(r'trout_fish2.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
+    # image_Rec_clicker(r'salmon_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, False)
+    # image_Rec_clicker(r'lobster_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, False)
     actions = "all fish dropped"
-
     time.sleep(f)
-def find_fish(showCoords=False, left=875, top=0, right=1500, bottom=800, boundaries=[([110, 100, 0], [195, 180, 60])]):
-    # Window 1: left=0, top=0, right=800, bottom=800
-    # Window 2: left=875, top=0, right=1500, bottom=800
 
+def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries=[([110, 100, 0], [195, 180, 60])]):
+    global window
     functions.screen_Image(left, top, right, bottom)
     image = cv2.imread('images/screenshot.png')
     image = cv2.rectangle(image, pt1=(600, 0), pt2=(850, 200), color=(0, 0, 0), thickness=-1)
@@ -182,7 +220,7 @@ def find_fish(showCoords=False, left=875, top=0, right=1500, bottom=800, boundar
         x, y, w, h = cv2.boundingRect(c)
         if showCoords:
             print(x, y, w, h)
-        x = random.randrange(x + 5, x +  max(w - 5, 6)) + left  # 950,960
+        x = random.randrange(x + 5, x + max(w - 5, 6)) + left  # 950,960
         y = random.randrange(y + 5, y + max(h - 5, 6)) + top  # 490,500
         b = random.uniform(0.2, 0.4)
         pyautogui.moveTo(x, y, duration=b)
@@ -191,13 +229,22 @@ def find_fish(showCoords=False, left=875, top=0, right=1500, bottom=800, boundar
         return (x, y)
     else:
         return False
-def pick_random_fishing_spot(showCoords=False):
-    fish = find_fish()
+def pick_random_fishing_spot(top_ss=0, left_ss=0, right_ss=800, bottom_ss=800, showCoords=False):
+    if window == 2:
+        left_ss, top_ss, right_ss, bottom_ss = 0 + 875, 0, 1500, 800
+    elif window == 3:
+        left_ss, top_ss, right_ss, bottom_ss = 1920, 0, 800+1920, 800
+    elif window == 4:
+        left_ss, top_ss, right_ss, bottom_ss = 1920, 0, 1500+1920, 800
+    else:
+        left_ss, top_ss, right_ss, bottom_ss = 0, 0, 800, 800
+    fish = find_fish(False, left_ss, top_ss, right_ss, bottom_ss)
     return fish
 
 def timer_countdown():
     global Run_Duration_hours
     global timer_log
+    global inv_cap
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
     #print(t_end)
     final = round((60 * 60 * Run_Duration_hours) / 1)
@@ -223,14 +270,15 @@ def powerfisher(fish_type, Run_Duration_hours=6):
     t1.start()
 
     while time.time() < t_end:
+        global inv_cap
         randomizer(timer_break, ibreak)
         resizeImage()
         fishing_text = Image_to_Text('thresh', 'textshot.png')
         print(f'Emptying inv when at {inv_cap} items')
         if fishing_text.strip().lower() != 'fishing' and fishing_text.strip().lower() != 'fishinq' and fishing_text.strip().lower() != 'ishing' and fishing_text.strip().lower() != 'pishing':
             random_breaks(0.2, 3)
-            pick_random_fishing_spot(fish_type)
-            random_breaks(5, 10)
+            pick_random_fishing_spot(fish_type,)
+            random_breaks(8, 15)
             resizeImage()
         # if skill_lvl_up() != 0: todo revisit
         #     actions = 'level up'
@@ -243,12 +291,11 @@ def powerfisher(fish_type, Run_Duration_hours=6):
         #     spaces(a)
         actions = 'none'
         invent_crop()
-        main_good = functions.invent_count(fish_type + '.png', .95)
-        hammer = functions.invent_count('hammer.png', .75)
-        print(f'eels is: {main_good}')
-        print(f'hammer is: {hammer}')
-        fish_count = functions.invent_count(fish_type + '.png', .95)
+        # main_good = functions.invent_count(fish_type + '.png', .95)
+        hammer = functions.invent_count('hammer.png', .75) + functions.invent_count('hammer2.png', .75)
+        fish_count = max(functions.invent_count(fish_type + '.png', .9), functions.invent_count(fish_type + '2.png', .9))
         print(f'fish count is: {fish_count}')
+        print(f'hammer count is: {hammer}')
         invent = fish_count
         if invent == 0:
             actions = 'opening inventory'
@@ -259,7 +306,7 @@ def powerfisher(fish_type, Run_Duration_hours=6):
             random_breaks(0.2, 0.7)
             drop_fish()
             random_breaks(0.2, 0.7)
-            inv_cap = random.randint(17, 21)
+            # inv_cap = random.randint(17, 21)
 
 
 
@@ -274,18 +321,44 @@ time_left = 0
 invent_count = 0
 
 #use the other names to fly/cage fish
-fish_type = 'infernal_eel' # 'lobster_fish' 'salmon_fish', 'prawn_fish#
+fish_type = functions.fish_type # 'trout_fish' # 'lobster_fish' 'salmon_fish', 'prawn_fish#
 fish_count = 0
 clue_count = 0
 #-------------------------------
 
+def rand_click(xrand, yrand):
+    if window == 2:
+        xrand = random.randrange(900, 1250)
+        print(xrand)
+        yrand = random.randrange(250, 600)
+        return xrand, yrand
+    if window == 3:
+        xrand = random.randrange(2050, 2500)
+        yrand = random.randrange(250, 600)
+        return xrand, yrand
+    if window == 4:
+        xrand = random.randrange(2975, 3425)
+        yrand = random.randrange(250, 600)
+        return xrand, yrand
+    else:
+        xrand = random.randrange(100, 450)
+        yrand = random.randrange(250, 600)
+        return xrand, yrand
 if __name__ == "__main__":
+    print(f'window is {window}')
+    xrand = 0
+    yrand = 0
+    xrand, yrand = rand_click(xrand, yrand)
+    print(f'xrand is {xrand}')
+    print(f'yrand is {yrand}')
     time.sleep(2)
     resizeImage()
-    x = random.randrange(900, 1250)
-    # X window 1: 100, 250
-    # X window 2: 900, 1250
-    y = random.randrange(400, 500)
+    invent_crop()
+    fish_count = functions.invent_count(fish_type + '.png', .95)
+    x = xrand
+    print(f'Right click x cord is: {x}')
+    y = yrand
+    print(f'Right click y cord is: {y}')
     pyautogui.click(x, y, button='right')
     ibreak = random.randrange(300, 2000)
     timer_break = timer()
