@@ -121,11 +121,11 @@ def get_os_configuration():
 
 def offscreen_mouse():
     print('Starting offscreen_mouse')
-    xcoord = random.uniform(300,1050)
+    xcoord = random.uniform(925,1200)
     ycoord = random. uniform(1000, 170)
     new_coord = (xcoord, ycoord)
     b = random.uniform(0.15, .6)
-    print('Trying to move to coord!')
+    print('Trying to move to coord offscreen!')
     pyautogui.moveTo(new_coord, duration=b)
 
 def safe_open(image, png):
@@ -1047,6 +1047,7 @@ def change_brown_black():
 #
 #
 def McropImage_quick():
+    print('Starting mcropimage_quick')
     left = 150
     top = 150
     right = 600
@@ -1059,6 +1060,7 @@ def McropImage_quick():
 def findarea_attack_quick(object, deep=8):
     print('Starting findarea_attack_quick')
     McropImage_quick()
+
     image = cv2.imread(r"images/screenshot2.png")
 
     # B, G, R
@@ -1106,8 +1108,7 @@ def findarea_attack_quick(object, deep=8):
             print(f'x is: {x}')
             print(f'y is: {y}')
             pyautogui.moveTo(x, y, duration=b)
-            time.sleep(random.uniform(1.5,3))
-            b = random.uniform(0.01, 0.05)
+            b = random.uniform(0.1, 0.3)
             pyautogui.click(duration=b)
             return (x, y)
     return (0, 0)
@@ -1319,7 +1320,7 @@ def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
             icoord = pt[0] + iheight + x
             icoord = (icoord, pt[1] + iwidth + y)
             b = random.uniform(0.04, 0.13)
-            print('Trying to move to coord!')
+            print('Trying to move to coord in rec_clicker!')
             pyautogui.moveTo(icoord, duration=b)
             b = random.uniform(0.04, 0.13)
             print('Trying to click coord!')

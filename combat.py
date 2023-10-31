@@ -131,7 +131,7 @@ def timer_countdown():
         time.sleep(1)
 
 
-def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Human_Break=True, Run_Duration_hours=6):
+def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Human_Break=False, Run_Duration_hours=6):
     print('Starting powerattack_text!')
     global ibreak, coords, combat_text, time_left, powerlist, actions, powerlist, t_end
     print('Will break in: %.2f' % (ibreak / 60) + ' minutes |', "Mob Selected:", monster)
@@ -143,6 +143,7 @@ def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Hum
     #print(date_time)
     group = monster_list.index(monster)
     while time.time() < t_end:
+        print('Start of while loop')
         randomizer(timer_break, ibreak)
         r = random.uniform(0.1, 5)
         resizeImage()
@@ -151,7 +152,7 @@ def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Hum
         #print(combat_text)
         attack = 0
         for monsters in monster_array[group]:
-            #print(monsters)
+            print(monsters)
             if combat_text.strip().lower().find(monsters) == -1:
                 attack += 1
         if Plugin_Enabled:
@@ -171,11 +172,13 @@ def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Hum
             coords = findarea_attack_quick(3)
             offscreen_mouse()
             if coords[0] != 0:   # attack npc/monster
-                c = random.uniform(3, 5)
+                c = random.uniform(2, 4)
+                print(f'coords[0] is: {coords[0]} and coords[1] is {coords[1]}')
                 time.sleep(c)
                 if Take_Human_Break:
                     c = random.triangular(0.1, 50, 3)
                     time.sleep(c)
+            print('Ending powerattack_text')
 
 
 coords = (0, 0)
@@ -210,7 +213,7 @@ if __name__ == "__main__":
     timer_break = timer()
 
     # --------- CHANGE TO RUN FOR AMOUNT OF HOURS ----------------
-    Run_Duration_hours = 4.3
+    Run_Duration_hours = 2
     # --------------------------------------------------------------------------------------------------
     monster_list = ['chicken', 'guard', 'cow', 'monk', 'imp', 'skeleton', 'dwarf', 'giant frog']
 
