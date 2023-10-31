@@ -132,7 +132,7 @@ def timer_countdown():
 
 
 def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Human_Break=True, Run_Duration_hours=6):
-    print'Starting powerattack_text!'
+    print('Starting powerattack_text!')
     global ibreak, coords, combat_text, time_left, powerlist, actions, powerlist, t_end
     print('Will break in: %.2f' % (ibreak / 60) + ' minutes |', "Mob Selected:", monster)
     t1 = Thread(target=timer_countdown)

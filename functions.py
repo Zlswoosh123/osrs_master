@@ -120,6 +120,7 @@ def get_os_configuration():
     return scale_factor, font_size, width, height
 
 def offscreen_mouse():
+    print('Starting offscreen_mouse')
     xcoord = random.uniform(750,1100)
     ycoord = random. uniform(350, 850)
     new_coord = (xcoord, ycoord)
@@ -128,6 +129,7 @@ def offscreen_mouse():
     pyautogui.moveTo(new_coord, duration=b)
 
 def safe_open(image, png):
+    print('Starting safe_open')
     while image is None:
         image = cv2.imread('images/' + png)
         print(f'Sleeping until image is created')
@@ -135,6 +137,7 @@ def safe_open(image, png):
         return image
 
 def screen_front(runelite):
+    print('Starting screen_front')
     try:
         pyautogui.keyUp('shift')
         window = win32gui.FindWindow(None, runelite)
@@ -198,6 +201,7 @@ print('jagex files deleted')
 
 
 def deposit_all_Bank():
+    print('Starting deposit_all_Bank')
     banker = 50
     b = random.uniform(0.1, 0.77)
     x = random.randrange(480, 500)  # x = random.randrange(1040, 1050)
@@ -210,6 +214,7 @@ def deposit_all_Bank():
 
 
 def invent_crop():
+    print('Starting invent_crop')
     global window
     if window == 2:
          screen_Image(1600, 395, 1830, 730, 'inventshot.png')
@@ -225,6 +230,7 @@ def invent_crop():
 
 
 def random_inventory():
+    print('Starting random_inventory')
     global newTime_break, actions
     actions = 'inventory tab'
     b = random.uniform(0.1, 15)
@@ -238,6 +244,7 @@ def random_inventory():
 
 
 def random_combat():
+    print('Starting random_combat')
     global newTime_break, actions
     actions = 'combat tab'
     b = random.uniform(0.1, 15)
@@ -251,6 +258,7 @@ def random_combat():
 
 
 def random_skills():
+    print('Starting random_skills')
     global newTime_break, actions
     actions = 'skills tab'
     b = random.uniform(0.1, 15)
@@ -264,6 +272,7 @@ def random_skills():
 
 
 def random_quests():
+    print('Starting random_quests')
     global newTime_break, actions
     actions = 'quest tab'
     b = random.uniform(0.1, 15)
@@ -291,6 +300,7 @@ def rand_size(lt, tp, rt, bt):
         return lt, tp, rt, bt
 
 def resize_quick():
+    print('Starting resize_quick')
     left = 905
     top = 55
     right = 1002
@@ -303,6 +313,7 @@ def resize_quick():
 
 
 def resizeImage():
+    print('Starting resizeImage -- See resize_quick')
     resize_quick()
     png = 'images/screen_resize.png'
     im = Image.open(png)
@@ -315,6 +326,7 @@ def resizeImage():
 
 
 def Miner_Image_quick():
+    print('Starting miner_image_quick')
     left = 150
     top = 150
     right = 600
@@ -325,6 +337,7 @@ def Miner_Image_quick():
 
 
 def Image_to_Text(preprocess, image, parse_config='--psm 7'):
+    print('Starting image_to_text')
     resizeImage()
     change_brown_black()
     # construct the argument parse and parse the arguments
@@ -357,12 +370,14 @@ def Image_to_Text(preprocess, image, parse_config='--psm 7'):
 
 
 def screen_Image_new(name='screenshot.png'):
+    print('Starting screen_image_new')
     x, y, w, h = core.getWindow(data[0]['Config']['client_title'])
     im = ImageGrab.grab(bbox=(x, y, x + w, y + h))
     im.save('images/' + name, 'png')
 
 
 def screen_Image(left=0, top=0, right=0, bottom=0, name='screenshot.png'):
+    print('Starting screen_image')
     if left != 0 or top != 0 or right != 0 or bottom != 0:
         myScreenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
     else:
@@ -1042,6 +1057,7 @@ def McropImage_quick():
 #
 #
 def findarea_attack_quick(object, deep=20):
+    print('Starting findarea_attack_quick')
     McropImage_quick()
     image = cv2.imread(r"images/screenshot2.png")
 
