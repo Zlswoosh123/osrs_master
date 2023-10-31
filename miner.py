@@ -4,6 +4,8 @@ import win32gui
 from threading import Thread
 import core
 import yaml
+
+import functions
 from functions import Image_count, invent_enabled
 from functions import image_Rec_clicker
 from functions import screen_Image
@@ -196,7 +198,7 @@ def count_gems2():
     return Image_count('gem_icon2.png')
 
 def inv_count(name):
-    return Image_count(name + '_ore.png')
+    return Image_count(name + '_ore.png', threshold=0.8, left=1000, top=0, right=1920, bottom=800)
 
 def timer_countdown():
     global Run_Duration_hours
@@ -226,6 +228,7 @@ def print_progress(time_left, spot, mined_text, powerlist, ore, actions):
 def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
     global inv_cap
     global spot, mined_text, time_left, powerlist, actions, powerlist, t_end, gem_count, ore_count, clue_count
+    runelite = functions.runelite
     powerlist = ['tin', 'copper', 'coal', 'iron', 'gold', 'clay', 'red', 'green', 'amber']
     print("Will break in: %.2f" % (ibreak / 60) + " minutes |", "Mine Ore Selected:", powerlist[ore])
     t1 = Thread(target=timer_countdown)

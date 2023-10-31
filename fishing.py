@@ -203,6 +203,10 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
     global window
     functions.screen_Image(left, top, right, bottom)
     image = cv2.imread('images/screenshot.png')
+    while image is None:
+        image = cv2.imread('images/screenshot.png')
+        print(f'Sleeping until image is created')
+        time.sleep(3)
     image = cv2.rectangle(image, pt1=(600, 0), pt2=(850, 200), color=(0, 0, 0), thickness=-1)
     image = cv2.rectangle(image, pt1=(0, 0), pt2=(150, 100), color=(0, 0, 0), thickness=-1)
 
@@ -211,6 +215,10 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
         # create NumPy arrays from the boundaries
         lower = np.array(lower, dtype="uint8")
         upper = np.array(upper, dtype="uint8")
+        while image is None:
+            image = cv2.imread('images/screenshot.png')
+            print(f'Sleeping until image is created')
+            time.sleep(3)
         # find the colors within the specified boundaries and apply the mask
         mask = cv2.inRange(image, lower, upper)
         ret, thresh = cv2.threshold(mask, 40, 255, 0)

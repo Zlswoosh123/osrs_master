@@ -26,8 +26,8 @@ newTime_break = False
 global timer
 global timer_break
 global ibreak
-runelite = 'RuneLite - Liuminescent'
-window = 1
+runelite = 'RuneLite - BabyEel'
+window = 2
 fish_type = 'infernal_eel'
 
 import pytesseract
@@ -197,13 +197,13 @@ def deposit_all_Bank():
 def invent_crop():
     global window
     if window == 2:
-         screen_Image(1585, 400, 1830, 730, 'inventshot.png')
+         screen_Image(1600, 395, 1830, 730, 'inventshot.png')
     elif window == 3:
         screen_Image(620 + 1920, 460, 820 + 1920, 750, 'inventshot.png')
     elif window == 4:
          screen_Image(1585 + 1920, 400, 1830 + 1920, 730, 'inventshot.png')
     else:
-         screen_Image(600, 460, 820, 785, 'inventshot.png')
+         screen_Image(620, 460, 820, 805, 'inventshot.png')
 
     # Window 1? 620, 480, 820, 750. Defines inventoryshot.png view
     # Window 2 fishing numbs? # 1575, 380, 1850, 750 fishing numbs.
@@ -1203,16 +1203,16 @@ def change_brown_black():
 #     return False
 #
 #
-# def invent_enabled():
-#     return Image_count('inventory_enabled.png', threshold=0.95)
-#
-#
-# def run_enabled():
-#     return Image_count('run_enabled.png', threshold=0.95)
-#
-#
-# def make_enabled(make='make_craft.png'):
-#     return Image_count(make, threshold=0.95)
+def invent_enabled():
+    return Image_count('inventory_enabled.png', threshold=0.95)
+
+
+def run_enabled():
+    return Image_count('run_enabled.png', threshold=0.95)
+
+
+def make_enabled(make='make_craft.png'):
+    return Image_count(make, threshold=0.95)
 
 
 def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=25, playarea=True,
@@ -1256,7 +1256,7 @@ def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
             print('pt is None so iflag is False')
         else:
             if window == 2:
-                cropx = 1585
+                cropx = 1610
                 cropy = 405
             elif window == 3:
                 cropx = 1920
@@ -1328,7 +1328,7 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
                 print('pt is None so iflag is False')
             else:
                 if window == 2:
-                    cropx = 1585
+                    cropx = 1610
                     cropy = 405
                 elif window == 3:
                     cropx = 1920
@@ -1409,7 +1409,11 @@ def Image_count(object, threshold=0.8, left=0, top=0, right=0, bottom=0):
     counter = 0
     screen_Image(left, top, right, bottom, name='screenshot.png')
     invent_crop()
-    img_rgb = cv2.imread('images/screenshot.png')
+    img_rgb = cv2.imread('images/inventshot.png')
+    while img_rgb is None:
+        img_rgb = cv2.imread('images/inventshot.png')
+        print(f'Sleeping until image is created')
+        time.sleep(3)
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + object, 0)
     w, h = template.shape[::-1]
@@ -1481,8 +1485,16 @@ def invent_count(object, threshold=0.7):
     # active coords? 1560, 390, 1850, 790
     counter = 0
     img_rgb = cv2.imread('images/inventshot.png')
+    while img_rgb is None:
+        img_rgb = cv2.imread('images/inventshot.png')
+        print(f'Sleeping until image is created')
+        time.sleep(3)
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + object, 0)
+    while template is None:
+        template = cv2.imread('images/' + object, 0)
+        print(f'Sleeping until image is created')
+        time.sleep(3)
     w, h = template.shape[::-1]
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
     # print(f'res is {res}')
