@@ -302,22 +302,22 @@ def rand_size(lt, tp, rt, bt):
 
 def resize_quick():
     print('Starting resize_quick')
-    left = 905
-    top = 55
-    right = 1002
-    bottom = 80
-    left, top, right, bottom = rand_size(left, top, right, bottom)
-    print(f'resize values: {left}, {top}, {right}, {bottom}')
+    left = 30
+    top = 49
+    right = 113
+    bottom = 73
+    # left, top, right, bottom = rand_size(left, top, right, bottom)
+    # print(f'resize values: {left}, {top}, {right}, {bottom}')
     screen_Image(left, top, right, bottom, 'screen_resize.png')
-    print('Taking screen_resize.png!')
+    # print('Taking screen_resize.png!')
 
 def resize_quick_combat():
     print('Starting resize_quick_combat')
-    left = 905
-    top = 55
-    right = 1002
-    bottom = 80
-    left, top, right, bottom = rand_size(left, top, right, bottom)
+    left = 30
+    top = 49
+    right = 113
+    bottom = 68
+    # left, top, right, bottom = rand_size(left, top, right, bottom)
     print(f'resize values: {left}, {top}, {right}, {bottom}')
     screen_Image(left, top, right, bottom, 'screen_resize.png')
     print('Taking screen_resize.png!')
@@ -379,6 +379,56 @@ def Image_to_Text(preprocess, image, parse_config='--psm 7'):
     # print(text)
     return text
 
+def resizeImage_combat():
+    print('Starting resizeImage_combat -- See resize_quick')
+    resize_quick_combat()
+    png = 'images/screen_resize.png'
+    im = Image.open(png)
+    # saves new cropped image
+    width, height = im.size
+    new_size = (width * 4, height * 4)
+    im1 = im.resize(new_size)
+    print('Taking textshot.png!')
+    im1.save('images/textshot.png')
+
+def Image_to_Text_combat(preprocess, image, parse_config='--psm 7'):
+    print('Starting image_to_text')
+    resizeImage_combat()
+    change_brown_black()
+    # construct the argument parse and parse the arguments
+    image = cv2.imread('images/' + image)
+    image = cv2.bitwise_not(image)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # check to see if we should apply thresholding to preprocess the
+    # image
+    if preprocess == "thresh":
+        gray = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+    # make a check to see if median blurring should be done to remove
+    # noise
+    if preprocess == "blur":
+        gray = cv2.medianBlur(gray, 3)
+
+    if preprocess == 'adaptive':
+        gray = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
+
+    # write the grayscale image to disk as a temporary file so we can
+    # apply OCR to it
+    filename = "{}.png".format(os.getpid())
+    cv2.imwrite(filename, gray)
+    # print(f'Filename is {filename}')
+    # load the image as a PIL/Pillow image, apply OCR, and then delete
+    # the temporary file
+    with Image.open(filename) as im:
+        text = pytesseract.image_to_string(im, config=parse_config)
+        print(f'Text from image_to_text is: {text}')
+    try:
+        os.remove(filename)
+    except:
+        print(f'File {filename} not found, skipping!')
+    # print(f'Filename after remove is {filename}')
+    # print(text)
+    time.sleep(random.uniform(.5,1))
+    return text
 
 def screen_Image_new(name='screenshot.png'):
     print('Starting screen_image_new')
@@ -495,6 +545,7 @@ def screen_Image(left=0, top=0, right=0, bottom=0, name='screenshot.png'):
 def change_brown_black():
     # Load the aerial image and convert to HSV colourspace
     image = cv2.imread("images/textshot.png")
+    safe_open(image, 'textshot.png')
     # hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # define the list of boundaries
     # BGR
@@ -1113,13 +1164,13 @@ def findarea_attack_quick(object, deep=8):
             # print('attack x: ', x)
             y = random.randrange(y + 150 + hhalf - deep, y + 150 + max(hhalf + deep, 1))  # 490,500
             # print('attack y: ', y)
-            b = random.uniform(0.01, 0.1)
-            print(f'hhalf is: {hhalf}')
-            print(f'deep is: {deep}')
-            print(f'x is: {x}')
-            print(f'y is: {y}')
+            b = random.uniform(0.05, 0.15)
+            # print(f'hhalf is: {hhalf}')
+            # print(f'deep is: {deep}')
+            # print(f'x is: {x}')
+            # print(f'y is: {y}')
             pyautogui.moveTo(x, y, duration=b)
-            b = random.uniform(0.1, 0.3)
+            b = random.uniform(0.02, 0.08)
             pyautogui.click(duration=b)
             return (x, y)
     return (0, 0)
@@ -1274,14 +1325,14 @@ def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     # else:
     #     print('Taking screenshot.png!')
     #     screen_Image(1575, 380, 1850, 750, 'screenshot.png')  # OG 620, 480, 820, 750
-    if window == 2:
-         screen_Image(1575, 480, 1860, 750, 'screenshot.png')
-    elif window == 3:
-        screen_Image(620 + 1920, 480, 820 + 1920, 750, 'screenshot.png')
-    elif window == 4:
-         screen_Image(1575 + 1920, 480, 1860 + 1920, 750, 'screenshot.png')
-    else:
-         screen_Image(600, 480, 820, 780, 'screenshot.png')
+    # if window == 2:
+    #      screen_Image(1575, 480, 1860, 750, 'screenshot.png')
+    # elif window == 3:
+    #     screen_Image(620 + 1920, 480, 820 + 1920, 750, 'screenshot.png')
+    # elif window == 4:
+    #      screen_Image(1575 + 1920, 480, 1860 + 1920, 750, 'screenshot.png')
+    # else:
+    # screen_Image(600, 480, 820, 780, 'screenshot.png')
     img_rgb = cv2.imread('images/inventshot.png')
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + image, 0)

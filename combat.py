@@ -20,12 +20,9 @@ import pytesseract
 from PIL import Image, ImageGrab
 from functions import Image_to_Text, findarea_attack_quick
 from functions import resizeImage
-from functions import random_combat
-from functions import random_quests
-from functions import random_skills
-from functions import random_inventory
+from functions import random_combat, random_quests, random_skills, random_inventory
 from functions import image_Rec_clicker
-from functions import offscreen_mouse
+from functions import Image_to_Text_combat, resizeImage_combat, offscreen_mouse
 import functions
 import core
 
@@ -127,10 +124,10 @@ def timer_countdown():
     #print(final)
     for i in range(final):
         # the exact output you're looking for:
-        combat_text = Image_to_Text('thresh', 'screen_resize.png')
-        time.sleep(5)
+        # combat_text = Image_to_Text_combat('thresh', 'screen_resize.png')
+        functions.resize_quick_combat()
+        combat_text = Image_to_Text_combat('thresh', 'screen_resize.png')
         print(bcolors.OK + f'\r[%-10s] %d%%' % ('='*round((i/final)*10), round((i/final)*100)), f'time left: {(t_end - time.time())/60 :.2f} mins | coords: {coords} | combat text: {combat_text} | {actions}', end='')
-        time.sleep(1)
 
 
 def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Human_Break=False, Run_Duration_hours=6):
@@ -148,8 +145,8 @@ def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Hum
         print('Start of while loop')
         randomizer(timer_break, ibreak)
         r = random.uniform(0.1, 5)
-        resizeImage()
-        combat_text = Image_to_Text('thresh', 'screen_resize.png')
+        resizeImage_combat()
+        combat_text = Image_to_Text_combat('thresh', 'screen_resize.png')
         # combat_text = re.sub('[^A-Za-z0-9]+', ' ', combat_text)
         #print(combat_text)
         attack = 0
@@ -185,7 +182,7 @@ def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Hum
 
 coords = (0, 0)
 actions = 'None'
-combat_text = 'Not in Combsat'
+combat_text = 'Not in Combat'
 time_left = 0
 
 
