@@ -38,7 +38,7 @@ def gfindWindow(data):  # find window name returns PID of the window
     # win32gui.ShowWindow(hwnd)
     win32gui.MoveWindow(hwnd, 0, 0, 865, 830, True)
 
-
+print('test')
 with open("pybot-config.yaml", "r") as yamlfile:
     data = yaml.load(yamlfile, Loader=yaml.FullLoader)
 
