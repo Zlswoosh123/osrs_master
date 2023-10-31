@@ -292,6 +292,7 @@ def powerfisher(fish_type, Run_Duration_hours=6):
         #     spaces(a)
         actions = 'none'
         invent_crop()
+        resizeImage()
         # main_good = functions.invent_count(fish_type + '.png', .95)
         hammer = functions.invent_count('hammer.png', .75)
         fish_count = functions.invent_count(fish_type + '.png', .95)
