@@ -26,8 +26,8 @@ newTime_break = False
 global timer
 global timer_break
 global ibreak
-runelite = 'RuneLite - 1AttackMaul'
-window = 2
+runelite = 'RuneLite'
+window = 1
 fish_type = 'infernal_eel'
 
 import pytesseract
@@ -310,6 +310,16 @@ def resize_quick():
     screen_Image(left, top, right, bottom, 'screen_resize.png')
     print('Taking screen_resize.png!')
 
+def resize_quick_combat():
+    print('Starting resize_quick_combat')
+    left = 905
+    top = 55
+    right = 1002
+    bottom = 80
+    left, top, right, bottom = rand_size(left, top, right, bottom)
+    print(f'resize values: {left}, {top}, {right}, {bottom}')
+    screen_Image(left, top, right, bottom, 'screen_resize.png')
+    print('Taking screen_resize.png!')
 
 
 def resizeImage():
@@ -1365,19 +1375,11 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
             if pt is None:
                 iflag = False
                 print('pt is None so iflag is False')
+                cropx = 620
+                cropy = 465
             else:
-                if window == 2:
-                    cropx = 1610
-                    cropy = 405
-                elif window == 3:
-                    cropx = 1920
-                    cropy = 480
-                elif window == 4:
-                    cropx = 1585 + 1920
-                    cropy = 405
-                else:
-                    cropx = 600
-                    cropy = 505
+                cropx = 620
+                cropy = 465
                 # print('pt is NOT None so were in else statement')
                 # if playarea == False:
                 #     print('playarea must be False! Crop is 1575 380')
@@ -1399,6 +1401,7 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
                     b = random.uniform(0.1, 0.3)
                 print('Trying to move to coord!')
                 pyautogui.moveTo(icoord, duration=b)
+                time.sleep(2)
                 if fast == True:
                     b = random.uniform(0.02, 0.1)
                 else:
@@ -1407,6 +1410,7 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
                 screen_front(runelite)
                 pyautogui.click(icoord, duration=b, button=clicker)
                 loop_end += 1
+                time.sleep(2)
     print('Ending image_eel_clicker')
     return iflag
 
@@ -1499,14 +1503,7 @@ def Image_count(object, threshold=0.8, left=0, top=0, right=0, bottom=0):
 def invent_count(object, threshold=0.7):
     global window
     print(f'Starting invent_count')
-    if window == 2:
-         screen_Image(1585, 400, 1830, 730, 'inventshot.png')
-    elif window == 3:
-        screen_Image(620 + 1920, 460, 820 + 1920, 750, 'inventshot.png')
-    elif window == 4:
-         screen_Image(1585 + 1920, 400, 1830 + 1920, 730, 'inventshot.png')
-    else:
-         screen_Image(600, 460, 820, 785, 'inventshot.png')
+    invent_crop()
     # if window == 2:
     #      screen_Image(1585, 380, 1830, 735, 'inventshot.png')
     # elif window == 3:

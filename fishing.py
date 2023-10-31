@@ -44,7 +44,7 @@ global timer_break
 global ibreak
 timer_log = 0
 runelite = functions.runelite
-inv_cap = random.randint(17, 21) # init inv cap to read in status
+inv_cap = random.randint(14, 17) # init inv cap to read in status
 window = functions.window
 print(f'Window is {window}')
 iflag = False
@@ -306,7 +306,7 @@ def powerfisher(fish_type, Run_Duration_hours=6):
             random_breaks(0.2, 0.7)
             drop_fish()
             random_breaks(0.2, 0.7)
-            # inv_cap = random.randint(17, 21)
+            inv_cap = random.randint(15, 18)
 
 
 
