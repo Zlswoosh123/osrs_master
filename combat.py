@@ -25,6 +25,7 @@ from functions import random_quests
 from functions import random_skills
 from functions import random_inventory
 from functions import image_Rec_clicker
+from functions import offscreen_mouse
 import functions
 import core
 
@@ -126,7 +127,7 @@ def timer_countdown():
         time.sleep(1)
 
 
-def powerattack_text(monster='chicken', burybones=True, Pickup_loot=False, Take_Human_Break=False, Run_Duration_hours=6):
+def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Human_Break=True, Run_Duration_hours=6):
     global ibreak, coords, combat_text, time_left, powerlist, actions, powerlist, t_end
     print('Will break in: %.2f' % (ibreak / 60) + ' minutes |', "Mob Selected:", monster)
     t1 = Thread(target=timer_countdown)
@@ -154,21 +155,23 @@ def powerattack_text(monster='chicken', burybones=True, Pickup_loot=False, Take_
         if attack == len(monster_array[group]):
             d = random.uniform(0.05, 0.1)
             time.sleep(d)
-            if burybones and image_Rec_clicker('bones_icon.png', 'bury bones', 5, 5, 0.7, 'left', 5, False):
-                c = random.uniform(0.6, 1)
-                time.sleep(c)
-            if Pickup_loot:
-                coords = findarea_attack_quick(2, 5)
-                if coords[0] != 0:  # pick up highlighted loot
-                    c = random.uniform(3, 5)
-                    time.sleep(c)
+            # if burybones and image_Rec_clicker('bones_icon.png', 'bury bones', 5, 5, 0.7, 'left', 5, False):
+            #     c = random.uniform(0.6, 1)
+            #     time.sleep(c)
+            # if Pickup_loot:
+            #     coords = findarea_attack_quick(2, 5)
+            #     if coords[0] != 0:  # pick up highlighted loot
+            #         c = random.uniform(3, 5)
+            #         time.sleep(c)
             coords = findarea_attack_quick(3)
+            offscreen_mouse()
             if coords[0] != 0:   # attack npc/monster
                 c = random.uniform(3, 5)
                 time.sleep(c)
                 if Take_Human_Break:
                     c = random.triangular(0.1, 50, 3)
                     time.sleep(c)
+
 
 coords = (0, 0)
 actions = 'None'
