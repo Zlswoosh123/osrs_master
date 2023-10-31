@@ -281,7 +281,7 @@ def resize_quick():
     left = 30
     top = 49
     right = 113
-    bottom = 73
+    bottom = 70
     screen_Image(left, top, right, bottom, 'screen_resize.png')
     # print('Taking screen_resize.png!')
 
