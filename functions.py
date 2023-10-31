@@ -121,8 +121,8 @@ def get_os_configuration():
 
 def offscreen_mouse():
     print('Starting offscreen_mouse')
-    xcoord = random.uniform(750,1100)
-    ycoord = random. uniform(350, 850)
+    xcoord = random.uniform(300,1050)
+    ycoord = random. uniform(1000, 170)
     new_coord = (xcoord, ycoord)
     b = random.uniform(0.15, .6)
     print('Trying to move to coord!')
@@ -1056,7 +1056,7 @@ def McropImage_quick():
     im.save('images/screenshot2.png', 'png')
 #
 #
-def findarea_attack_quick(object, deep=20):
+def findarea_attack_quick(object, deep=8):
     print('Starting findarea_attack_quick')
     McropImage_quick()
     image = cv2.imread(r"images/screenshot2.png")
@@ -1079,7 +1079,7 @@ def findarea_attack_quick(object, deep=20):
         # find the colors within the specified boundaries and apply
         # the mask
         mask = cv2.inRange(image, lower, upper)
-        output = cv2.bitwise_and(image, image, mask=mask)
+        # output = cv2.bitwise_and(image, image, mask=mask)
         ret, thresh = cv2.threshold(mask, 40, 255, 0)
         # if (cv2.__version__[0] > 3):
         # contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
@@ -1101,7 +1101,12 @@ def findarea_attack_quick(object, deep=20):
             y = random.randrange(y + 150 + hhalf - deep, y + 150 + max(hhalf + deep, 1))  # 490,500
             # print('attack y: ', y)
             b = random.uniform(0.01, 0.1)
+            print(f'hhalf is: {hhalf}')
+            print(f'deep is: {deep}')
+            print(f'x is: {x}')
+            print(f'y is: {y}')
             pyautogui.moveTo(x, y, duration=b)
+            time.sleep(random.uniform(1.5,3))
             b = random.uniform(0.01, 0.05)
             pyautogui.click(duration=b)
             return (x, y)
