@@ -22,6 +22,7 @@ from functions import random_quests
 from functions import random_skills
 from functions import random_inventory
 from functions import random_breaks
+from functions import safe_open
 
 import numpy as np
 import cv2
@@ -146,6 +147,8 @@ def drop_ore():
 def findarea_single(ore, cropx, cropy):
     Miner_Image_quick()
     image = cv2.imread(r"images/miner_img.png")
+    safe_open(image, 'miner_img.png')
+
 
     # B, G, R
 #--------------------- ADD OBJECTS -------------------

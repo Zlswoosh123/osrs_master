@@ -119,6 +119,14 @@ def get_os_configuration():
 
     return scale_factor, font_size, width, height
 
+
+def safe_open(image, png):
+    while image is None:
+        image = cv2.imread('images/' + png)
+        print(f'Sleeping until image is created')
+        time.sleep(2)
+        return image
+
 def screen_front(runelite):
     try:
         pyautogui.keyUp('shift')
@@ -1410,10 +1418,7 @@ def Image_count(object, threshold=0.8, left=0, top=0, right=0, bottom=0):
     screen_Image(left, top, right, bottom, name='screenshot.png')
     invent_crop()
     img_rgb = cv2.imread('images/inventshot.png')
-    while img_rgb is None:
-        img_rgb = cv2.imread('images/inventshot.png')
-        print(f'Sleeping until image is created')
-        time.sleep(3)
+    safe_open(img_rgb, 'inventshot.png')
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + object, 0)
     w, h = template.shape[::-1]
@@ -1485,16 +1490,10 @@ def invent_count(object, threshold=0.7):
     # active coords? 1560, 390, 1850, 790
     counter = 0
     img_rgb = cv2.imread('images/inventshot.png')
-    while img_rgb is None:
-        img_rgb = cv2.imread('images/inventshot.png')
-        print(f'Sleeping until image is created')
-        time.sleep(3)
+    safe_open(img_rgb, 'inventshot.png')
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + object, 0)
-    while template is None:
-        template = cv2.imread('images/' + object, 0)
-        print(f'Sleeping until image is created')
-        time.sleep(3)
+    safe_open(template, object)
     w, h = template.shape[::-1]
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
     # print(f'res is {res}')
