@@ -275,7 +275,8 @@ def powerfisher(fish_type, Run_Duration_hours=6):
         resizeImage()
         fishing_text = Image_to_Text('thresh', 'textshot.png')
         print(f'Emptying inv when at {inv_cap} items')
-        if fishing_text.strip().lower() != 'fishing' and fishing_text.strip().lower() != 'fishinq' and fishing_text.strip().lower() != 'ishing' and fishing_text.strip().lower() != 'pishing':
+        approved_text = ['fishing', 'ishing', 'fishin']
+        if fishing_text.strip([" ", "'"]).lower() not in approved_text:
             random_breaks(0.2, 3)
             pick_random_fishing_spot(fish_type,)
             random_breaks(8, 15)
