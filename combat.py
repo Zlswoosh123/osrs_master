@@ -80,6 +80,7 @@ def timer():
 
 def random_pause():
     global actions
+    print('Starting random_pause')
     b = random.uniform(20, 250)
     actions = 'pausing for ' + str(b) + ' seconds'
     time.sleep(b)
@@ -95,6 +96,7 @@ options = {0: random_inventory,
 
 def random_break(start, c):
     global newTime_break
+    print('Starting random_break')
     startTime = time.time()
     # 1200 = 20 minutes
     a = random.randrange(0, 4)
@@ -107,6 +109,7 @@ def randomizer(timer_breaks, ibreaks):
     global newTime_break
     global timer_break
     global ibreak
+    print('Starting randomizer')
     random_break(timer_breaks, ibreaks)
     if newTime_break == True:
         timer_break = timer()
@@ -117,6 +120,7 @@ def randomizer(timer_breaks, ibreaks):
 
 def timer_countdown():
     global Run_Duration_hours
+    print('Starting timer_countdown')
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
     #print(t_end)
     final = round((60 * 60 * Run_Duration_hours) / 1)
@@ -128,6 +132,7 @@ def timer_countdown():
 
 
 def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Human_Break=True, Run_Duration_hours=6):
+    print'Starting powerattack_text!'
     global ibreak, coords, combat_text, time_left, powerlist, actions, powerlist, t_end
     print('Will break in: %.2f' % (ibreak / 60) + ' minutes |', "Mob Selected:", monster)
     t1 = Thread(target=timer_countdown)
