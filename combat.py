@@ -127,6 +127,8 @@ def timer_countdown():
     #print(final)
     for i in range(final):
         # the exact output you're looking for:
+        combat_text = Image_to_Text('thresh', 'screen_resize.png')
+        time.sleep(5)
         print(bcolors.OK + f'\r[%-10s] %d%%' % ('='*round((i/final)*10), round((i/final)*100)), f'time left: {(t_end - time.time())/60 :.2f} mins | coords: {coords} | combat text: {combat_text} | {actions}', end='')
         time.sleep(1)
 
@@ -147,8 +149,8 @@ def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Hum
         randomizer(timer_break, ibreak)
         r = random.uniform(0.1, 5)
         resizeImage()
-        combat_text = Image_to_Text('thresh', 'textshot.png')
-        combat_text = re.sub('[^A-Za-z0-9]+', ' ', combat_text)
+        combat_text = Image_to_Text('thresh', 'screen_resize.png')
+        # combat_text = re.sub('[^A-Za-z0-9]+', ' ', combat_text)
         #print(combat_text)
         attack = 0
         for monsters in monster_array[group]:
@@ -204,7 +206,7 @@ if Plugin_Enabled:
 if __name__ == "__main__":
     # ----- UPDATE WITH ALL VARIATIONS OF MONSTER'S IMAGE TO TEXT RESULT IN LINE WITH MONSTER_LIST -----
     monster_array = [
-        ['chicken'], ['guard', 'gua rd'], ['cow', 'cou'], ['monk'], ['imp'], ['skeleton'], ['dwarf'], ['giant frog', 'giant', 'frog']
+        ['chicken'], ['guard', 'gua rd'], ['cow', 'cou'], ['monk'], ['imp'], ['skeleton'], ['dwarf'], ['giant frog', 'giant', 'frog'], ['goblin']
     ]
     x = random.randrange(100, 250)
     y = random.randrange(400, 500)
@@ -215,7 +217,7 @@ if __name__ == "__main__":
     # --------- CHANGE TO RUN FOR AMOUNT OF HOURS ----------------
     Run_Duration_hours = 2
     # --------------------------------------------------------------------------------------------------
-    monster_list = ['chicken', 'guard', 'cow', 'monk', 'imp', 'skeleton', 'dwarf', 'giant frog']
+    monster_list = ['chicken', 'guard', 'cow', 'monk', 'imp', 'skeleton', 'dwarf', 'giant frog', 'goblin']
 
-    powerattack_text('chicken', Take_Human_Break=True, Run_Duration_hours=Run_Duration_hours)
+    powerattack_text('cow', Take_Human_Break=True, Run_Duration_hours=Run_Duration_hours)
     #os.system('shutdown -s -f')
