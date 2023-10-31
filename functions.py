@@ -119,6 +119,13 @@ def get_os_configuration():
 
     return scale_factor, font_size, width, height
 
+def offscreen_mouse():
+    xcoord = random.uniform(750,1100)
+    ycoord = random. uniform(350, 850)
+    new_coord = (xcoord, ycoord)
+    b = random.uniform(0.15, .6)
+    print('Trying to move to coord!')
+    pyautogui.moveTo(new_coord, duration=b)
 
 def safe_open(image, png):
     while image is None:
@@ -1024,67 +1031,67 @@ def change_brown_black():
 #         return False
 #
 #
-# def McropImage_quick():
-#     left = 150
-#     top = 150
-#     right = 600
-#     bottom = 750
+def McropImage_quick():
+    left = 150
+    top = 150
+    right = 600
+    bottom = 750
+
+    im = ImageGrab.grab(bbox=(left, top, right, bottom))
+    im.save('images/screenshot2.png', 'png')
 #
-#     im = ImageGrab.grab(bbox=(left, top, right, bottom))
-#     im.save('images/screenshot2.png', 'png')
 #
-#
-# def findarea_attack_quick(object, deep=20):
-#     McropImage_quick()
-#     image = cv2.imread(r"images/screenshot2.png")
-#
-#     # B, G, R
-#     # --------------------- ADD OBJECTS -------------------
-#     red = ([0, 0, 180], [80, 80, 255])
-#     green = ([0, 180, 0], [80, 255, 80])
-#     pickup_high = ([200, 0, 100], [255, 30, 190])
-#     attack_blue = ([250, 250, 0], [255, 255, 5])
-#     amber = ([0, 160, 160], [80, 255, 255])
-#     # --------------------- ADD OBJECTS -------------------
-#     ore_list = [red, green, pickup_high, attack_blue, amber]
-#     boundaries = [ore_list[object]]
-#     # loop over the boundaries
-#     for (lower, upper) in boundaries:
-#         # create NumPy arrays from the boundaries
-#         lower = np.array(lower, dtype="uint8")
-#         upper = np.array(upper, dtype="uint8")
-#         # find the colors within the specified boundaries and apply
-#         # the mask
-#         mask = cv2.inRange(image, lower, upper)
-#         output = cv2.bitwise_and(image, image, mask=mask)
-#         ret, thresh = cv2.threshold(mask, 40, 255, 0)
-#         # if (cv2.__version__[0] > 3):
-#         # contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-#         # else:
-#         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-#         if len(contours) != 0:
-#             # draw in blue the contours that were founded
-#             # cv2.drawContours(output, contours, -1, 255, 3)
-#             # find the biggest countour (c) by the area
-#             c = max(contours, key=cv2.contourArea)
-#
-#             x, y, w, h = cv2.boundingRect(c)
-#             # draw the biggest contour (c) in green
-#             whalf = max(round(w / 2), 1)
-#             hhalf = max(round(h / 2), 1)
-#             # cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 2)
-#             x = random.randrange(x + 150 + whalf - deep, x + 150 + max(whalf + deep, 1))  # 950,960
-#             # print('attack x: ', x)
-#             y = random.randrange(y + 150 + hhalf - deep, y + 150 + max(hhalf + deep, 1))  # 490,500
-#             # print('attack y: ', y)
-#             b = random.uniform(0.01, 0.1)
-#             pyautogui.moveTo(x, y, duration=b)
-#             b = random.uniform(0.01, 0.05)
-#             pyautogui.click(duration=b)
-#             return (x, y)
-#     return (0, 0)
-#     # show the images
-#     # cv2.imshow("Result", np.hstack([image, output]))
+def findarea_attack_quick(object, deep=20):
+    McropImage_quick()
+    image = cv2.imread(r"images/screenshot2.png")
+
+    # B, G, R
+    # --------------------- ADD OBJECTS -------------------
+    red = ([0, 0, 180], [80, 80, 255])
+    green = ([0, 180, 0], [80, 255, 80])
+    pickup_high = ([200, 0, 100], [255, 30, 190])
+    attack_blue = ([250, 250, 0], [255, 255, 5])
+    amber = ([0, 160, 160], [80, 255, 255])
+    # --------------------- ADD OBJECTS -------------------
+    ore_list = [red, green, pickup_high, attack_blue, amber]
+    boundaries = [ore_list[object]]
+    # loop over the boundaries
+    for (lower, upper) in boundaries:
+        # create NumPy arrays from the boundaries
+        lower = np.array(lower, dtype="uint8")
+        upper = np.array(upper, dtype="uint8")
+        # find the colors within the specified boundaries and apply
+        # the mask
+        mask = cv2.inRange(image, lower, upper)
+        output = cv2.bitwise_and(image, image, mask=mask)
+        ret, thresh = cv2.threshold(mask, 40, 255, 0)
+        # if (cv2.__version__[0] > 3):
+        # contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        # else:
+        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        if len(contours) != 0:
+            # draw in blue the contours that were founded
+            # cv2.drawContours(output, contours, -1, 255, 3)
+            # find the biggest countour (c) by the area
+            c = max(contours, key=cv2.contourArea)
+
+            x, y, w, h = cv2.boundingRect(c)
+            # draw the biggest contour (c) in green
+            whalf = max(round(w / 2), 1)
+            hhalf = max(round(h / 2), 1)
+            # cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            x = random.randrange(x + 150 + whalf - deep, x + 150 + max(whalf + deep, 1))  # 950,960
+            # print('attack x: ', x)
+            y = random.randrange(y + 150 + hhalf - deep, y + 150 + max(hhalf + deep, 1))  # 490,500
+            # print('attack y: ', y)
+            b = random.uniform(0.01, 0.1)
+            pyautogui.moveTo(x, y, duration=b)
+            b = random.uniform(0.01, 0.05)
+            pyautogui.click(duration=b)
+            return (x, y)
+    return (0, 0)
+    # show the images
+    # cv2.imshow("Result", np.hstack([image, output]))
 
 
 # def Image_Rec_single(image, event, iheight=5, iwidth=5, threshold=0.7, clicker='left', ispace=20, playarea=True):
