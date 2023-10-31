@@ -217,17 +217,6 @@ def invent_crop():
     print('Starting invent_crop')
     global window
     screen_Image(620, 460, 820, 780, 'inventshot.png')
-    # if window == 2:
-    #      screen_Image(1600, 395, 1830, 730, 'inventshot.png')
-    # elif window == 3:
-    #     screen_Image(620 + 1920, 460, 820 + 1920, 750, 'inventshot.png')
-    # elif window == 4:
-    #      screen_Image(1585 + 1920, 400, 1830 + 1920, 730, 'inventshot.png')
-    # else:
-
-
-    # Window 1? 620, 480, 820, 750. Defines inventoryshot.png view
-    # Window 2 fishing numbs? # 1575, 380, 1850, 750 fishing numbs.
 
 
 def random_inventory():
@@ -286,19 +275,6 @@ def random_quests():
     newTime_break = True
 
 
-def rand_size(lt, tp, rt, bt):
-    if window == 2:
-        lt, tp, rt, bt = 905, 55, 1002, 80
-        return lt, tp, rt, bt
-    if window == 3:
-        lt, tp, rt, bt = 30 + 1620, 49, 313 + 1920, 273
-        return lt, tp, rt, bt
-    if window == 4:
-        lt, tp, rt, bt = 905 + 1920, 55, 1002 + 1920, 80
-        return lt, tp, rt, bt
-    else:
-        lt, tp, rt, bt = 30, 49, 113, 73
-        return lt, tp, rt, bt
 
 def resize_quick():
     print('Starting resize_quick')
@@ -306,8 +282,6 @@ def resize_quick():
     top = 49
     right = 113
     bottom = 73
-    # left, top, right, bottom = rand_size(left, top, right, bottom)
-    # print(f'resize values: {left}, {top}, {right}, {bottom}')
     screen_Image(left, top, right, bottom, 'screen_resize.png')
     # print('Taking screen_resize.png!')
 
@@ -1354,19 +1328,8 @@ def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
             iflag = False
             print('pt is None so iflag is False')
         else:
-            if window == 2:
-                cropx = 1610
-                cropy = 405
-            elif window == 3:
-                cropx = 1920
-                cropy = 480
-            elif window == 4:
-                cropx = 1585 + 1920
-                cropy = 405
-            else:
-                cropx = 600
-                cropy = 480
-                # # print('pt is NOT None so were in else statement')
+            cropx = 620
+            cropy = 465
             # if playarea == False:
             #     # print('playarea must be False! Crop is 1575 380')
             #     cropx = 1575
@@ -1399,14 +1362,6 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     global runelite
     loop_end = 0
     invent_crop()
-    # if window == 2:
-    #      screen_Image(1575, 480, 1860, 750, 'screenshot.png')
-    # elif window == 3:
-    #     screen_Image(620 + 1920, 480, 820 + 1920, 750, 'screenshot.png')
-    # elif window == 4:
-    #      screen_Image(1575 + 1920, 480, 1860 + 1920, 750, 'screenshot.png')
-    # else:
-    #      screen_Image(600, 480, 820, 780, 'screenshot.png')
     img_rgb = cv2.imread('images/inventshot.png')
     safe_open(img_rgb, 'inventshot.png')
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
@@ -1551,18 +1506,6 @@ def invent_count(object, threshold=0.7):
     global window
     print(f'Starting invent_count')
     invent_crop()
-    # if window == 2:
-    #      screen_Image(1585, 380, 1830, 735, 'inventshot.png')
-    # elif window == 3:
-    #     screen_Image(620 + 1920, 420, 820 + 1920, 750, 'inventshot.png')
-    # elif window == 4:
-    #      screen_Image(1585 + 1920, 380, 1830 + 1920, 735, 'inventshot.png')
-    # else:
-    #      screen_Image(620, 420, 820, 755, 'inventshot.png')
-    # screen_Image(1560, 390, 1850, 790, 'inventshot.png')
-    # 620, 480, 820, 750 - unknown coords
-    # legacy coords? 1375, 380, 1850, 750
-    # active coords? 1560, 390, 1850, 790
     counter = 0
     img_rgb = cv2.imread('images/inventshot.png')
     safe_open(img_rgb, 'inventshot.png')
