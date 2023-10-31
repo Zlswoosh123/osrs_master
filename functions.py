@@ -216,14 +216,15 @@ def deposit_all_Bank():
 def invent_crop():
     print('Starting invent_crop')
     global window
-    if window == 2:
-         screen_Image(1600, 395, 1830, 730, 'inventshot.png')
-    elif window == 3:
-        screen_Image(620 + 1920, 460, 820 + 1920, 750, 'inventshot.png')
-    elif window == 4:
-         screen_Image(1585 + 1920, 400, 1830 + 1920, 730, 'inventshot.png')
-    else:
-         screen_Image(620, 460, 820, 805, 'inventshot.png')
+    screen_Image(620, 460, 820, 780, 'inventshot.png')
+    # if window == 2:
+    #      screen_Image(1600, 395, 1830, 730, 'inventshot.png')
+    # elif window == 3:
+    #     screen_Image(620 + 1920, 460, 820 + 1920, 750, 'inventshot.png')
+    # elif window == 4:
+    #      screen_Image(1585 + 1920, 400, 1830 + 1920, 730, 'inventshot.png')
+    # else:
+
 
     # Window 1? 620, 480, 820, 750. Defines inventoryshot.png view
     # Window 2 fishing numbs? # 1575, 380, 1850, 750 fishing numbs.
@@ -1395,22 +1396,17 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
                 y = random.randrange(iheight, iheight + ispace) + cropy - 8
                 icoord = pt[0] + iheight + x
                 icoord = (icoord, pt[1] + iwidth + y)
-                if fast == True:
-                    b = random.uniform(0.05, 0.1)
-                else:
-                    b = random.uniform(0.1, 0.3)
+                b = random.uniform(0.05, 0.15)
+                c = random.uniform(0.05, 0.2)
                 print('Trying to move to coord!')
                 pyautogui.moveTo(icoord, duration=b)
-                time.sleep(2)
-                if fast == True:
-                    b = random.uniform(0.02, 0.1)
-                else:
-                    b = random.uniform(0.05, 0.15)
+                time.sleep(c)
+                b = random.uniform(0.05, 0.15)
                 print('Trying to click coord!')
                 screen_front(runelite)
                 pyautogui.click(icoord, duration=b, button=clicker)
                 loop_end += 1
-                time.sleep(2)
+
     print('Ending image_eel_clicker')
     return iflag
 
