@@ -177,27 +177,24 @@ def drop_fish():
     time.sleep(d)
     # Drop click items
     if fish_type == 'infernal_eel':
-        hammer = functions.invent_count('hammer.png', .85) + functions.invent_count('hammer2.png', .85)
+        hammer = functions.invent_count('hammer.png', .85)
         print(f'Hammer count is {hammer}')
-        if functions.invent_count('hammer.png', .85) >= 1:
-            image_eel_clicker(r'hammer.png', 'Clicking hammer', 5, 5, 0.8, 'left', 10, False, True)
-        elif functions.invent_count('hammer2.png', .85) >= 1:
-            image_eel_clicker(r'hammer2.png', 'Clicking hammer', 5, 5, 0.8, 'left', 10, False, True)
-        else:
-            pass
-        time.sleep(random.uniform(.1, .3))
-        image_eel_clicker(r'infernal_eel.png', 'Clicking Eel', 5, 5, 0.7, 'left', 10, False, True)
-        image_eel_clicker(r'infernal_eel2.png', 'Clicking Eel', 5, 5, 0.7, 'left', 10, False, True)
-        eel_wait = functions.invent_count(fish_type + '.png', .9) * 3 * .6
+        image_eel_clicker(r'hammer.png', 'Clicking hammer', 5, 5, 0.8, 'left', 10, False, True)
+
+        time.sleep(random.uniform(.3, .8))
+        image_eel_clicker(r'infernal_eel.png', 'Clicking Eel', 5, 5, 0.95, 'left', 10, False, True)
+        # image_eel_clicker(r'infernal_eel2.png', 'Clicking Eel', 5, 5, 0.7, 'left', 10, False, True)
+        eel_wait = functions.invent_count(fish_type + '.png', .95) * 3 * .6
         sleep = min(40, int(random.uniform(eel_wait + 1, eel_wait + 10)))
         print(f'Waiting for {sleep}s while eels breakdown')
         time.sleep(sleep)
-    image_Rec_clicker(r'prawn_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
-    image_Rec_clicker(r'trout_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
-    image_Rec_clicker(r'trout_fish2.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
-    # image_Rec_clicker(r'salmon_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, False)
-    # image_Rec_clicker(r'lobster_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, False)
-    actions = "all fish dropped"
+    else:
+        image_Rec_clicker(r'prawn_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
+        image_Rec_clicker(r'trout_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
+        image_Rec_clicker(r'trout_fish2.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
+        # image_Rec_clicker(r'salmon_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, False)
+        # image_Rec_clicker(r'lobster_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, False)
+        actions = "all fish dropped"
     time.sleep(f)
 
 def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries=[([110, 100, 0], [195, 180, 60])]):
@@ -295,8 +292,8 @@ def powerfisher(fish_type, Run_Duration_hours=6):
         actions = 'none'
         invent_crop()
         # main_good = functions.invent_count(fish_type + '.png', .95)
-        hammer = functions.invent_count('hammer.png', .75) + functions.invent_count('hammer2.png', .75)
-        fish_count = max(functions.invent_count(fish_type + '.png', .9), functions.invent_count(fish_type + '2.png', .9))
+        hammer = functions.invent_count('hammer.png', .75)
+        fish_count = functions.invent_count(fish_type + '.png', .95)
         print(f'fish count is: {fish_count}')
         print(f'hammer count is: {hammer}')
         invent = fish_count

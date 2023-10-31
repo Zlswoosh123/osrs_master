@@ -26,8 +26,8 @@ newTime_break = False
 global timer
 global timer_break
 global ibreak
-runelite = 'RuneLite - BabyEel'
-window = 1
+runelite = 'RuneLite - 1AttackMaul'
+window = 2
 fish_type = 'infernal_eel'
 
 import pytesseract
@@ -129,7 +129,7 @@ def offscreen_mouse():
     pyautogui.moveTo(new_coord, duration=b)
 
 def safe_open(image, png):
-    print('Starting safe_open')
+    # print('Starting safe_open')
     while image is None:
         image = cv2.imread('images/' + png)
         print(f'Sleeping until image is created')
@@ -296,15 +296,15 @@ def rand_size(lt, tp, rt, bt):
         lt, tp, rt, bt = 905 + 1920, 55, 1002 + 1920, 80
         return lt, tp, rt, bt
     else:
-        lt, tp, rt, bt = 30, 49, 113, 66
+        lt, tp, rt, bt = 30, 49, 113, 73
         return lt, tp, rt, bt
 
 def resize_quick():
     print('Starting resize_quick')
-    left = 100
+    left = 905
     top = 55
-    right = 250
-    bottom = 180
+    right = 1002
+    bottom = 80
     left, top, right, bottom = rand_size(left, top, right, bottom)
     print(f'resize values: {left}, {top}, {right}, {bottom}')
     screen_Image(left, top, right, bottom, 'screen_resize.png')
@@ -359,15 +359,11 @@ def Image_to_Text(preprocess, image, parse_config='--psm 7'):
     # write the grayscale image to disk as a temporary file so we can
     # apply OCR to it
     filename = "{}.png".format(os.getpid())
-    safe_open(filename, gray)
+    cv2.imwrite(filename, gray)
     # load the image as a PIL/Pillow image, apply OCR, and then delete
     # the temporary file
-    print(f'opened filename and its {filename}')
-    time.sleep(2)
     with Image.open(filename) as im:
-        print('Starting image.open')
         text = pytesseract.image_to_string(im, config=parse_config)
-        print(f'text is {text}')
     os.remove(filename)
     # print(text)
     return text
@@ -1106,7 +1102,7 @@ def findarea_attack_quick(object, deep=8):
             # print('attack x: ', x)
             y = random.randrange(y + 150 + hhalf - deep, y + 150 + max(hhalf + deep, 1))  # 490,500
             # print('attack y: ', y)
-            b = random.uniform(0.08, 0.25)
+            b = random.uniform(0.01, 0.1)
             print(f'hhalf is: {hhalf}')
             print(f'deep is: {deep}')
             print(f'x is: {x}')
@@ -1340,18 +1336,20 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     global iflag
     global runelite
     loop_end = 0
-
-    if window == 2:
-         screen_Image(1575, 480, 1860, 750, 'screenshot.png')
-    elif window == 3:
-        screen_Image(620 + 1920, 480, 820 + 1920, 750, 'screenshot.png')
-    elif window == 4:
-         screen_Image(1575 + 1920, 480, 1860 + 1920, 750, 'screenshot.png')
-    else:
-         screen_Image(600, 480, 820, 780, 'screenshot.png')
-    img_rgb = cv2.imread('images/screenshot.png')
+    invent_crop()
+    # if window == 2:
+    #      screen_Image(1575, 480, 1860, 750, 'screenshot.png')
+    # elif window == 3:
+    #     screen_Image(620 + 1920, 480, 820 + 1920, 750, 'screenshot.png')
+    # elif window == 4:
+    #      screen_Image(1575 + 1920, 480, 1860 + 1920, 750, 'screenshot.png')
+    # else:
+    #      screen_Image(600, 480, 820, 780, 'screenshot.png')
+    img_rgb = cv2.imread('images/inventshot.png')
+    safe_open(img_rgb, 'inventshot.png')
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + image, 0)
+    safe_open(template, image)
     w, h = template.shape[::-1]
     pt = None
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
