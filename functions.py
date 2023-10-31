@@ -26,7 +26,7 @@ newTime_break = False
 global timer
 global timer_break
 global ibreak
-runelite = 'RuneLite - BabyEel'
+runelite = 'RuneLite - 1AttackMaul'
 window = 2
 fish_type = 'infernal_eel'
 
@@ -129,7 +129,7 @@ def offscreen_mouse():
     pyautogui.moveTo(new_coord, duration=b)
 
 def safe_open(image, png):
-    print('Starting safe_open')
+    # print('Starting safe_open')
     while image is None:
         image = cv2.imread('images/' + png)
         print(f'Sleeping until image is created')
@@ -1336,18 +1336,20 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     global iflag
     global runelite
     loop_end = 0
-
-    if window == 2:
-         screen_Image(1575, 480, 1860, 750, 'screenshot.png')
-    elif window == 3:
-        screen_Image(620 + 1920, 480, 820 + 1920, 750, 'screenshot.png')
-    elif window == 4:
-         screen_Image(1575 + 1920, 480, 1860 + 1920, 750, 'screenshot.png')
-    else:
-         screen_Image(600, 480, 820, 780, 'screenshot.png')
-    img_rgb = cv2.imread('images/screenshot.png')
+    invent_crop()
+    # if window == 2:
+    #      screen_Image(1575, 480, 1860, 750, 'screenshot.png')
+    # elif window == 3:
+    #     screen_Image(620 + 1920, 480, 820 + 1920, 750, 'screenshot.png')
+    # elif window == 4:
+    #      screen_Image(1575 + 1920, 480, 1860 + 1920, 750, 'screenshot.png')
+    # else:
+    #      screen_Image(600, 480, 820, 780, 'screenshot.png')
+    img_rgb = cv2.imread('images/inventshot.png')
+    safe_open(img_rgb, 'inventshot.png')
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + image, 0)
+    safe_open(template, image)
     w, h = template.shape[::-1]
     pt = None
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
