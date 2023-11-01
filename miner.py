@@ -331,6 +331,6 @@ if __name__ == "__main__":
     Run_Duration_hours = 4.5
 
                 # | ore | marker color | take break | how long to run for in hours
-    powerminer_text(tin, red, Take_Human_Break=True, Run_Duration_hours=Run_Duration_hours)
+    powerminer_text(tin, red, Take_Human_Break=False, Run_Duration_hours=Run_Duration_hours)
 
     #os.system('shutdown -s -f')
