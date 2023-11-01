@@ -151,10 +151,12 @@ def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Hum
         #print(combat_text)
         attack = 0
         for monsters in monster_array[group]:
-            print(monsters)
+            print(f'Current monster is: {monster}')
+            print(combat_text.strip().lower().find(monsters))
             if combat_text.strip().lower().find(monsters) == -1:
                 attack += 1
         if Plugin_Enabled:
+            print('Plugin (surprisingly) enabled')
             if attack == monster:
                 attack = 1
         if attack == len(monster_array[group]):
@@ -169,7 +171,9 @@ def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Hum
             #         c = random.uniform(3, 5)
             #         time.sleep(c)
             coords = findarea_attack_quick(3)
-            offscreen_mouse()
+            off = random.randint
+            if off == 3:
+                offscreen_mouse()
             if coords[0] != 0:   # attack npc/monster
                 c = random.uniform(2, 4)
                 print(f'coords[0] is: {coords[0]} and coords[1] is {coords[1]}')
@@ -216,5 +220,5 @@ if __name__ == "__main__":
     # --------------------------------------------------------------------------------------------------
     monster_list = ['chicken', 'guard', 'cow', 'monk', 'imp', 'skeleton', 'dwarf', 'giant frog', 'goblin']
 
-    powerattack_text('cow', Take_Human_Break=True, Run_Duration_hours=Run_Duration_hours)
+    powerattack_text('cow', Take_Human_Break=False, Run_Duration_hours=Run_Duration_hours)
     #os.system('shutdown -s -f')

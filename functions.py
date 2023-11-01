@@ -286,19 +286,19 @@ def resize_quick():
     # print('Taking screen_resize.png!')
 
 def resize_quick_combat():
-    print('Starting resize_quick_combat')
+    # print('Starting resize_quick_combat')
     left = 30
     top = 49
     right = 113
     bottom = 68
     # left, top, right, bottom = rand_size(left, top, right, bottom)
-    print(f'resize values: {left}, {top}, {right}, {bottom}')
+    # print(f'resize values: {left}, {top}, {right}, {bottom}')
     screen_Image(left, top, right, bottom, 'screen_resize.png')
-    print('Taking screen_resize.png!')
+    # print('Taking screen_resize.png!')
 
 
 def resizeImage():
-    print('Starting resizeImage -- See resize_quick')
+    # print('Starting resizeImage -- See resize_quick')
     resize_quick()
     png = 'images/screen_resize.png'
     im = Image.open(png)
@@ -306,7 +306,7 @@ def resizeImage():
     width, height = im.size
     new_size = (width * 4, height * 4)
     im1 = im.resize(new_size)
-    print('Taking textshot.png!')
+    # print('Taking textshot.png!')
     im1.save('images/textshot.png')
 
 
@@ -322,7 +322,7 @@ def Miner_Image_quick():
 
 
 def Image_to_Text(preprocess, image, parse_config='--psm 7'):
-    print('Starting image_to_text')
+    # print('Starting image_to_text')
     resizeImage()
     change_brown_black()
     # construct the argument parse and parse the arguments
@@ -354,7 +354,7 @@ def Image_to_Text(preprocess, image, parse_config='--psm 7'):
     return text
 
 def resizeImage_combat():
-    print('Starting resizeImage_combat -- See resize_quick')
+    # print('Starting resizeImage_combat -- See resize_quick')
     resize_quick_combat()
     png = 'images/screen_resize.png'
     im = Image.open(png)
@@ -362,7 +362,7 @@ def resizeImage_combat():
     width, height = im.size
     new_size = (width * 4, height * 4)
     im1 = im.resize(new_size)
-    print('Taking textshot.png!')
+    # print('Taking textshot.png!')
     im1.save('images/textshot.png')
 
 def Image_to_Text_combat(preprocess, image, parse_config='--psm 7'):
@@ -394,7 +394,7 @@ def Image_to_Text_combat(preprocess, image, parse_config='--psm 7'):
     # the temporary file
     with Image.open(filename) as im:
         text = pytesseract.image_to_string(im, config=parse_config)
-        print(f'Text from image_to_text is: {text}')
+        # print(f'Text from image_to_text is: {text}')
     try:
         os.remove(filename)
     except:
@@ -405,14 +405,14 @@ def Image_to_Text_combat(preprocess, image, parse_config='--psm 7'):
     return text
 
 def screen_Image_new(name='screenshot.png'):
-    print('Starting screen_image_new')
+    # print('Starting screen_image_new')
     x, y, w, h = core.getWindow(data[0]['Config']['client_title'])
     im = ImageGrab.grab(bbox=(x, y, x + w, y + h))
     im.save('images/' + name, 'png')
 
 
 def screen_Image(left=0, top=0, right=0, bottom=0, name='screenshot.png'):
-    print('Starting screen_image')
+    # print('Starting screen_image')
     if left != 0 or top != 0 or right != 0 or bottom != 0:
         myScreenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
     else:
