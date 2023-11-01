@@ -192,16 +192,16 @@ def findarea_single(ore, cropx, cropy):
 
 
 def count_gems():
-    return Image_count('gem_icon.png')
+    return Image_count('gem_icon.png', threshold=0.8, left=0, top=0, right=800, bottom=750)
 
 def count_geo():
-    return Image_count('geo_icon.png')
+    return Image_count('geo_icon.png', threshold=0.8, left=0, top=0, right=800, bottom=750)
 
 def count_gems2():
-    return Image_count('gem_icon2.png')
+    return Image_count('gem_icon2.png', threshold=0.8, left=0, top=0, right=800, bottom=750)
 
 def inv_count(name):
-    return Image_count(name + '_ore.png', threshold=0.8, left=1000, top=0, right=1920, bottom=800)
+    return Image_count(name + '_ore.png', threshold=0.8, left=0, top=0, right=800, bottom=750)
 
 def timer_countdown():
     global Run_Duration_hours

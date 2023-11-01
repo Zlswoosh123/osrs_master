@@ -28,7 +28,7 @@ global timer_break
 global ibreak
 runelite = 'RuneLite'
 window = 1
-fish_type = 'infernal_eel'
+fish_type = 'trout_fish'
 
 import pytesseract
 

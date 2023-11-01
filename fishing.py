@@ -55,7 +55,6 @@ global top, left, right, bottom
 #            3: random_quests,
 #            4: random_pause}
 # Setting window params todo move to top
-
 left = 0
 top = 0
 right = 865
@@ -281,7 +280,7 @@ def powerfisher(fish_type, Run_Duration_hours=6):
             random_breaks(0.2, 0.7)
             drop_fish()
             random_breaks(0.2, 0.7)
-            inv_cap = random.randint(15, 18)
+            inv_cap = random.randint(14, 17)
 
 
 
