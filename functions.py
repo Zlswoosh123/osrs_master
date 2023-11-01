@@ -28,7 +28,7 @@ global timer_break
 global ibreak
 runelite = 'RuneLite'
 window = 1
-fish_type = 'trout_fish'
+fish_type = 'infernal_eel'
 
 import pytesseract
 
@@ -232,7 +232,7 @@ def random_inventory():
     pyautogui.press('esc')
     newTime_break = True
 
-
+    # old         screen_Image(645, 460, 845, 775, 'inventshot.png') #right mon vm2
 def random_combat():
     print('Starting random_combat')
     global newTime_break, actions

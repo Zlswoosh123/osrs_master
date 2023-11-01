@@ -149,12 +149,23 @@ def drop_fish():
     time.sleep(d)
     # Drop click items
     if fish_type == 'infernal_eel':
-        hammer = functions.invent_count('hammer.png', .85)
+        hammer = functions.invent_count('hammer.png', .7)
+        xham= random.randint(648,670)
+        yham= random.randint(500,520)
+        hammer_coord =(xham, yham)
+        b = random.uniform(0.05, 0.15)
+        pyautogui.moveTo(hammer_coord, duration=b)
+        b = random.uniform(0.05, 0.15)
+        print('Trying to click coord!')
+        screen_front(runelite)
+        pyautogui.click(hammer_coord, duration=b, button='left')
+
+
         print(f'Hammer count is {hammer}')
-        image_eel_clicker(r'hammer.png', 'Clicking hammer', 5, 5, 0.8, 'left', 10, False, True)
+        image_eel_clicker(r'hammer.png', 'Clicking hammer', 2, 2, 0.7, 'left', 10, False, True)
 
         time.sleep(random.uniform(.3, .8))
-        image_eel_clicker(r'infernal_eel.png', 'Clicking Eel', 5, 5, 0.95, 'left', 10, False, True)
+        image_eel_clicker(r'infernal_eel.png', 'Clicking Eel', 2, 2, 0.95, 'left', 10, False, True)
         # image_eel_clicker(r'infernal_eel2.png', 'Clicking Eel', 5, 5, 0.7, 'left', 10, False, True)
         eel_wait = functions.invent_count(fish_type + '.png', .95) * 3 * .6
         sleep = min(40, int(random.uniform(eel_wait + 1, eel_wait + 10)))
@@ -184,9 +195,12 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
         upper = np.array(upper, dtype="uint8")
         safe_open(image, 'screenshot.png')
         # find the colors within the specified boundaries and apply the mask
-        mask = cv2.inRange(image, lower, upper)
-        ret, thresh = cv2.threshold(mask, 40, 255, 0)
-        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        print(f'image before mask is {image}')
+        contours = ""
+        if image is not None:
+            mask = cv2.inRange(image, lower, upper)
+            ret, thresh = cv2.threshold(mask, 40, 255, 0)
+            contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     if len(contours) != 0:
         c = max(contours, key=cv2.contourArea)
         x, y, w, h = cv2.boundingRect(c)
