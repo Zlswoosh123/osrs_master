@@ -267,13 +267,13 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
         inventory = gem_count + ore_count + clue_count
         #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
 
-        if inventory > 18:
+        if inventory > inv_cap:
             actions = 'dropping ore starting...'
             #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
             actions = drop_ore()
             #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
             random_breaks(0.2, 0.7)
-            inv_cap = random.uniform(15, 20)
+            inv_cap = random.uniform(15, 18)
             print(f'Dropping ore at {inv_cap}')
         resize_quick()
         resizeImage()
@@ -283,7 +283,7 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
             mined_text = 'Not Mining'
             #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
             #random_breaks(0.05, 0.1)
-            spot = findarea_single(num, 1000, 150)
+            spot = findarea_single(num, 0,0)
             if Take_Human_Break:
                 c = random.triangular(0.05, 6, 0.5)
                 time.sleep(c)
@@ -331,6 +331,6 @@ if __name__ == "__main__":
     Run_Duration_hours = 4.5
 
                 # | ore | marker color | take break | how long to run for in hours
-    powerminer_text(tin, red, Take_Human_Break=True, Run_Duration_hours=Run_Duration_hours)
+    powerminer_text(tin, red, Take_Human_Break=False, Run_Duration_hours=Run_Duration_hours)
 
     #os.system('shutdown -s -f')

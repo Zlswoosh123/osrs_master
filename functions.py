@@ -1448,7 +1448,7 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
 #     return iflag
 
 
-def Image_count(object, threshold=0.8, left=0, top=0, right=0, bottom=0):
+def Image_count(object, threshold=0.8, left=0, top=0, right=865, bottom=830):
     # Window 1: object, threshold=0.8, left=0, top=0, right=0, bottom=0
     # Window 2: object, threshold=0.88, left=1000, top=0, right=1920, bottom=800
     counter = 0
