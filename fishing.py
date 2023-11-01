@@ -58,8 +58,8 @@ global top, left, right, bottom
 
 left = 0
 top = 0
-right = 800
-bottom = 800
+right = 865
+bottom = 830
 
 class bcolors:
     OK = '\033[92m' #GREEN

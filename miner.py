@@ -57,7 +57,7 @@ def gfindWindow(data):  # find window name returns PID of the window
     #print('findWindow:', hwnd)
     win32gui.SetActiveWindow(hwnd)
     # win32gui.ShowWindow(hwnd)
-    win32gui.MoveWindow(hwnd, 0, 0, 800, 800, True) #(hwnd, 0, 0, 865, 830, True)
+    win32gui.MoveWindow(hwnd, 0, 0, 865, 830, True) #(hwnd, 0, 0, 865, 830, True)
 
 
 with open("pybot-config.yaml", "r") as yamlfile:
