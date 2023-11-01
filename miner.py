@@ -116,16 +116,16 @@ def random_pause():
 #            4: random_pause}
 
 def Miner_Image_quick():
-    left = 150
-    top = 150
-    right = 600
-    bottom = 750
+    left = 0
+    top = 0
+    right = 863
+    bottom = 830
 
     im = ImageGrab.grab(bbox=(left, top, right, bottom))
     im.save('images/miner_img.png', 'png')
 
 def Miner_Image():
-    screen_Image(150, 150, 600, 750, 'images/miner_img.png')
+    screen_Image(0, 0, 865, 830, 'images/miner_img.png')
 
 def drop_ore():
     global actions

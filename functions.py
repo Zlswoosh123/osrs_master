@@ -312,10 +312,10 @@ def resizeImage():
 
 def Miner_Image_quick():
     print('Starting miner_image_quick')
-    left = 150
-    top = 150
-    right = 600
-    bottom = 750
+    left = 0
+    top = 0
+    right = 865
+    bottom = 830
 
     im = ImageGrab.grab(bbox=(left, top, right, bottom))
     im.save('images/miner_img.png', 'png')
