@@ -57,7 +57,7 @@ def gfindWindow(data):  # find window name returns PID of the window
     #print('findWindow:', hwnd)
     win32gui.SetActiveWindow(hwnd)
     # win32gui.ShowWindow(hwnd)
-    win32gui.MoveWindow(hwnd, 875, 0, 1000, 830, True) #(hwnd, 0, 0, 865, 830, True)
+    win32gui.MoveWindow(hwnd, 0, 0, 800, 800, True) #(hwnd, 0, 0, 865, 830, True)
 
 
 with open("pybot-config.yaml", "r") as yamlfile:
@@ -116,10 +116,10 @@ def random_pause():
 #            4: random_pause}
 
 def Miner_Image_quick():
-    left = 1000
+    left = 150
     top = 150
-    right = 1850
-    bottom = 850
+    right = 600
+    bottom = 750
 
     im = ImageGrab.grab(bbox=(left, top, right, bottom))
     im.save('images/miner_img.png', 'png')

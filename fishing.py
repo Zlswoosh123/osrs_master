@@ -55,27 +55,11 @@ global top, left, right, bottom
 #            3: random_quests,
 #            4: random_pause}
 # Setting window params todo move to top
-if window == 2:
-    left = 875
-    top = 0
-    right = 875+800
-    bottom = 800
-elif window == 3: # URGENT todo fix coords
-    left = 1921
-    top = 0
-    right = 2720
-    bottom = 800
-    print('Window is 3')
-elif window == 4: # URGENT todo fix coords
-    left = 1920+875+800
-    top = 0
-    right = 875+800
-    bottom = 800
-else:
-    left = 0
-    top = 0
-    right = 800
-    bottom = 800
+
+left = 0
+top = 0
+right = 800
+bottom = 800
 
 class bcolors:
     OK = '\033[92m' #GREEN
@@ -90,18 +74,7 @@ def gfindWindow(data):  # find window name returns PID of the window
     hwnd = win32gui.FindWindow(None, data)
     win32gui.SetActiveWindow(hwnd)
     win = win32gui.GetForegroundWindow()
-
-    # [(0, 0, 1920, 1080), (1920, 0, 3840, 1080)]
-    if window == 2:
-        win32gui.MoveWindow(hwnd, 875, 0, 1000, 830, True)
-    elif window == 3:
-        # URGENT todo fix coords
-        win32gui.MoveWindow(hwnd, 1920, 0, 865, 830, True)
-    elif window == 4:
-        win32gui.MoveWindow(hwnd, 875 + 1920, 0, 1000, 830, True)
-        # URGENT todo fix coords
-    else:
-        win32gui.MoveWindow(hwnd, 0, 0, 865, 830, True)
+    win32gui.MoveWindow(hwnd, 0, 0, 865, 830, True)
 
     # window 1: (hwnd, 0, 0, 865, 830, True)
     # window 2: (hwnd, 875, 0, 1000, 830, True)
