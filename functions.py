@@ -1300,20 +1300,7 @@ def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     print('Starting image_Rec_clicker')
     global icoord
     global iflag
-    # if playarea:
-    #     screen_Image(1575, 380, 1850, 750, 'images/screenshot.png')
-    #     # screen_Image(0, 0, 600, 750)
-    # else:
-    #     print('Taking screenshot.png!')
-    #     screen_Image(1575, 380, 1850, 750, 'screenshot.png')  # OG 620, 480, 820, 750
-    # if window == 2:
-    #      screen_Image(1575, 480, 1860, 750, 'screenshot.png')
-    # elif window == 3:
-    #     screen_Image(620 + 1920, 480, 820 + 1920, 750, 'screenshot.png')
-    # elif window == 4:
-    #      screen_Image(1575 + 1920, 480, 1860 + 1920, 750, 'screenshot.png')
-    # else:
-    # screen_Image(600, 480, 820, 780, 'screenshot.png')
+    # Update images, convert to gray, match template, apply threshold
     img_rgb = cv2.imread('images/inventshot.png')
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + image, 0)
@@ -1323,32 +1310,26 @@ def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     loc = np.where(res >= threshold)
     print(f'res is: {res}')
     iflag = False
-    event = event
 
+    # for image where template match % > threshold
     for pt in zip(*loc[::-1]):
-        resizeImage()
-        invent_crop()
         # print('Starting our for loop in zip now!')
         # print(f'Current pt is {pt}')
+        resizeImage() # update screenresize/text images
+        invent_crop() # update inventory.png
+        # confirm how below draws rectangles
         cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
         if pt is None:
             iflag = False
             print('pt is None so iflag is False')
         else:
+            # useless?
             cropx = 620
-            cropy = 465
-            # if playarea == False:
-            #     # print('playarea must be False! Crop is 1575 380')
-            #     cropx = 1575
-            #     cropy = 380
-            # else:
-            #     # print('playarea must be Else! Crop is 0 0')
-            #     cropx = 0
-            #     cropy = 0
-
+            cropy = 457
             iflag = True
+            # i vars are constants todo add double randomness
             x = random.randrange(iwidth, iwidth + ispace) + cropx
-            y = random.randrange(iheight, iheight + ispace) + cropy - 8
+            y = random.randrange(iheight, iheight + ispace) + cropy
             icoord = pt[0] + iheight + x
             icoord = (icoord, pt[1] + iwidth + y)
             b = random.uniform(0.04, 0.13)
