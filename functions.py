@@ -30,6 +30,13 @@ runelite = 'RuneLite'
 window = 1
 fish_type = 'infernal_eel'
 
+# todo list
+# add offscreen mouse to fishing logic 1/4th
+# fix random quests/skill checks
+# add arrow key movements
+# add login?
+# Figure out walk logic back to a tile for combat
+
 import pytesseract
 
 with open("pybot-config.yaml", "r") as yamlfile:
@@ -845,7 +852,7 @@ def change_brown_black():
 #         pyautogui.press('space')
 
 
-# def skill_lvl_up(): todo revisit
+# def skill_lvl_up():
 #     counter = 0
 #     myScreenshot = ImageGrab.grab()
 #     myScreenshot.save(r"images/screen.png")
@@ -1193,10 +1200,10 @@ def findarea_attack_quick(object, deep=8):
 #         if window == 2:
 #             cropx = 1575
 #             cropy = 480
-#         elif window == 3:  # URGENT todo fix coords
+#         elif window == 3:  # URGENT
 #             cropx = 2540
 #             cropy = 480
-#         elif window == 4:  # URGENT todo fix coords
+#         elif window == 4:  # URGENT
 #             cropx = 3490
 #             cropy = 480
 #         else:
@@ -1377,7 +1384,7 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     print('Starting for loop in eel_clicker!')
     for pt in zip(*loc[::-1]):
         cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
-        # Adding logic to skip the loop, TODO only need first eel, not like dropping logic
+        # Adding logic to skip the loop
         if loop_end == 0:
             if pt is None:
                 iflag = False
@@ -1548,6 +1555,13 @@ def release_drop_item():
 def random_breaks(minsec, maxsec):
     e = random.uniform(minsec, maxsec)
     time.sleep(e)
+
+def super_random_breaks(a, b, c, d):
+    min1 = random.uniform(a, b) # e.g. 1-3
+    max1 = random.uniform(c, d) # e.g. 5-7
+    wait = random.uniform(min1, max1) # e.g 2, 6
+    return wait
+
 
 
 def findarea(object):

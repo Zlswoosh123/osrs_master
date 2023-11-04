@@ -30,6 +30,8 @@ from functions import random_inventory
 from functions import random_breaks
 from functions import image_eel_clicker
 from functions import screen_front
+from functions import offscreen_mouse
+from functions import super_random_breaks
 from functions import safe_open
 
 # Variables
@@ -96,12 +98,12 @@ except BaseException:
     core.printWindows()
     print(BaseException)
     pass
-def random_break(start, c): # todo rename C var
+def random_break(start, c):
     global newTime_break
     startTime = time.time()
     # 1200 = 20 minutes
     a = random.randrange(0, 4)
-    # if startTime - start > c: todo fix
+    # if startTime - start > c:
     #     options[a]()
     #     newTime_break = True
 
@@ -150,12 +152,14 @@ def drop_fish():
     # Drop click items
     if fish_type == 'infernal_eel':
         hammer = functions.invent_count('hammer.png', .7)
-        xham= random.randint(648,670)
-        yham= random.randint(500,520)
+        xham= random.randint(655,660) + random.randint(-7, 10) # 648, 670
+        yham= random.randint(505,515) + random.randint(-5,5) # 500, 520
         hammer_coord =(xham, yham)
-        b = random.uniform(0.05, 0.15)
+        b = super_random_breaks(.03, .12, .14, .25)
+        # b = random.uniform(0.05, 0.15)
         pyautogui.moveTo(hammer_coord, duration=b)
-        b = random.uniform(0.05, 0.15)
+        b = super_random_breaks(.03, .12, .14, .25)
+        # b = random.uniform(0.05, 0.15)
         print('Trying to click coord!')
         screen_front(runelite)
         pyautogui.click(hammer_coord, duration=b, button='left')
@@ -241,11 +245,8 @@ def timer_countdown():
             print(bcolors.OK + f'\r[%-10s] %d%%' % ('='*round((i/final)*10), round((i/final)*100)), f'time left: {(t_end - time.time())/60 :.2f} mins | coords: {coords} | status: {fishing_text} | fish: {fish_count} | clues: {clue_count} | {actions}| Drop at: {inv_cap}', end='')
         timer_log += 1
         time.sleep(1)
-        if timer_log % 15 == 0:
+        if timer_log % 10 == 0:
             functions.screen_Image(0, 0, 800, 800)
-            # left=875, top=0, right=1500, bottom=800
-            # Window 1: 0, 0, 800, 800 todo test and confirm
-            # Window 2: 875, 0, 1500, 800 todo test and confirm
 
 def powerfisher(fish_type, Run_Duration_hours=6):
     global ibreak, coords, fishing_text, time_left, powerlist, actions, t_end, fish_count, clue_count, invent_count
@@ -265,9 +266,11 @@ def powerfisher(fish_type, Run_Duration_hours=6):
         if fishing_text.strip().strip("'").strip(';').lower() not in approved_text:
             random_breaks(0.2, 3)
             pick_random_fishing_spot(fish_type,)
-            random_breaks(8, 15)
+            if random.randint(1,6) == 3:
+                functions.offscreen_mouse()
+            super_random_breaks(8, 11, 15, 18)
             resizeImage()
-        # if skill_lvl_up() != 0: todo revisit
+        # if skill_lvl_up() != 0:
         #     actions = 'level up'
         #     random_breaks(0.2, 3)
         #     pyautogui.press('space')
@@ -294,7 +297,7 @@ def powerfisher(fish_type, Run_Duration_hours=6):
             random_breaks(0.2, 0.7)
             drop_fish()
             random_breaks(0.2, 0.7)
-            inv_cap = random.randint(14, 17)
+            inv_cap = random.randint(16, 21)
 
 
 
@@ -315,23 +318,9 @@ clue_count = 0
 #-------------------------------
 
 def rand_click(xrand, yrand):
-    if window == 2:
-        xrand = random.randrange(900, 1250)
-        print(xrand)
-        yrand = random.randrange(250, 600)
-        return xrand, yrand
-    if window == 3:
-        xrand = random.randrange(2050, 2500)
-        yrand = random.randrange(250, 600)
-        return xrand, yrand
-    if window == 4:
-        xrand = random.randrange(2975, 3425)
-        yrand = random.randrange(250, 600)
-        return xrand, yrand
-    else:
-        xrand = random.randrange(100, 450)
-        yrand = random.randrange(250, 600)
-        return xrand, yrand
+    xrand = random.randrange(100, 450)
+    yrand = random.randrange(250, 600)
+    return xrand, yrand
 if __name__ == "__main__":
     print(f'window is {window}')
     xrand = 0
