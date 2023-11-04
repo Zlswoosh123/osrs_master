@@ -1332,10 +1332,10 @@ def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
             y = random.randrange(iheight, iheight + ispace) + cropy
             icoord = pt[0] + iheight + x
             icoord = (icoord, pt[1] + iwidth + y)
-            b = random.uniform(0.04, 0.13)
+            b = super_random_breaks(.03, .12, .14, .25)
             print('Trying to move to coord in rec_clicker!')
             pyautogui.moveTo(icoord, duration=b)
-            b = random.uniform(0.04, 0.13)
+            b = super_random_breaks(.03, .12, .14, .25)
             print('Trying to click coord!')
             pyautogui.keyDown('shift')
             pyautogui.click(icoord, duration=b, button=clicker)
@@ -1358,44 +1358,31 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     w, h = template.shape[::-1]
     pt = None
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
-    # threshold = threshold
     loc = np.where(res >= threshold)
     iflag = False
-    event = event
     print('Starting for loop in eel_clicker!')
     for pt in zip(*loc[::-1]):
         cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
-        # Adding logic to skip the loop
+        # Adding logic to skip the loop, remove?
         if loop_end == 0:
             if pt is None:
                 iflag = False
                 print('pt is None so iflag is False')
-                cropx = 620
-                cropy = 465
             else:
                 cropx = 620
-                cropy = 465
-                # print('pt is NOT None so were in else statement')
-                # if playarea == False:
-                #     print('playarea must be False! Crop is 1575 380')
-                #     cropx = 1575
-                #     cropy = 380
-                # else:
-                #     print('playarea must be Else! Crop is 0 0')
-                #     cropx = 0
-                #     cropy = 0
+                cropy = 457
 
                 iflag = True
                 x = random.randrange(iwidth, iwidth + ispace) + cropx
-                y = random.randrange(iheight, iheight + ispace) + cropy - 8
+                y = random.randrange(iheight, iheight + ispace) + cropy
                 icoord = pt[0] + iheight + x
                 icoord = (icoord, pt[1] + iwidth + y)
-                b = random.uniform(0.05, 0.15)
-                c = random.uniform(0.05, 0.2)
+                b = super_random_breaks(.03, .12, .14, .25)
+                c = super_random_breaks(.03, .12, .14, .25)
                 print('Trying to move to coord!')
                 pyautogui.moveTo(icoord, duration=b)
                 time.sleep(c)
-                b = random.uniform(0.05, 0.15)
+                b = super_random_breaks(.03, .12, .14, .25)
                 print('Trying to click coord!')
                 screen_front(runelite)
                 pyautogui.click(icoord, duration=b, button=clicker)
