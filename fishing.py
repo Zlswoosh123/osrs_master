@@ -328,7 +328,7 @@ if __name__ == "__main__":
     xrand, yrand = rand_click(xrand, yrand)
     print(f'xrand is {xrand}')
     print(f'yrand is {yrand}')
-    time.sleep(2)
+    time.sleep(1)
     resizeImage()
     invent_crop()
     fish_count = functions.invent_count(fish_type + '.png', .95)

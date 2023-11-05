@@ -31,7 +31,6 @@ window = 1
 fish_type = 'infernal_eel'
 
 # todo list
-# add offscreen mouse to fishing logic 1/4th
 # fix random quests/skill checks
 # add arrow key movements
 # add login?
@@ -1528,7 +1527,7 @@ def super_random_breaks(a, b, c, d):
     min1 = random.uniform(a, b) # e.g. 1-3
     max1 = random.uniform(c, d) # e.g. 5-7
     wait = random.uniform(min1, max1) # e.g 2, 6
-    return wait
+    return time.sleep(wait)
 
 
 
