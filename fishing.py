@@ -268,7 +268,7 @@ def powerfisher(fish_type, Run_Duration_hours=6):
             pick_random_fishing_spot(fish_type,)
             if random.randint(1,6) == 3:
                 functions.offscreen_mouse()
-            super_random_breaks(8, 11, 15, 18)
+            time.sleep(super_random_breaks(8, 11, 15, 18))
             resizeImage()
         # if skill_lvl_up() != 0:
         #     actions = 'level up'

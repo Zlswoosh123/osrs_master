@@ -1527,7 +1527,7 @@ def super_random_breaks(a, b, c, d):
     min1 = random.uniform(a, b) # e.g. 1-3
     max1 = random.uniform(c, d) # e.g. 5-7
     wait = random.uniform(min1, max1) # e.g 2, 6
-    return time.sleep(wait)
+    return wait
 
 
 
