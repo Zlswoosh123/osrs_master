@@ -130,9 +130,24 @@ def offscreen_mouse():
     xcoord = random.uniform(925,1200)
     ycoord = random. uniform(1000, 170)
     new_coord = (xcoord, ycoord)
-    b = random.uniform(0.15, .6)
+    min, max = random.uniform(0.1, .25), random.uniform(0.35, .7)
+    b = random.uniform(min, max)
     print('Trying to move to coord offscreen!')
     pyautogui.moveTo(new_coord, duration=b)
+
+def double_random(min, max, scaler = .5):
+    min = random.uniform(min * scaler, min (1 + scaler))
+    max = random.uniform(max * scaler, max (1 + scaler))
+    if min > max:
+        min, max = max, min
+    wait = random.uniform(min, max)
+    return wait
+
+def super_random_breaks(a, b, c, d):
+    min1 = random.uniform(a, b) # e.g. 1-3
+    max1 = random.uniform(c, d) # e.g. 5-7
+    wait = random.uniform(min1, max1) # e.g 2, 6
+    return wait
 
 def safe_open(image, png):
     # print('Starting safe_open')
@@ -1363,30 +1378,6 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     for pt in zip(*loc[::-1]):
         cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
         # Adding logic to skip the loop, remove?
-        if loop_end == 0:
-            if pt is None:
-                iflag = False
-                print('pt is None so iflag is False')
-            else:
-                cropx = 620
-                cropy = 457
-
-                iflag = True
-                x = random.randrange(iwidth, iwidth + ispace) + cropx
-                y = random.randrange(iheight, iheight + ispace) + cropy
-                icoord = pt[0] + iheight + x
-                icoord = (icoord, pt[1] + iwidth + y)
-                b = super_random_breaks(.03, .12, .14, .25)
-                c = super_random_breaks(.03, .12, .14, .25)
-                print('Trying to move to coord!')
-                pyautogui.moveTo(icoord, duration=b)
-                time.sleep(c)
-                b = super_random_breaks(.03, .12, .14, .25)
-                print('Trying to click coord!')
-                screen_front(runelite)
-                pyautogui.click(icoord, duration=b, button=clicker)
-                loop_end += 1
-
     print('Ending image_eel_clicker')
     return iflag
 

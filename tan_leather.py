@@ -33,6 +33,7 @@ from functions import screen_front
 from functions import offscreen_mouse
 from functions import super_random_breaks
 from functions import safe_open
+from functions import double_random
 
 # Variables
 global hwnd
@@ -127,57 +128,27 @@ def random_pause():
     time.sleep(b)
     newTime_break = True
 
-def drop_fish():
-    print('Starting drop_fish which should click hammer and eel!')
+def tan_leather():
+    print('Starting tan_leather which should click spell')
     global actions
     global runelite
     actions = "Making eel sushi - always hot but never seared"
     invent_crop()
 
-    # Setting random timer vars
-    c = random.uniform(0.1, 0.2)
-    d = random.uniform(0.1, 0.23)
-    e = random.uniform(0.1, 0.3)
-    f = random.uniform(0.1, 0.2)
-    time.sleep(c)
-
-    # Get runelite window
-    screen_front(runelite)
-    time.sleep(d)
+    double_random(1, 2)
     # Drop click items
-    if fish_type == 'infernal_eel':
-        hammer = functions.invent_count('hammer.png', .7)
         xham= random.randint(655,660) + random.randint(-7, 10) # 648, 670
         yham= random.randint(505,515) + random.randint(-5,5) # 500, 520
         hammer_coord =(xham, yham)
-        b = super_random_breaks(.03, .12, .14, .25)
-        # b = random.uniform(0.05, 0.15)
-        pyautogui.moveTo(hammer_coord, duration=b)
-        b = super_random_breaks(.03, .12, .14, .25)
-        # b = random.uniform(0.05, 0.15)
+        move_wait = double_random(.1, .22)
+        pyautogui.moveTo(hammer_coord, duration=move_wait)
+        click_wait = double_random(.1, .22)
         print('Trying to click coord!')
         screen_front(runelite)
-        pyautogui.click(hammer_coord, duration=b, button='left')
+        pyautogui.click(hammer_coord, duration=click_wait, button='left')
 
-
-        print(f'Hammer count is {hammer}')
-        image_eel_clicker(r'hammer.png', 'Clicking hammer', 2, 2, 0.7, 'left', 10, False, True)
-
-        time.sleep(random.uniform(.3, .8))
         image_eel_clicker(r'infernal_eel.png', 'Clicking Eel', 2, 2, 0.95, 'left', 10, False, True)
-        # image_eel_clicker(r'infernal_eel2.png', 'Clicking Eel', 5, 5, 0.7, 'left', 10, False, True)
-        eel_wait = functions.invent_count(fish_type + '.png', .95) * 3 * .6
-        sleep = min(40, int(random.uniform(eel_wait + 1, eel_wait + 10)))
-        print(f'Waiting for {sleep}s while eels breakdown')
-        time.sleep(sleep)
-    else:
-        image_Rec_clicker(r'prawn_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
-        image_Rec_clicker(r'trout_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
-        image_Rec_clicker(r'trout_fish2.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, fast=True)
-        # image_Rec_clicker(r'salmon_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, False)
-        # image_Rec_clicker(r'lobster_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, False)
-        actions = "all fish dropped"
-    time.sleep(f)
+
 
 def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries=[([110, 100, 0], [195, 180, 60])]):
     global window
