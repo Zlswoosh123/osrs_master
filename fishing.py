@@ -46,7 +46,7 @@ global timer_break
 global ibreak
 timer_log = 0
 runelite = functions.runelite
-inv_cap = random.randint(14, 17) # init inv cap to read in status
+inv_cap = random.randint(14, 20) # init inv cap to read in status
 window = functions.window
 print(f'Window is {window}')
 iflag = False
@@ -220,14 +220,7 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
     else:
         return False
 def pick_random_fishing_spot(top_ss=0, left_ss=0, right_ss=800, bottom_ss=800, showCoords=False):
-    if window == 2:
-        left_ss, top_ss, right_ss, bottom_ss = 0 + 875, 0, 1500, 800
-    elif window == 3:
-        left_ss, top_ss, right_ss, bottom_ss = 1920, 0, 800+1920, 800
-    elif window == 4:
-        left_ss, top_ss, right_ss, bottom_ss = 1920, 0, 1500+1920, 800
-    else:
-        left_ss, top_ss, right_ss, bottom_ss = 0, 0, 800, 800
+    left_ss, top_ss, right_ss, bottom_ss = 0, 0, 800, 800
     fish = find_fish(False, left_ss, top_ss, right_ss, bottom_ss)
     return fish
 
