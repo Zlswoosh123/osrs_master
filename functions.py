@@ -1404,7 +1404,7 @@ def bank_item_clicker(image, iheight=5, iwidth=2, threshold=0.8, clicker='left',
     print('Ending image_Rec_clicker')
     return iflag
 
-def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=25, playarea=True,
+def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=8, playarea=True,
                       fast=False):
     print(f'Starting image_eel_clicker for {image}')
     global icoord
@@ -1424,8 +1424,21 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     iflag = False
     print('Starting for loop in eel_clicker!')
     for pt in zip(*loc[::-1]):
-        cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+        whalf = max(round(w / 2), 1)
+        hhalf = max(round(h / 2), 1)
+        cv2.rectangle(img_rgb, pt, (pt[0] + whalf, pt[1] + hhalf), (0, 0, 255), 2)
         # Adding logic to skip the loop, remove?
+        x = random.randrange(iwidth, iwidth + ispace)
+        y = random.randrange(iheight, iheight + ispace)
+        icoord = pt[0] + iheight + x
+        icoord = (icoord, pt[1] + iwidth + y)
+        b = super_random_breaks(.03, .12, .14, .25)
+        print('Trying to move to coord in rec_clicker!')
+        pyautogui.moveTo(icoord, duration=b)
+        b = super_random_breaks(.03, .12, .14, .25)
+        print('Trying to click coord!')
+        pyautogui.keyDown('shift')
+        pyautogui.click(icoord, duration=b, button=clicker)
     print('Ending image_eel_clicker')
     return iflag
 
