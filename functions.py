@@ -1399,7 +1399,6 @@ def bank_item_clicker(image, iheight=5, iwidth=2, threshold=0.8, clicker='left',
             pyautogui.moveTo(icoord, duration=b)
             b = super_random_breaks(.03, .12, .14, .25)
             print('Trying to click coord!')
-            pyautogui.keyDown('shift')
             pyautogui.click(icoord, duration=b, button=clicker)
     print('Ending image_Rec_clicker')
     return iflag
@@ -1423,7 +1422,7 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
     loc = np.where(res >= threshold)
     iflag = False
     print('Starting for loop in eel_clicker!')
-    for pt in zip(*loc[0:1:-1]):
+    for pt in zip(*loc[::-1]):
         whalf = max(round(w / 2), 1)
         hhalf = max(round(h / 2), 1)
         cv2.rectangle(img_rgb, pt, (pt[0] + whalf, pt[1] + hhalf), (0, 0, 255), 2)
@@ -1439,10 +1438,10 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
         pyautogui.moveTo(icoord, duration=b)
         b = super_random_breaks(.03, .12, .14, .25)
         print('Trying to click coord!')
-        pyautogui.keyDown('shift')
         pyautogui.click(icoord, duration=b, button=clicker)
-    print('Ending image_eel_clicker')
-    return iflag
+        return iflag
+        print('Ending image_eel_clicker')
+
 
 
 # def image_Rec_inventory(image, threshold=0.85, clicker='left', iheight=5, iwidth=5, ispace=10):
