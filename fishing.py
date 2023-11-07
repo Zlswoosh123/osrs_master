@@ -205,8 +205,10 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
         x, y, w, h = cv2.boundingRect(c)
         if showCoords:
             print(x, y, w, h)
-        x = random.randrange(x + 5, x + max(w - 5, 6)) + left  # 950,960
-        y = random.randrange(y + 5, y + max(h - 5, 6)) + top  # 490,500
+        whalf = max(round(w / 2), 1)
+        hhalf = max(round(h / 2), 1)
+        x = random.randrange(x + 5, x + max(whalf - 5, 6)) + left  # 950,960
+        y = random.randrange(y + 5, y + max(hhalf - 5, 6)) + top  # 490,500
         b = random.uniform(0.2, 0.4)
         pyautogui.moveTo(x, y, duration=b)
         b = random.uniform(0.01, 0.05)
@@ -215,14 +217,7 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
     else:
         return False
 def pick_random_fishing_spot(top_ss=0, left_ss=0, right_ss=800, bottom_ss=800, showCoords=False):
-    if window == 2:
-        left_ss, top_ss, right_ss, bottom_ss = 0 + 875, 0, 1500, 800
-    elif window == 3:
-        left_ss, top_ss, right_ss, bottom_ss = 1920, 0, 800+1920, 800
-    elif window == 4:
-        left_ss, top_ss, right_ss, bottom_ss = 1920, 0, 1500+1920, 800
-    else:
-        left_ss, top_ss, right_ss, bottom_ss = 0, 0, 800, 800
+    left_ss, top_ss, right_ss, bottom_ss = 0, 0, 800, 800
     fish = find_fish(False, left_ss, top_ss, right_ss, bottom_ss)
     return fish
 

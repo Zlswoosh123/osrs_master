@@ -136,8 +136,8 @@ def offscreen_mouse():
     pyautogui.moveTo(new_coord, duration=b)
 
 def double_random(min, max, scaler = .5):
-    min = random.uniform(min * scaler, min (1 + scaler))
-    max = random.uniform(max * scaler, max (1 + scaler))
+    min = random.uniform(min * scaler, min*(1 + scaler))
+    max = random.uniform(max * scaler, max*(1 + scaler))
     if min > max:
         min, max = max, min
     wait = random.uniform(min, max)
@@ -146,6 +146,8 @@ def double_random(min, max, scaler = .5):
 def super_random_breaks(a, b, c, d):
     min1 = random.uniform(a, b) # e.g. 1-3
     max1 = random.uniform(c, d) # e.g. 5-7
+    if min1 > max1:
+        min1, max1 = max1, min1
     wait = random.uniform(min1, max1) # e.g 2, 6
     return wait
 
@@ -1327,6 +1329,52 @@ def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
 
     # for image where template match % > threshold
     for pt in zip(*loc[::-1]):
+        # print('Starting our for loop in zip now!')
+        # print(f'Current pt is {pt}')
+        resizeImage() # update screenresize/text images
+        invent_crop() # update inventory.png
+        # confirm how below draws rectangles
+        cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+        if pt is None:
+            iflag = False
+            print('pt is None so iflag is False')
+        else:
+            # useless?
+            cropx = 620
+            cropy = 457
+            iflag = True
+            # i vars are constants todo add double randomness
+            x = random.randrange(iwidth, iwidth + ispace) + cropx
+            y = random.randrange(iheight, iheight + ispace) + cropy
+            icoord = pt[0] + iheight + x
+            icoord = (icoord, pt[1] + iwidth + y)
+            b = super_random_breaks(.03, .12, .14, .25)
+            print('Trying to move to coord in rec_clicker!')
+            pyautogui.moveTo(icoord, duration=b)
+            b = super_random_breaks(.03, .12, .14, .25)
+            print('Trying to click coord!')
+            pyautogui.keyDown('shift')
+            pyautogui.click(icoord, duration=b, button=clicker)
+    print('Ending image_Rec_clicker')
+    return iflag
+
+def bank_item_clicker(image, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=25):
+    print('Starting bank_clicker')
+    global icoord
+    global iflag
+    # Update images, convert to gray, match template, apply threshold
+    img_rgb = cv2.imread('images/screenshot.png')
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+    template = cv2.imread('images/' + image, 0)
+    w, h = template.shape[::-1]
+    pt = None
+    res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+    loc = np.where(res >= threshold)
+    print(f'res is: {res}')
+    iflag = False
+
+    # for image where template match % > threshold
+    for pt in zip(*loc[0:1:-1]):
         # print('Starting our for loop in zip now!')
         # print(f'Current pt is {pt}')
         resizeImage() # update screenresize/text images

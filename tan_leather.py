@@ -14,23 +14,10 @@ import pytesseract
 import core
 import yaml
 from PIL import Image
-from functions import Image_count
-from functions import Image_to_Text
-from functions import random_breaks
-from functions import invent_crop
-from functions import resizeImage
-from functions import random_combat
-from functions import random_quests
-from functions import random_skills
-from functions import random_inventory
-from functions import random_breaks
-from functions import image_eel_clicker
-from functions import screen_front
-from functions import offscreen_mouse
-from functions import super_random_breaks
-from functions import safe_open
-from functions import double_random
-from functions import findarea_attack_quick
+from functions import Image_count, Image_to_Text, random_breaks, invent_crop, resizeImage
+from functions import random_combat, random_quests, random_skills, random_inventory, random_breaks
+from functions import screen_front, offscreen_mouse, super_random_breaks
+from functions import safe_open, double_random, findarea_attack_quick, bank_item_clicker
 
 # Variables
 global hwnd
@@ -120,31 +107,35 @@ def tan_leather(monster='Banker', Run_Duration_hours=3):
     global actions
     global runelite
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
-    while time.time() < t_end:
+    test_timeout = 0
+    while test_timeout <= 1: # time.time() < t_end:
         invent_crop()
         functions.screen_Image(0, 0, 800, 800, 'screenshot.png')
-        double_random(1, 2) # safety wait, possibly remove
         # Open Bank and deposit hides
         open_bank()
         # Withdraw Hides
+        bank_item_clicker('blue_dragonhide.png')
         withdraw_item(112, 115, -7, 10, 123, 130, -7, 9)
         # Close Bank
-        wait = super_random_breaks(.1, .25, 1, 1.5)
+        wait = super_random_breaks(.05, .2, .3, .5)
         time.sleep(wait)
         pyautogui.press('esc')
-        # Open Magic menu
-        pyautogui.press('F6')
-        wait = super_random_breaks(.1, .25, 1, 1.5)
+        wait = super_random_breaks(.2, .3, .5, .7)
         time.sleep(wait)
+        # Open Magic menu
+        # pyautogui.press('F6')
         # Move mouse and click spell x5 (check tick delay)
         cast_spell()
+        wait = super_random_breaks(.05, .2, .3, .5)
+        time.sleep(wait)
         # Open bank
         open_bank()
         # Deposit hides
         withdraw_item(645, 651, -7, 10, 557, 568, -7, 9)
+        test_timeout += 1
 
 def open_bank(monster='Banker'):
-    print('Starting powerattack_text!')
+    print('Starting open_bank!')
     global coords
     monster_list = ['Banker']
     monster_array = [['Banker']]
@@ -155,9 +146,11 @@ def open_bank(monster='Banker'):
     if attack == len(monster_array[group]):
         time.sleep(random.uniform(.05, .15))
         coords = findarea_attack_quick(3)
-    time.sleep(double_random(2,4))
+    time.sleep(double_random(1.2,1.8))
+    print('Ending open bank')
 
 def withdraw_item(x1, x2, xrand1, xrand2, y1, y2, yrand1, yrand2):
+    print('Start withdraw_item')
     xitem = random.randint(x1, x2) + random.randint(xrand1, xrand2)  # 101-131 limit for top-left bank
     yitem = random.randint(y1, y2) + random.randint(yrand1, yrand2)  # 113 - 143 limit for top-left bank
     item_coord = (xitem, yitem)
@@ -167,35 +160,46 @@ def withdraw_item(x1, x2, xrand1, xrand2, y1, y2, yrand1, yrand2):
     print('Trying to click coord!')
     screen_front(runelite)
     pyautogui.click(item_coord, duration=speed, button='left')
+    print('End withdraw_item')
 
 def cast_spell():
+    print('Start cast_spell')
     count = 0
+    seed = random.randint(0,100)
     xspell = random.randint(670, 673) + random.randint(-7, 10)  # 661-685 limit for tan leather
     yspell = random.randint(586, 590) + random.randint(-7, 9)  # 577 - 602
     spell_coord = (xspell, yspell)
-    speed = super_random_breaks(.08, .2, .3, .4)
-    pyautogui.moveTo(spell_coord, duration=speed)
-    speed = super_random_breaks(.03, .12, .14, .25)
-    screen_front(runelite)
-    while count <= 4:
-        pyautogui.click(spell_coord, duration=speed, button='left')
-        time.sleep(random.uniform(1.5, 2.5))
-        count += 1
+
+    if seed % 2 == 0:
+        speed = super_random_breaks(.08, .2, .3, .4)
+        pyautogui.moveTo(spell_coord, duration=speed)
+        speed = super_random_breaks(.03, .12, .14, .25)
+        screen_front(runelite)
+        while count <= 6:
+            pyautogui.click(spell_coord, duration=speed, button='left')
+            time.sleep(random.uniform(1, 1.6))
+            count += 1
+    if seed % 2 != 0:
+        speed = super_random_breaks(.08, .2, .3, .4)
+        pyautogui.moveTo(spell_coord, duration=speed)
+        speed = super_random_breaks(.05, .15, .17, .22)
+        screen_front(runelite)
+        while count <= 4:
+            pyautogui.click(spell_coord, duration=speed, button='left')
+            time.sleep(random.uniform(1.5, 2))
+            count += 1
+    print('End cast_spell')
 
 if __name__ == "__main__":
     print(f'window is {window}')
     xrand = 0
     yrand = 0
     xrand, yrand = rand_click(xrand, yrand)
-    print(f'xrand is {xrand}')
-    print(f'yrand is {yrand}')
-    time.sleep(1)
+    time.sleep(double_random(1,2))
     resizeImage()
     invent_crop()
     x = xrand
-    print(f'Right click x cord is: {x}')
     y = yrand
-    print(f'Right click y cord is: {y}')
     pyautogui.click(x, y, button='right')
     # --------- CHANGE TO RUN FOR AMOUNT OF HOURS ----------------
     Run_Duration_hours = 5.1

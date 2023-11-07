@@ -171,7 +171,7 @@ def powerattack_text(monster='cow', burybones=False, Pickup_loot=False, Take_Hum
             #         c = random.uniform(3, 5)
             #         time.sleep(c)
             coords = findarea_attack_quick(3)
-            off = random.randint
+            off = random.randint(0,5)
             if off == 3:
                 offscreen_mouse()
             if coords[0] != 0:   # attack npc/monster
