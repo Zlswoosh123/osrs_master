@@ -109,6 +109,7 @@ def tan_leather(monster='Banker', Run_Duration_hours=3):
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
     test_timeout = 0
     while test_timeout <= 1: # time.time() < t_end:
+        seed = random.randint(0,100)
         invent_crop()
         functions.screen_Image(0, 0, 800, 800, 'screenshot.png')
         # Open Bank and deposit hides
@@ -125,7 +126,7 @@ def tan_leather(monster='Banker', Run_Duration_hours=3):
         # Open Magic menu
         # pyautogui.press('F6')
         # Move mouse and click spell x5 (check tick delay)
-        cast_spell()
+        cast_spell(seed)
         wait = super_random_breaks(.05, .2, .3, .5)
         time.sleep(wait)
         # Open bank
@@ -162,10 +163,10 @@ def withdraw_item(x1, x2, xrand1, xrand2, y1, y2, yrand1, yrand2):
     pyautogui.click(item_coord, duration=speed, button='left')
     print('End withdraw_item')
 
-def cast_spell():
+def cast_spell(seed):
     print('Start cast_spell')
     count = 0
-    seed = random.randint(0,100)
+    seed = seed
     xspell = random.randint(670, 673) + random.randint(-7, 10)  # 661-685 limit for tan leather
     yspell = random.randint(586, 590) + random.randint(-7, 9)  # 577 - 602
     spell_coord = (xspell, yspell)

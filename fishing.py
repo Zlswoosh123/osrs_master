@@ -238,7 +238,7 @@ def timer_countdown():
         if timer_log % 10 == 0:
             functions.screen_Image(0, 0, 800, 800)
 
-def powerfisher(fish_type, Run_Duration_hours=6):
+def powerfisher(fish_type, Run_Duration_hours):
     global ibreak, coords, fishing_text, time_left, powerlist, actions, t_end, fish_count, clue_count, invent_count
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
 
@@ -330,5 +330,5 @@ if __name__ == "__main__":
     ibreak = random.randrange(300, 2000)
     timer_break = timer()
     # --------- CHANGE TO RUN FOR AMOUNT OF HOURS ----------------
-    Run_Duration_hours = 5.1
+    Run_Duration_hours = random.uniform(4.5, 5.5)
     powerfisher(fish_type, Run_Duration_hours=Run_Duration_hours)
