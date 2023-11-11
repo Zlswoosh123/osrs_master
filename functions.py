@@ -31,7 +31,6 @@ window = 1
 fish_type = 'infernal_eel'
 
 # todo list
-# fix random quests/skill checks
 # add arrow key movements
 # add login?
 # Figure out walk logic back to a tile for combat
@@ -241,64 +240,6 @@ def invent_crop():
     global window
     screen_Image(620, 460, 820, 780, 'inventshot.png')
 
-
-def random_inventory():
-    print('Starting random_inventory')
-    global newTime_break, actions
-    actions = 'inventory tab'
-    b = random.uniform(0.1, 15)
-    pyautogui.press('f4')
-    time.sleep(b)
-    pyautogui.press('f4')
-    b = random.uniform(0.1, 2)
-    time.sleep(b)
-    pyautogui.press('esc')
-    newTime_break = True
-
-    # old         screen_Image(645, 460, 845, 775, 'inventshot.png') #right mon vm2
-def random_combat():
-    print('Starting random_combat')
-    global newTime_break, actions
-    actions = 'combat tab'
-    b = random.uniform(0.1, 15)
-    pyautogui.press('f1')
-    time.sleep(b)
-    pyautogui.press('f1')
-    b = random.uniform(0.1, 2)
-    time.sleep(b)
-    pyautogui.press('esc')
-    newTime_break = True
-
-
-def random_skills():
-    print('Starting random_skills')
-    global newTime_break, actions
-    actions = 'skills tab'
-    b = random.uniform(0.1, 15)
-    pyautogui.press('f2')
-    time.sleep(b)
-    pyautogui.press('f2')
-    b = random.uniform(0.1, 2)
-    time.sleep(b)
-    pyautogui.press('esc')
-    newTime_break = True
-
-
-def random_quests():
-    print('Starting random_quests')
-    global newTime_break, actions
-    actions = 'quest tab'
-    b = random.uniform(0.1, 15)
-    pyautogui.press('f3')
-    time.sleep(b)
-    pyautogui.press('f3')
-    b = random.uniform(0.1, 2)
-    time.sleep(b)
-    pyautogui.press('esc')
-    newTime_break = True
-
-
-
 def resize_quick():
     print('Starting resize_quick')
     left = 30
@@ -434,13 +375,17 @@ def screen_Image_new(name='screenshot.png'):
     im.save('images/' + name, 'png')
 
 
-def screen_Image(left=0, top=0, right=0, bottom=0, name='screenshot.png'):
+def screen_Image(left=0, top=0, right=800, bottom=800, name='screenshot.png'):
     # print('Starting screen_image')
-    if left != 0 or top != 0 or right != 0 or bottom != 0:
-        myScreenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
-    else:
-        myScreenshot = ImageGrab.grab()
+    myScreenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
     myScreenshot.save('images/' + name)
+
+def screen_block(image):
+    image = cv2.rectangle(image, pt1=(540, 250), pt2=(800, 0), color=(0, 0, 0), thickness=-1) # blocks map
+    image = cv2.rectangle(image, pt1=(0, 650), pt2=(800, 800), color=(0, 0, 0), thickness=-1) # blocks chat
+    image = cv2.rectangle(image, pt1=(605, 450), pt2=(800, 800), color=(0, 0, 0), thickness=-1) # blocks inventory
+    return image
+
 
 
 # def Image_color_new():
@@ -1107,10 +1052,10 @@ def change_brown_black():
 #
 def McropImage_quick():
     print('Starting mcropimage_quick')
-    left = 150
-    top = 150
-    right = 600
-    bottom = 750
+    left = 0
+    top = 0
+    right = 800
+    bottom = 800
 
     im = ImageGrab.grab(bbox=(left, top, right, bottom))
     im.save('images/screenshot2.png', 'png')
@@ -1142,12 +1087,9 @@ def findarea_attack_quick(object, deep=8):
         mask = cv2.inRange(image, lower, upper)
         # output = cv2.bitwise_and(image, image, mask=mask)
         ret, thresh = cv2.threshold(mask, 40, 255, 0)
-        # if (cv2.__version__[0] > 3):
-        # contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        # else:
         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         if len(contours) != 0:
-            # draw in blue the contours that were founded
+            # draw in blue the contours that were found
             # cv2.drawContours(output, contours, -1, 255, 3)
             # find the biggest countour (c) by the area
             c = max(contours, key=cv2.contourArea)
@@ -1157,9 +1099,9 @@ def findarea_attack_quick(object, deep=8):
             whalf = max(round(w / 2), 1)
             hhalf = max(round(h / 2), 1)
             # cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            x = random.randrange(x + 150 + whalf - deep, x + 150 + max(whalf + deep, 1))  # 950,960
+            x = random.randrange(x + whalf - deep, x + max(whalf + deep, 1))  # 950,960
             # print('attack x: ', x)
-            y = random.randrange(y + 150 + hhalf - deep, y + 150 + max(hhalf + deep, 1))  # 490,500
+            y = random.randrange(y + hhalf - deep, y + max(hhalf + deep, 1))  # 490,500
             # print('attack y: ', y)
             b = random.uniform(0.05, 0.15)
             # print(f'hhalf is: {hhalf}')
@@ -1440,7 +1382,6 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
         print('Trying to click coord!')
         pyautogui.click(icoord, duration=b, button=clicker)
         return iflag
-        print('Ending image_eel_clicker')
 
 
 

@@ -20,13 +20,8 @@ from functions import screen_Image
 from functions import release_drop_item
 from functions import drop_item
 from functions import Image_to_Text
-from functions import random_breaks
 from functions import invent_crop
 from functions import resizeImage
-from functions import random_combat
-from functions import random_quests
-from functions import random_skills
-from functions import random_inventory
 from functions import random_breaks
 from functions import image_eel_clicker
 from functions import screen_front
@@ -147,8 +142,8 @@ def drop_fish():
     # Drop click items
     if fish_type == 'infernal_eel':
         hammer = functions.invent_count('hammer.png', .7)
-        xham= random.randint(655,660) + random.randint(-7, 10) # 648, 670
-        yham= random.randint(505,515) + random.randint(-5,5) # 500, 520
+        xham= random.randint(655,660) + random.randint(-7, 7) # 648, 670
+        yham= random.randint(475,495) + random.randint(-5,5) # 500, 520
         hammer_coord =(xham, yham)
         b = super_random_breaks(.03, .12, .14, .25)
         # b = random.uniform(0.05, 0.15)
@@ -178,6 +173,7 @@ def drop_fish():
         # image_Rec_clicker(r'lobster_fish.png', 'dropping item', 5, 5, 0.9, 'left', 10, False, False)
         actions = "all fish dropped"
     time.sleep(f)
+
 
 def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries=[([110, 100, 0], [195, 180, 60])]):
     global window
@@ -215,6 +211,7 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
         pyautogui.click(duration=b)
         return (x, y)
     else:
+        print('No contours!')
         return False
 def pick_random_fishing_spot(top_ss=0, left_ss=0, right_ss=800, bottom_ss=800, showCoords=False):
     left_ss, top_ss, right_ss, bottom_ss = 0, 0, 800, 800
@@ -232,7 +229,7 @@ def timer_countdown():
     for i in range(final):
         # the exact output you're looking for:
         if timer_log % 10 == 0:
-            print(bcolors.OK + f'\r[%-10s] %d%%' % ('='*round((i/final)*10), round((i/final)*100)), f'time left: {(t_end - time.time())/60 :.2f} mins | coords: {coords} | status: {fishing_text} | fish: {fish_count} | clues: {clue_count} | {actions}| Drop at: {inv_cap}', end='')
+            print(bcolors.OK + f'time left: {(t_end - time.time())/60 :.2f} mins | status: {fishing_text} | fish: {fish_count} | clues: {clue_count} | {actions}| Drop at: {inv_cap}', end='')
         timer_log += 1
         time.sleep(1)
         if timer_log % 10 == 0:
