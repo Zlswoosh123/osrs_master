@@ -51,7 +51,7 @@ if __name__ == "__main__":
                 pyautogui.press('enter')
                 time.sleep(15)
                 #say message
-                molemessage1 = "red: Dont sell mole skins to the GE! Get more from cc: 'MoleBuyer'"
+                molemessage1 = "red: Dont sell mole skins to the GE! Get more from fc: 'MoleBuyer'"
                 molemessage2 = "green: Buying all mole skins for 5% over GE price. Save on fees too!"
                 molemessage3 = "rainbow:Happy hunting and have fun!"
                 pyautogui.typewrite(molemessage1,.03)
@@ -66,15 +66,15 @@ if __name__ == "__main__":
                 #pause
                 #world hop
                 print(f"Leaving {world}")
-            if type == 'GE':
+            if type == 'ge':
                 value = worlds[world]
                 hopmsg = '::hop '+str(value)
                 pyautogui.typewrite(hopmsg,.03)
                 pyautogui.press('enter')
                 time.sleep(15)
                 #say message
-                gemessage1 = "rainbow:Hangout and make over 100k/day at 'MoleBuyer' cc"
-                gemessage2 = "green: Earn an easy 5% return every 4 hours with 1 G.E. slot in cc 'MoleBuyer'"
+                gemessage1 = "rainbow:Hangout and make over 100k/day at 'MoleBuyer' fc"
+                gemessage2 = "green: Earn an easy 5% return every 4 hours with 1 G.E. slot in fc 'MoleBuyer'"
                 pyautogui.typewrite(gemessage1,.03)
                 pyautogui.press('enter')
                 time.sleep(3)
