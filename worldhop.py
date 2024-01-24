@@ -65,6 +65,22 @@ if __name__ == "__main__":
                 time.sleep(6)
                 #pause
                 #world hop
-                print("I'm here")
+                print(f"Leaving {world}")
             if type == 'GE':
-                pass
+                value = worlds[world]
+                hopmsg = '::hop '+str(value)
+                pyautogui.typewrite(hopmsg,.03)
+                pyautogui.press('enter')
+                time.sleep(15)
+                #say message
+                gemessage1 = "rainbow:Hangout and make over 100k/day at 'MoleBuyer' cc"
+                gemessage2 = "green: Earn an easy 5% return every 4 hours with 1 G.E. slot in cc 'MoleBuyer'"
+                pyautogui.typewrite(gemessage1,.03)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.typewrite(gemessage2, .03)
+                pyautogui.press('enter')
+                time.sleep(6)
+                #pause
+                #world hop
+                print(f"Leaving {world}")
