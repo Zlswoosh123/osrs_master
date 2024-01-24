@@ -73,8 +73,8 @@ if __name__ == "__main__":
                 pyautogui.press('enter')
                 time.sleep(15)
                 #say message
-                gemessage1 = "rainbow:Hangout and make over 100k/day at 'MoleBuyer' fc"
-                gemessage2 = "green: Earn an easy 5% return every 4 hours with 1 G.E. slot in fc 'MoleBuyer'"
+                gemessage1 = "Cash sitting in your bank? Put it to use and make mils per week! [Molebuyer]"
+                gemessage2 = "green: Put that cash to work and earn 5% return or more everyday [Molebuyer] fc"
                 pyautogui.typewrite(gemessage1,.03)
                 pyautogui.press('enter')
                 time.sleep(3)
