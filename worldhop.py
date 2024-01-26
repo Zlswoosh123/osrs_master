@@ -41,10 +41,10 @@ if __name__ == "__main__":
               449,450,459,463,464,465,466,467,474,477,478,479,480,481,482,484,485,486,487,488,489,490,491,492,493,494,
               495,496,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523,524,525,526,527,
               528,529,531,532,534,535]
-    type = 'Mole'
+    type = 'clan'
     while True:
         for world in range(len(worlds)-1):
-            if type == 'Mole':
+            if type == 'mole':
                 value = worlds[world]
                 hopmsg = '::hop '+str(value)
                 pyautogui.typewrite(hopmsg,.03)
@@ -77,10 +77,40 @@ if __name__ == "__main__":
                 gemessage2 = "green: Put that cash to work and earn 5% return or more everyday [Molebuyer] fc"
                 pyautogui.typewrite(gemessage1,.03)
                 pyautogui.press('enter')
-                time.sleep(3)
+                time.sleep(5)
                 pyautogui.typewrite(gemessage2, .03)
                 pyautogui.press('enter')
                 time.sleep(6)
+                #pause
+                #world hop
+                print(f"Leaving {world}")
+            if type == 'clan':
+                value = worlds[world]
+                # hopmsg = '::hop '+str(value)
+                # pyautogui.typewrite(hopmsg,.03)
+                # pyautogui.press('enter')
+                # time.sleep(15)
+                #say message
+                clanmessage1 = "How it works: I buy mole skins at 5% above GE mid price"
+                clanmessage2 = "They can be bought at mid price or even below (not always instant)"
+                clanmessage3 = "Below are additional items I buy above GE price:"
+                clanmessage4 = "blue/red/black d'hide body (5000/6150/7300), mole claw (8500)"
+                clanmessage5 = "Leave offers in GE at margins you decide for easy mils every week"
+                pyautogui.typewrite(clanmessage1,.03)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.typewrite(clanmessage2, .03)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.typewrite(clanmessage3, .03)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.typewrite(clanmessage4, .03)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.typewrite(clanmessage5, .03)
+                pyautogui.press('enter')
+                time.sleep(300)
                 #pause
                 #world hop
                 print(f"Leaving {world}")
