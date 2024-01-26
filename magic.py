@@ -95,9 +95,9 @@ iflag = False
 def high_alch_command():
     # 3rd item
     b = random.uniform(0.33, 0.46)
-    x = random.randrange(791, 800) + 5
+    x = random.randrange(625, 630) + 10
     print('x: ', x)
-    y = random.randrange(585, 595) + 5
+    y = random.randrange(595, 605) + 10
     print('y: ', y)
     d = random.uniform(0.11, 0.18)
     pyautogui.moveTo(x, y, duration=b)
