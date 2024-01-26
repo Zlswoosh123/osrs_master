@@ -94,10 +94,11 @@ iflag = False
 
 def high_alch_command():
     # 3rd item
+
     b = random.uniform(0.33, 0.46)
-    x = random.randrange(625, 630) + 10
+    x = random.randrange(640, 645) + 5
     print('x: ', x)
-    y = random.randrange(595, 605) + 10
+    y = random.randrange(605, 615) + 5
     print('y: ', y)
     d = random.uniform(0.11, 0.18)
     pyautogui.moveTo(x, y, duration=b)
@@ -106,20 +107,20 @@ def high_alch_command():
     print('alch command clicked')
 
 
-def high_alch():
-    # 3rd item
-    b = random.uniform(0.33, 0.46)
-    c = random.uniform(1, 1.5)
-    x = random.randrange(730, 750)
-    print('x: ', x)
-    y = random.randrange(490, 515) + 5
-    print('y: ', y)
-    d = random.uniform(0.11, 0.18)
-    pyautogui.moveTo(x, y, duration=b)
-    time.sleep(d)
-    pyautogui.click()
-
-    print('alching item')
+# def high_alch():
+#     # 3rd item
+#     b = random.uniform(0.33, 0.46)
+#     c = random.uniform(1, 1.5)
+#     x = random.randrange(730, 750)
+#     print('x: ', x)
+#     y = random.randrange(490, 515) + 5
+#     print('y: ', y)
+#     d = random.uniform(0.11, 0.18)
+#     pyautogui.moveTo(x, y, duration=b)
+#     time.sleep(d)
+#     pyautogui.click()
+#
+#     print('alching item')
 
 
 def high_aclh_loop(vol, bool):
@@ -127,6 +128,9 @@ def high_aclh_loop(vol, bool):
     exp = bool
     while t > 0:
         c = random.uniform(1.5, 1.8)
+        # pyautogui.press('f6')
+        # time.sleep(.1)
+        # pyautogui.press('f6')
         high_alch_command()
         # time.sleep(c)
         high_alch_command()  # alchs same spot as alch spell location     #high_alch() alchs 3rd inventory spot
@@ -196,5 +200,5 @@ def high_aclh_loop(vol, bool):
 
 
 if __name__ == "__main__":
-    high_aclh_loop(68, False)
+    high_aclh_loop(1673, False)
     # superheat_items(100, 1) #100 items iron
