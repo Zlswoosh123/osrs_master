@@ -1,6 +1,6 @@
 - Config:
     client_title: RuneLite
-    enable_on_start: true
+    enable_on_start: false
     file_path_to_client: \.runelite\
     pc_profile: C:\Users\Zlswo
     tesseract_path: C:\Program Files\Tesseract-OCR\

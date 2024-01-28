@@ -94,14 +94,6 @@ iflag = False
 
 def high_alch_command():
     # 3rd item
-
-    b = random.uniform(0.33, 0.46)
-    x = random.randrange(640, 645) + 5
-    print('x: ', x)
-    y = random.randrange(605, 615) + 5
-    print('y: ', y)
-    d = random.uniform(0.11, 0.18)
-    pyautogui.moveTo(x, y, duration=b)
     time.sleep(d)
     pyautogui.click()
     print('alch command clicked')
@@ -200,5 +192,15 @@ def high_aclh_loop(vol, bool):
 
 
 if __name__ == "__main__":
-    high_aclh_loop(1673, False)
+    n = 5
+    if n == 5:
+        b = random.uniform(0.33, 0.46)
+        x = random.randrange(640, 645) + 0
+        print('x: ', x)
+        y = random.randrange(605, 615) + 0
+        print('y: ', y)
+        d = random.uniform(0.11, 0.18)
+        pyautogui.moveTo(x, y, duration=b)
+    high_aclh_loop(4000, False)
+    n = random.randint(1, 10)
     # superheat_items(100, 1) #100 items iron

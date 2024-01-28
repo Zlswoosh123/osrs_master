@@ -20,7 +20,6 @@ import pytesseract
 from PIL import Image, ImageGrab
 from functions import Image_to_Text, findarea_attack_quick
 from functions import resizeImage
-from functions import random_combat, random_quests, random_skills, random_inventory
 from functions import image_Rec_clicker
 from functions import Image_to_Text_combat, resizeImage_combat, offscreen_mouse
 import functions
@@ -84,13 +83,6 @@ def random_pause():
     newTime_break = True
 
 
-options = {0: random_inventory,
-           1: random_combat,
-           2: random_skills,
-           3: random_quests,
-           4: random_pause}
-
-
 def random_break(start, c):
     global newTime_break
     print('Starting random_break')
@@ -98,7 +90,6 @@ def random_break(start, c):
     # 1200 = 20 minutes
     a = random.randrange(0, 4)
     if startTime - start > c:
-        options[a]()
         newTime_break = True
 
 
@@ -220,5 +211,5 @@ if __name__ == "__main__":
     # --------------------------------------------------------------------------------------------------
     monster_list = ['chicken', 'guard', 'cow', 'monk', 'imp', 'skeleton', 'dwarf', 'giant frog', 'goblin']
 
-    powerattack_text('cow', Take_Human_Break=False, Run_Duration_hours=Run_Duration_hours)
+    powerattack_text('monk', Take_Human_Break=False, Run_Duration_hours=Run_Duration_hours)
     #os.system('shutdown -s -f')

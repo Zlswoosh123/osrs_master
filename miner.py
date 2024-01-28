@@ -17,10 +17,6 @@ from functions import resizeImage
 from functions import resize_quick
 from PIL import ImageGrab
 
-from functions import random_combat
-from functions import random_quests
-from functions import random_skills
-from functions import random_inventory
 from functions import random_breaks
 from functions import safe_open
 
@@ -180,9 +176,9 @@ def findarea_single(ore, cropx, cropy):
         c = max(contours, key=cv2.contourArea)
 
         x, y, w, h = cv2.boundingRect(c)
-        x = random.randrange(x + 5, x + max(w - 5, 6)) + cropx  # 950,960
+        x = random.randrange(x + 2, x + max(w - 2 , 6)) + cropx  # 950,960
         #print('x: ', x)
-        y = random.randrange(y + 5, y + max(h - 5, 6)) + cropy # 490,500
+        y = random.randrange(y + 2, y + max(h - 2, 6)) + cropy # 490,500
         #print('y: ', y)
         b = random.uniform(0.1, 0.3)
         pyautogui.moveTo(x, y, duration=b)

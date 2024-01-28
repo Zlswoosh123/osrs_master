@@ -32,6 +32,7 @@ fish_type = 'infernal_eel'
 
 # todo list
 # add arrow key movements
+# add breaks
 # add login?
 # Figure out walk logic back to a tile for combat
 
