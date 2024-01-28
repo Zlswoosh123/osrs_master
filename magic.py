@@ -94,6 +94,7 @@ iflag = False
 
 def high_alch_command():
     # 3rd item
+    d = random.uniform(0.11, 0.18)
     time.sleep(d)
     pyautogui.click()
     print('alch command clicked')
@@ -122,13 +123,12 @@ def high_aclh_loop(vol, bool):
     while t > 0:
         if n == 5:
             b = random.uniform(0.33, 0.46)
-            x = random.randrange(640, 645) + 0
+            x = random.randrange(640, 645) + 5
             print('x: ', x)
-            y = random.randrange(605, 615) + 0
+            y = random.randrange(605, 615) + 5
             print('y: ', y)
             d = random.uniform(0.11, 0.18)
             pyautogui.moveTo(x, y, duration=b)
-        high_aclh_loop(4000, False)
         n = random.randint(1, 10)
         c = random.uniform(1.5, 1.8)
         # pyautogui.press('f6')
