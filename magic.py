@@ -118,7 +118,18 @@ def high_alch_command():
 def high_aclh_loop(vol, bool):
     t = vol
     exp = bool
+    n = 5
     while t > 0:
+        if n == 5:
+            b = random.uniform(0.33, 0.46)
+            x = random.randrange(640, 645) + 0
+            print('x: ', x)
+            y = random.randrange(605, 615) + 0
+            print('y: ', y)
+            d = random.uniform(0.11, 0.18)
+            pyautogui.moveTo(x, y, duration=b)
+        high_aclh_loop(4000, False)
+        n = random.randint(1, 10)
         c = random.uniform(1.5, 1.8)
         # pyautogui.press('f6')
         # time.sleep(.1)
@@ -127,6 +138,7 @@ def high_aclh_loop(vol, bool):
         # time.sleep(c)
         high_alch_command()  # alchs same spot as alch spell location     #high_alch() alchs 3rd inventory spot
         c = random.uniform(1.4, 1.9)
+        n = random.randint(1, 10)
         if exp:
             print('expensive')
             x = random.uniform(0.8, 1.2)
@@ -192,15 +204,5 @@ def high_aclh_loop(vol, bool):
 
 
 if __name__ == "__main__":
-    n = 5
-    if n == 5:
-        b = random.uniform(0.33, 0.46)
-        x = random.randrange(640, 645) + 0
-        print('x: ', x)
-        y = random.randrange(605, 615) + 0
-        print('y: ', y)
-        d = random.uniform(0.11, 0.18)
-        pyautogui.moveTo(x, y, duration=b)
     high_aclh_loop(4000, False)
-    n = random.randint(1, 10)
     # superheat_items(100, 1) #100 items iron
