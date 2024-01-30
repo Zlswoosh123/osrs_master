@@ -121,11 +121,15 @@ def high_aclh_loop(vol, bool):
     exp = bool
     n = 5
     while t > 0:
+        wait_roll = random.randint(1,1000)
+        wait_time = random.randint(45,260)
+        if wait_roll == 500:
+            time.sleep(wait_time)
         if n == 5:
-            b = random.uniform(0.33, 0.46)
-            x = random.randrange(640, 645) + 5
+            b = random.uniform(0.36, 0.52)
+            x = random.randrange(640, 645) - 4
             print('x: ', x)
-            y = random.randrange(605, 615) + 5
+            y = random.randrange(605, 615) - 4
             print('y: ', y)
             d = random.uniform(0.11, 0.18)
             pyautogui.moveTo(x, y, duration=b)
@@ -150,7 +154,9 @@ def high_aclh_loop(vol, bool):
             x = random.uniform(0.5, 0.6)
             time.sleep(x)
         time.sleep(c)
+        # todo rename vars
         t -= 1
+        print(f'{t} alchs remaining')
 
 
 # def pick_iron_items():
@@ -204,5 +210,5 @@ def high_aclh_loop(vol, bool):
 
 
 if __name__ == "__main__":
-    high_aclh_loop(4000, False)
+    high_aclh_loop(5500, False)
     # superheat_items(100, 1) #100 items iron
