@@ -210,5 +210,5 @@ def high_aclh_loop(vol, bool):
 
 
 if __name__ == "__main__":
-    high_aclh_loop(5500, False)
+    high_aclh_loop(4000, False)
     # superheat_items(100, 1) #100 items iron
