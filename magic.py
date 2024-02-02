@@ -103,7 +103,7 @@ def charge_staff():
 
 def high_alch_loop(vol=1200, expensive=False, charge=False):
     t = vol
-    charge_amt = t - 3#(random.randint(900,1000))
+    charge_amt = t - (random.randint(900,1000))
     exp = expensive
     n = 5
     while t > 0:
@@ -116,7 +116,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
         if t < charge_amt and charge:
             charge_staff()
             n = 5
-            charge_amt = t - 3#(random.randint(900,1000))
+            charge_amt = t - (random.randint(900,1000))
 
         if wait_roll == 500:
             print(f'Weve initiated a long wait for anti-ban for {wait_time_long}s')
@@ -217,5 +217,5 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
 
 
 if __name__ == "__main__":
-    high_alch_loop(70, expensive=False, charge=True)
+    high_alch_loop(5500, expensive=False, charge=True)
     # superheat_items(100, 1) #100 items iron
