@@ -70,7 +70,7 @@ def random_wait(a=.1, b=.3):
 
 
 if __name__ == "__main__":
-    t = 15
+    t = 74
     while t > 0:
         dur = random.uniform(0.1, 0.35)
         move_mouse(110, 140, 120, 140, dur)  # move to first obj in tab (nest)
@@ -84,10 +84,11 @@ if __name__ == "__main__":
         y1_start = 470
         y2_start = 495
         for i in range(0,14):
+            quick_dur = random.uniform(.03,.1)
             addx = i%4 * 45
             addy = i//4 * 40
-            random_wait(.2, .4)
-            move_mouse(x1_start + addx, x2_start + addx, y1_start + addy, y2_start + addy)
+            random_wait(.05, .2)
+            move_mouse(x1_start + addx, x2_start + addx, y1_start + addy, y2_start + addy, quick_dur)
             random_wait(.05, .2)
             click_object()
 

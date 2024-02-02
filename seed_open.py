@@ -69,7 +69,7 @@ def random_wait(a=.1, b=.3):
 
 
 if __name__ == "__main__":
-    t = 39
+    t = (1973//27) + 1
     while t > 0:
         move_mouse(640, 660,475, 500)  # move to first obj in inv (next box)
         random_wait(.05, .2)
