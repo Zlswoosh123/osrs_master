@@ -54,39 +54,11 @@ except BaseException:
     print("Unable to find window:", data[0]['Config']['client_title'], "| Please see list of window names below:")
     core.printWindows()
     pass
-    
-def random_break(start, c):
-    global newTime_break
-    startTime = time.time()
-    # 1200 = 20 minutes
-    a = random.randrange(0, 4)
-    if startTime - start > c:
-        newTime_break = True
-
-
-def randomizer(timer_breaks, ibreaks):
-    global newTime_break
-    global timer_break
-    global ibreak
-    random_break(timer_breaks, ibreaks)
-    if newTime_break == True:
-        timer_break = timer()
-        ibreak = random.randrange(600, 2000)
-        newTime_break = False
-
-    # b = random.uniform(4, 5)
 
 
 def timer():
     startTime = time.time()
     return startTime
-
-
-def random_pause():
-    b = random.uniform(20, 250)
-    print('pausing for ' + str(b) + ' seconds')
-    time.sleep(b)
-    newTime_break = True
 
 
 iflag = False
@@ -100,20 +72,6 @@ def high_alch_command():
     print('alch command clicked')
 
 
-# def high_alch():
-#     # 3rd item
-#     b = random.uniform(0.33, 0.46)
-#     c = random.uniform(1, 1.5)
-#     x = random.randrange(730, 750)
-#     print('x: ', x)
-#     y = random.randrange(490, 515) + 5
-#     print('y: ', y)
-#     d = random.uniform(0.11, 0.18)
-#     pyautogui.moveTo(x, y, duration=b)
-#     time.sleep(d)
-#     pyautogui.click()
-#
-#     print('alching item')
 
 
 def high_aclh_loop(vol, bool):
@@ -155,7 +113,7 @@ def high_aclh_loop(vol, bool):
         high_alch_command()
         time.sleep(c)
         high_alch_command()  # alchs same spot as alch spell location     #high_alch() alchs 3rd inventory spot
-        c = random.uniform(1.4, 1.9)
+        c = random.uniform(1.8, 2.5)
         n = random.randint(1, 10)
         if exp:
             print('expensive')
@@ -224,5 +182,5 @@ def high_aclh_loop(vol, bool):
 
 
 if __name__ == "__main__":
-    high_aclh_loop(750, False)
+    high_aclh_loop(29, False)
     # superheat_items(100, 1) #100 items iron
