@@ -135,8 +135,9 @@ def high_aclh_loop(vol, bool):
             n = 5
         if n == 5:
             print(f'Were fixing mouse location and tab just in case')
+            time.sleep(1.5)
             pyautogui.press('f2')
-            time.sleep(random.uniform(.05,.3))
+            time.sleep(random.uniform(.1,.3))
             pyautogui.press('f6')
             b = random.uniform(0.36, 0.52)
             x = random.randrange(640, 645) - 4
