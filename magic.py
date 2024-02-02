@@ -129,7 +129,7 @@ def high_aclh_loop(vol, bool):
             print(f'Weve initiated a long wait for anti-ban for {wait_time_long}s')
             time.sleep(wait_time_long)
             n = 5
-        if wait_roll % 4 == 0:
+        if wait_roll % 250 == 0:
             print(f'Weve initiated a short wait for anti-ban for {wait_time_short}s')
             time.sleep(wait_time_short)
             n = 5
