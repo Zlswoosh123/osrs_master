@@ -122,10 +122,20 @@ def high_aclh_loop(vol, bool):
     n = 5
     while t > 0:
         wait_roll = random.randint(1,1000)
-        wait_time = random.randint(45,260)
+        wait_time_long = random.randint(45,260)
+        wait_time_short = random.randint(15, 60)
         if wait_roll == 500:
-            time.sleep(wait_time)
+            print(f'Weve initiated a long wait for anti-ban for {wait_time_long}s')
+            time.sleep(wait_time_long)
+            n = 5
+        if wait_roll % 4 == 0:
+            print(f'Weve initiated a short wait for anti-ban for {wait_time_short}s')
+            time.sleep(wait_time_short)
+            n = 5
         if n == 5:
+            pyautogui.press('f2')
+            time.sleep(random.uniform(.05,.3))
+            pyautogui.press('f6')
             b = random.uniform(0.36, 0.52)
             x = random.randrange(640, 645) - 4
             print('x: ', x)
@@ -133,13 +143,14 @@ def high_aclh_loop(vol, bool):
             print('y: ', y)
             d = random.uniform(0.11, 0.18)
             pyautogui.moveTo(x, y, duration=b)
-        n = random.randint(1, 10)
-        c = random.uniform(1.5, 1.8)
+
+        # n = random.randint(1, 10)
+        c = random.uniform(.05, .3)
         # pyautogui.press('f6')
-        # time.sleep(.1)
+        time.sleep(.1)
         # pyautogui.press('f6')
         high_alch_command()
-        # time.sleep(c)
+        time.sleep(c)
         high_alch_command()  # alchs same spot as alch spell location     #high_alch() alchs 3rd inventory spot
         c = random.uniform(1.4, 1.9)
         n = random.randint(1, 10)
@@ -210,5 +221,5 @@ def high_aclh_loop(vol, bool):
 
 
 if __name__ == "__main__":
-    high_aclh_loop(4000, False)
+    high_aclh_loop(750, False)
     # superheat_items(100, 1) #100 items iron
