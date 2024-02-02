@@ -124,6 +124,7 @@ def high_aclh_loop(vol, bool):
         wait_roll = random.randint(1,1000)
         wait_time_long = random.randint(45,260)
         wait_time_short = random.randint(15, 60)
+        print(f'The anti-ban dice have been thrown! You rolled a {wait_roll}')
         if wait_roll == 500:
             print(f'Weve initiated a long wait for anti-ban for {wait_time_long}s')
             time.sleep(wait_time_long)
@@ -133,6 +134,7 @@ def high_aclh_loop(vol, bool):
             time.sleep(wait_time_short)
             n = 5
         if n == 5:
+            print(f'Were fixing mouse location and tab just in case')
             pyautogui.press('f2')
             time.sleep(random.uniform(.05,.3))
             pyautogui.press('f6')
