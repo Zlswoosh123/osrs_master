@@ -63,6 +63,11 @@ def timer():
 
 iflag = False
 
+def move_mouse(x1, x2, y1, y2):
+    b = random.uniform(0.15, 0.45)
+    x_move = random.randrange(x1, x2) - 4
+    y_move = random.randrange(y1, y2) - 4
+    pyautogui.moveTo(x_move, y_move, duration=b)
 
 def high_alch_command():
     # 3rd item
@@ -71,18 +76,48 @@ def high_alch_command():
     pyautogui.click()
     print('alch command clicked')
 
+def charge_staff():
+    time.sleep(2.8)
+    pyautogui.press('f4') # Open equipment menu
+    time.sleep(random.uniform(.15, .5))
+    move_mouse(643, 664, 550, 570) # Move to staff
+    time.sleep(random.uniform(.15, .5))
+    pyautogui.click() # Remove staff
+    time.sleep(random.uniform(.15, .5))
+    pyautogui.press('esc') # Open inventory
+    time.sleep(random.uniform(1, 2))
+    move_mouse(640, 650, 515, 528)  # Move to nature runes (1,2) x,y slot
+    time.sleep(random.uniform(.15, .5))
+    pyautogui.click()  # Click nats
+    time.sleep(random.uniform(.15, .5))
+    move_mouse(640, 650, 475, 490)  # Move to staff (1,1) x,y slot
+    time.sleep(random.uniform(.15, .5))
+    pyautogui.click()  # Click nats
+    time.sleep(random.uniform(.15, .5))
+    pyautogui.click()  # Click nats
 
 
 
-def high_aclh_loop(vol, bool):
+
+
+
+def high_alch_loop(vol=1200, expensive=False, charge=False):
     t = vol
-    exp = bool
+    charge_amt = t - 3#(random.randint(900,1000))
+    exp = expensive
     n = 5
     while t > 0:
         wait_roll = random.randint(1,1000)
         wait_time_long = random.randint(45,260)
         wait_time_short = random.randint(15, 60)
         print(f'The anti-ban dice have been thrown! You rolled a {wait_roll}')
+        if charge and t == vol:
+            print(f'Bryophytas staff charging is enabled! Please ensure slot (1,1) is open and natures are directly below in (1,2)')
+        if t < charge_amt and charge:
+            charge_staff()
+            n = 5
+            charge_amt = t - 3#(random.randint(900,1000))
+
         if wait_roll == 500:
             print(f'Weve initiated a long wait for anti-ban for {wait_time_long}s')
             time.sleep(wait_time_long)
@@ -182,5 +217,5 @@ def high_aclh_loop(vol, bool):
 
 
 if __name__ == "__main__":
-    high_aclh_loop(29, False)
+    high_alch_loop(70, expensive=False, charge=True)
     # superheat_items(100, 1) #100 items iron
