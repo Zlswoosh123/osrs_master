@@ -69,11 +69,11 @@ def random_wait(a=.1, b=.3):
 
 
 
-if __name__ == "__main__":
-    t = 74
+if __name__ == "__main__": # Fixed version for vm
+    t = (5020//14) + 1
     while t > 0:
         dur = random.uniform(0.1, 0.35)
-        move_mouse(110, 140, 120, 140, dur)  # move to first obj in tab (nest)
+        move_mouse(130, 140, 110, 130, dur)  # move to first obj in tab (nest)
         random_wait(.05, .2)
         click_object() # withdraw nest
         random_wait()
@@ -98,7 +98,7 @@ if __name__ == "__main__":
         click_object()
         random_wait(.45,.65)
 
-        move_mouse(489, 512, 607, 628)  # empty all
+        move_mouse(480, 490, 625, 635)  # empty all
         random_wait(.05, .2)
         click_object()
         random_wait(.05, .2)
