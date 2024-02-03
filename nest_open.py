@@ -79,10 +79,10 @@ if __name__ == "__main__":
         random_wait()
         pyautogui.press('escape')
         # click nests here
-        x1_start = 640
+        x1_start = 650
         x2_start = 660
-        y1_start = 470
-        y2_start = 495
+        y1_start = 500
+        y2_start = 512
         for i in range(0,14):
             quick_dur = random.uniform(.03,.1)
             addx = i%4 * 45
@@ -93,7 +93,7 @@ if __name__ == "__main__":
             click_object()
 
 
-        move_mouse(425, 430, 470, 495)  # move to banker center screen
+        move_mouse(425, 430, 345, 365)  # move to banker center screen
         random_wait(.05, .2)
         click_object()
         random_wait(.45,.65)

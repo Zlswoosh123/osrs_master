@@ -133,9 +133,9 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             time.sleep(random.uniform(.1,.3))
             pyautogui.press('f6')
             b = random.uniform(0.36, 0.52)
-            x = random.randrange(640, 645) - 4
+            x = random.randrange(640, 645) + 5
             print('x: ', x)
-            y = random.randrange(605, 615) - 4
+            y = random.randrange(605, 615) + 5
             print('y: ', y)
             d = random.uniform(0.11, 0.18)
             pyautogui.moveTo(x, y, duration=b)

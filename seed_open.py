@@ -69,17 +69,17 @@ def random_wait(a=.1, b=.3):
 
 
 if __name__ == "__main__":
-    t = (1973//27) + 1
+    t = (3632//27) + 1
     while t > 0:
-        move_mouse(640, 660,475, 500)  # move to first obj in inv (next box)
+        move_mouse(650, 665,500, 515)  # move to first obj in inv (next box)
         random_wait(.05, .2)
         click_object()
         random_wait()
-        move_mouse(425, 430, 470, 495)  # move to banker center screen
+        move_mouse(425, 430, 345, 365)  # move to banker center screen
         random_wait(.05, .2)
         click_object()
         random_wait()
-        move_mouse(680, 715, 475, 500)  # move to 2nd obj in inv (nests)
+        move_mouse(695, 710, 500, 515)  # move to 2nd obj in inv (nests)
         random_wait(.05, .2)
         click_object()
         random_wait(.05, .2)

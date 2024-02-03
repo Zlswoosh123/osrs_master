@@ -58,8 +58,8 @@ def click_object():
 
 def move_mouse(x1, x2, y1, y2):
     b = random.uniform(0.1, 0.3)
-    x_move = random.randrange(x1, x2) - 4
-    y_move = random.randrange(y1, y2) - 4
+    x_move = random.randrange(x1, x2)
+    y_move = random.randrange(y1, y2)
     pyautogui.moveTo(x_move, y_move, duration=b)
 
 def random_wait(a=.1, b=.3):
@@ -71,36 +71,36 @@ def random_wait(a=.1, b=.3):
 if __name__ == "__main__":
     t = 50
     while t > 0:
-        move_mouse(640, 660,475, 500)  # move to first obj in inv (next box)
+        move_mouse(650, 665,500, 515)  # move to first obj in inv (next box)
         random_wait(.05, .2)
         click_object()
         random_wait(.05, .2)
 
-        move_mouse(680, 715, 475, 500)  # move to 2nd obj in inv (nests)
+        move_mouse(695, 710, 500, 515)  # move to 2nd obj in inv (nests)
         random_wait(.05, .2)
         click_object()
         random_wait(1, 1.2)
         pyautogui.press('space')
         random_wait(33, 41)
 
-        move_mouse(640, 660,475, 500)  # move to first obj in inv (next box)
+        move_mouse(650, 665,500, 515)  # move to first obj in inv (next box)
         random_wait(.05, .2)
         click_object()
         random_wait(.05, .2)
 
-        move_mouse(680, 715, 475, 500)  # move to 2nd obj in inv (nests)
+        move_mouse(695, 710, 500, 515)  # move to 2nd obj in inv (nests)
         random_wait(.05, .2)
         click_object()
         random_wait(1, 1.2)
         pyautogui.press('space')
         random_wait(80, 88)
 
-        move_mouse(425, 430, 470, 495)  # move to banker center screen
+        move_mouse(425, 430, 370, 390)  # move to banker center screen
         random_wait(.05, .2)
         click_object()
         random_wait(.6, .75)
 
-        move_mouse(110, 140, 120, 140) # move to first item in bank
+        move_mouse(125, 140, 120, 130) # move to first item in bank
         random_wait(.05, .2)
         click_object()
         pyautogui.press('escape')
