@@ -113,6 +113,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
         print(f'The anti-ban dice have been thrown! You rolled a {wait_roll}')
         if charge and t == vol:
             print(f'Bryophytas staff charging is enabled! Please ensure slot (1,1) is open and natures are directly below in (1,2)')
+            charge_staff()
         if t < charge_amt and charge:
             charge_staff()
             n = 5
@@ -133,9 +134,9 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             time.sleep(random.uniform(.1,.3))
             pyautogui.press('f6')
             b = random.uniform(0.36, 0.52)
-            x = random.randrange(640, 645) + 5
+            x = random.randrange(640, 645) - 4
             print('x: ', x)
-            y = random.randrange(605, 615) + 5
+            y = random.randrange(605, 615) - 4
             print('y: ', y)
             d = random.uniform(0.11, 0.18)
             pyautogui.moveTo(x, y, duration=b)
@@ -217,5 +218,5 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
 
 
 if __name__ == "__main__":
-    high_alch_loop(5000, expensive=False, charge=False)
+    high_alch_loop(5500, expensive=False, charge=True)
     # superheat_items(100, 1) #100 items iron
