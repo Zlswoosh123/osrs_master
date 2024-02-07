@@ -249,12 +249,17 @@ def resize_quick():
     screen_Image(left, right, top, bottom, 'screen_resize.png')
     # print('Taking screen_resize.png!')
 
-def resize_quick_combat():
+
+def resize_quick_combat(l=30, t=49, r=113, b=68, image='screen_resize.png'):
     # print('Starting resize_quick_combat')
-    left = 30
-    top = 49
-    right = 113
-    bottom = 68
+    # left = 30
+    # top = 49
+    # right = 113
+    # bottom = 68
+    left = l
+    top = t
+    right = r
+    bottom = b
     # left, top, right, bottom = rand_size(left, top, right, bottom)
     # print(f'resize values: {left}, {top}, {right}, {bottom}')
     screen_Image(left, right, top, bottom, 'screen_resize.png')
@@ -317,21 +322,21 @@ def Image_to_Text(preprocess, image, parse_config='--psm 7'):
     # print(text)
     return text
 
-def resizeImage_combat():
+def resizeImage_combat(image, new_image='textshot.png'):
     # print('Starting resizeImage_combat -- See resize_quick')
-    resize_quick_combat()
-    png = 'images/screen_resize.png'
+    resize_quick_combat(image)
+    png = 'images/' + image
     im = Image.open(png)
     # saves new cropped image
     width, height = im.size
     new_size = (width * 4, height * 4)
     im1 = im.resize(new_size)
     # print('Taking textshot.png!')
-    im1.save('images/textshot.png')
+    im1.save('images/' + new_image)
 
 def Image_to_Text_combat(preprocess, image, parse_config='--psm 7'):
     print('Starting image_to_text')
-    resizeImage_combat()
+    resizeImage_combat(image=image, new_image='textshot.png')
     change_brown_black()
     # construct the argument parse and parse the arguments
     image = cv2.imread('images/' + image)
@@ -365,7 +370,7 @@ def Image_to_Text_combat(preprocess, image, parse_config='--psm 7'):
         print(f'File {filename} not found, skipping!')
     # print(f'Filename after remove is {filename}')
     # print(text)
-    time.sleep(random.uniform(.5,1))
+    time.sleep(random.uniform(.5, 1))
     return text
 
 def screen_Image_new(name='screenshot.png'):
@@ -422,6 +427,7 @@ def findarea_attack_quick(object, deep=8):
     McropImage_quick()
 
     image = cv2.imread(r"images/screenshot2.png")
+    screen_block(image)
 
     # B, G, R
     # --------------------- ADD OBJECTS -------------------

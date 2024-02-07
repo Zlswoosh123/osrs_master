@@ -83,17 +83,17 @@ def charge_staff():
     time.sleep(2.8)
     pyautogui.press('f4') # Open equipment menu
     time.sleep(random.uniform(.15, .5))
-    move_mouse(643, 664, 550, 570) # Move to staff
+    move_mouse(655, 670, 568, 580) # Move to staff
     time.sleep(random.uniform(.15, .5))
     pyautogui.click() # Remove staff
     time.sleep(random.uniform(.15, .5))
     pyautogui.press('esc') # Open inventory
     time.sleep(random.uniform(1, 2))
-    move_mouse(640, 650, 515, 528)  # Move to nature runes (1,2) x,y slot
+    move_mouse(645, 660, 530, 540)  # Move to nature runes (1,2) x,y slot
     time.sleep(random.uniform(.15, .5))
     pyautogui.click()  # Click nats
     time.sleep(random.uniform(.15, .5))
-    move_mouse(640, 650, 475, 490)  # Move to staff (1,1) x,y slot
+    move_mouse(645, 660, 495, 505)  # Move to staff (1,1) x,y slot
     time.sleep(random.uniform(.15, .5))
     pyautogui.click()  # Click nats
     time.sleep(random.uniform(.15, .5))
@@ -137,9 +137,9 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             time.sleep(random.uniform(.1,.3))
             pyautogui.press('f6')
             b = random.uniform(0.36, 0.52)
-            x = random.randrange(640, 645) - 4
+            x = random.randrange(640, 645) + 5
             print('x: ', x)
-            y = random.randrange(605, 615) - 4
+            y = random.randrange(605, 615) + 5
             print('y: ', y)
             d = random.uniform(0.11, 0.18)
             pyautogui.moveTo(x, y, duration=b)
@@ -221,9 +221,9 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
 
 
 if __name__ == "__main__":
-    log = login.login('alt3login',house_tab=True)
+    log = login.login('junklogin',house_tab=True)
     if log:
-        high_alch_loop(6000, expensive=False, charge=False)
+        high_alch_loop(6000, expensive=False, charge=True)
     else:
         print('Failed to login')
         pass

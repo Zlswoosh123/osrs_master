@@ -69,7 +69,7 @@ def random_wait(a=.1, b=.3):
 
 
 if __name__ == "__main__":
-    t = 300
+    t = 420
     while t > 0:
         n = 5
         wait_roll = random.randint(1, 1000)
@@ -95,7 +95,7 @@ if __name__ == "__main__":
         random_wait(.03, .08)
         pyautogui.press('f6')
 
-        move_mouse(678, 686,600, 608)  # move to tan leather
+        move_mouse(675, 683,590, 600)  # move to tan leather
         for i  in range(0,5):
             click_object()
             random_wait(1.8, 2.1)
