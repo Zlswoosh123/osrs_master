@@ -221,9 +221,9 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
 
 
 if __name__ == "__main__":
-    log = login.login('junklogin',house_tab=True)
+    log = login.login('alt3login',house_tab=True)
     if log:
-        high_alch_loop(6000, expensive=False, charge=True)
+        high_alch_loop(6000, expensive=False, charge=False)
     else:
         print('Failed to login')
         pass

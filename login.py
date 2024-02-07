@@ -37,7 +37,7 @@ def login(account:str,house_tab=False):
         if house_tab:
             # f.move_mouse(770, 780, 700, 710, True) old coords
             print('clicking teletab')
-            f.move_mouse(775, 785, 710, 715, True)
+            f.move_mouse(775, 785, 715, 720, True)
             time.sleep(5)# Clicks home tele in bottom right of inv
         return True
     elif count >= 2:
