@@ -8,7 +8,6 @@ import random
 import time
 from shapely.geometry import Polygon
 import ctypes
-import slyautomation_title
 import yaml
 from PIL import Image, ImageGrab
 import os
@@ -236,10 +235,10 @@ def deposit_all_Bank():
     time.sleep(c)
 
 
-def invent_crop():
+def invent_crop():  # Takes picture of inventory
     print('Starting invent_crop')
     global window
-    screen_Image(620, 460, 820, 780, 'inventshot.png')
+    screen_Image(620, 820, 460, 780, 'inventshot.png')
 
 def resize_quick():
     print('Starting resize_quick')
@@ -247,7 +246,7 @@ def resize_quick():
     top = 49
     right = 113
     bottom = 70
-    screen_Image(left, top, right, bottom, 'screen_resize.png')
+    screen_Image(left, right, top, bottom, 'screen_resize.png')
     # print('Taking screen_resize.png!')
 
 def resize_quick_combat():
@@ -258,7 +257,7 @@ def resize_quick_combat():
     bottom = 68
     # left, top, right, bottom = rand_size(left, top, right, bottom)
     # print(f'resize values: {left}, {top}, {right}, {bottom}')
-    screen_Image(left, top, right, bottom, 'screen_resize.png')
+    screen_Image(left, right, top, bottom, 'screen_resize.png')
     # print('Taking screen_resize.png!')
 
 
@@ -376,7 +375,7 @@ def screen_Image_new(name='screenshot.png'):
     im.save('images/' + name, 'png')
 
 
-def screen_Image(left=0, top=0, right=800, bottom=800, name='screenshot.png'):
+def screen_Image(left=0, right=800, top=0, bottom=800, name='screenshot.png'): # Takes image and gives a name
     # print('Starting screen_image')
     myScreenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
     myScreenshot.save('images/' + name)
@@ -619,42 +618,14 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
 
 
 
-# def image_Rec_inventory(image, threshold=0.85, clicker='left', iheight=5, iwidth=5, ispace=10):
-#     global icoord
-#     global iflag
-#     invent_crop()
-#     img_rgb = cv2.imread('images/inventshot.png')
-#     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-#     template = cv2.imread('images/' + image, 0)
-#     w, h = template.shape[::-1]
-#     pt = None
-#     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
-#     threshold = threshold
-#     loc = np.where(res >= threshold)
-#     iflag = False
-#     for pt in zip(*loc[::-1]):
-#         cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
-#         print(f"pt is {pt}")
-#         if pt is None:
-#             iflag = False
-#         else:
-#             iflag = True
-#             x = random.randrange(iwidth, iwidth + ispace) + 620
-#             y = random.randrange(iheight, iheight + ispace) + 480
-#             icoord = pt[0] + iheight + x
-#             icoord = (icoord, pt[1] + iwidth + y)
-#             b = random.uniform(0.1, 0.3)
-#             pyautogui.moveTo(icoord, duration=b)
-#             b = random.uniform(0.01, 0.15)
-#             pyautogui.click(icoord, duration=b, button=clicker)
-#     return iflag
+
 
 
 def Image_count(object, threshold=0.8, left=0, top=0, right=865, bottom=830):
     # Window 1: object, threshold=0.8, left=0, top=0, right=0, bottom=0
     # Window 2: object, threshold=0.88, left=1000, top=0, right=1920, bottom=800
     counter = 0
-    screen_Image(left, top, right, bottom, name='screenshot.png')
+    screen_Image(left, right, top, bottom, name='screenshot.png')
     invent_crop()
     img_rgb = cv2.imread('images/inventshot.png')
     safe_open(img_rgb, 'inventshot.png')
@@ -668,40 +639,6 @@ def Image_count(object, threshold=0.8, left=0, top=0, right=865, bottom=830):
         counter += 1
     return counter
 
-
-# def Image_count_alpha(temp, threshold=0.89, left=0, top=0, right=0, bottom=0):
-#     counter = 0
-#     screen_Image(left, top, right, bottom, name='screenshot.png')
-#     # read screenshot
-#     img = cv2.imread('images/screenshot.png')
-#     # read pawn image template
-#     # template = cv2.imread('chess_template.png', cv2.IMREAD_UNCHANGED)
-#     template = cv2.imread('images/' + temp, cv2.IMREAD_UNCHANGED)
-#     hh, ww = template.shape[:2]
-#     # extract pawn base image and alpha channel and make alpha 3 channels
-#     temp_a = template[:, :, 0:3]
-#     alpha = template[:, :, 3]
-#     alpha = cv2.merge([alpha, alpha, alpha])
-#     # set threshold
-#     threshold = threshold
-#     # do masked template matching and save correlation image
-#     corr_img = cv2.matchTemplate(img, temp_a, cv2.TM_CCORR_NORMED, mask=alpha)
-#     # search for max score
-#     result = img.copy()
-#     max_val = 1
-#     while max_val > threshold:
-#
-#         # find max value of correlation image
-#         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(corr_img)
-#         # print(max_val, max_loc)
-#
-#         if max_val > threshold:
-#             # draw match on copy of input
-#             counter += 1
-#             cv2.rectangle(result, max_loc, (max_loc[0] + ww, max_loc[1] + hh), (0, 0, 255), 2)
-#         else:
-#             break
-#     return counter
 
 
 def invent_count(object, threshold=0.7):
@@ -724,6 +661,32 @@ def invent_count(object, threshold=0.7):
         counter += 1
     return counter
 
+def image_count(object, image, threshold=0.7):  # counts how many objects in image
+    global window
+    print(f'Starting image_count')
+    counter = 0
+    img_rgb = cv2.imread('images/' + image)
+    safe_open(img_rgb, object)
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+    template = cv2.imread('images/' + object, 0)
+    safe_open(template, object)
+    w, h = template.shape[::-1]
+    res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+    # print(f'res is {res}')
+    loc = np.where(res >= threshold)
+    # print(f'loc is {loc}')
+    for pt in zip(*loc[::-1]):
+        cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+        counter += 1
+    return counter
+
+def move_mouse(x1, x2, y1, y2, click=False):
+    b = random.uniform(0.15, 0.45)
+    x_move = random.randrange(x1, x2) - 4
+    y_move = random.randrange(y1, y2) - 4
+    pyautogui.moveTo(x_move, y_move, duration=b)
+    if click:
+        pyautogui.click()
 
 def drop_item():
     print('Starting drop_item!')

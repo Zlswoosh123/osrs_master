@@ -4,6 +4,7 @@ import pyautogui
 import win32gui
 import core
 import yaml
+import login
 # from functions import pick_item
 # from functions import random_combat
 # from functions import random_quests
@@ -63,11 +64,13 @@ def timer():
 
 iflag = False
 
-def move_mouse(x1, x2, y1, y2):
+def move_mouse(x1, x2, y1, y2, click=False):
     b = random.uniform(0.15, 0.45)
     x_move = random.randrange(x1, x2) - 4
     y_move = random.randrange(y1, y2) - 4
     pyautogui.moveTo(x_move, y_move, duration=b)
+    if click:
+        pyautogui.click()
 
 def high_alch_command():
     # 3rd item
@@ -218,5 +221,10 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
 
 
 if __name__ == "__main__":
-    high_alch_loop(5500, expensive=False, charge=True)
+    log = login.login('alt3login',house_tab=True)
+    if log:
+        high_alch_loop(6000, expensive=False, charge=False)
+    else:
+        print('Failed to login')
+        pass
     # superheat_items(100, 1) #100 items iron

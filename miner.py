@@ -121,7 +121,7 @@ def Miner_Image_quick():
     im.save('images/miner_img.png', 'png')
 
 def Miner_Image():
-    screen_Image(0, 0, 865, 830, 'images/miner_img.png')
+    screen_Image(0, 865, 0, 830, 'images/miner_img.png')
 
 def drop_ore():
     global actions
