@@ -7,8 +7,8 @@ import functions as f
 def login(account:str,house_tab=False):
     f.screen_Image(210,620, 200, 420,'loginarea.png')
     f.screen_Image(220, 620, 300, 450, 'redbox.png')
-    count = f.image_count('loginarea.png', 'existing_user.png', .9)
-    box_count = f.image_count('redbox.png', 'clickplay.png', .9)
+    count = f.image_count('loginarea.png', 'existing_user.png', .7)
+    box_count = f.image_count('redbox.png', 'clickplay.png', .7)
     fail_safe = 0
     if count == 1:
         f.move_mouse(490, 491, 335, 336, True)  # Click existing user
@@ -35,7 +35,9 @@ def login(account:str,house_tab=False):
         pyautogui.press('esc')  # Open inventory
         time.sleep(1)
         if house_tab:
-            f.move_mouse(770, 780, 700, 710, True)
+            # f.move_mouse(770, 780, 700, 710, True) old coords
+            print('clicking teletab')
+            f.move_mouse(775, 785, 715, 720, True)
             time.sleep(5)# Clicks home tele in bottom right of inv
         return True
     elif count >= 2:

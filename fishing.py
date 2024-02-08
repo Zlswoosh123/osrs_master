@@ -142,8 +142,8 @@ def drop_fish():
     # Drop click items
     if fish_type == 'infernal_eel':
         hammer = functions.invent_count('hammer.png', .7)
-        xham= random.randint(655,660) + random.randint(-7, 7) # 648, 670
-        yham= random.randint(475,495) + random.randint(-5,5) # 500, 520
+        xham= random.randint(655,660) + random.randint(0, 10) # 648, 670
+        yham= random.randint(505,515) + random.randint(0,5) # 500, 520
         hammer_coord =(xham, yham)
         b = super_random_breaks(.03, .12, .14, .25)
         # b = random.uniform(0.05, 0.15)
@@ -196,6 +196,9 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
             mask = cv2.inRange(image, lower, upper)
             ret, thresh = cv2.threshold(mask, 40, 255, 0)
             contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+            # cv2.imshow('Mask', mask)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
     if len(contours) != 0:
         c = max(contours, key=cv2.contourArea)
         x, y, w, h = cv2.boundingRect(c)
@@ -203,8 +206,8 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
             print(x, y, w, h)
         whalf = max(round(w / 2), 1)
         hhalf = max(round(h / 2), 1)
-        x = random.randrange(x + 5, x + max(whalf - 5, 6)) + left  # 950,960
-        y = random.randrange(y + 5, y + max(hhalf - 5, 6)) + top  # 490,500
+        x = random.randrange(x + 5, x + max(whalf - 5, 6)) + left # 950,960
+        y = random.randrange(y + 5, y + max(hhalf - 5, 6)) + top# 490,500
         b = random.uniform(0.2, 0.4)
         pyautogui.moveTo(x, y, duration=b)
         b = random.uniform(0.01, 0.05)
@@ -282,7 +285,7 @@ def powerfisher(fish_type, Run_Duration_hours):
             time.sleep(random.randint(3, 6))
         if invent >= inv_cap:
             random_breaks(0.2, 0.7)
-            drop_fish()
+            dropx_fish()
             random_breaks(0.2, 0.7)
             inv_cap = random.randint(16, 21)
 

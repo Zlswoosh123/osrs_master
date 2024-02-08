@@ -70,7 +70,19 @@ def random_wait(a=.1, b=.3):
 
 if __name__ == "__main__":
     t = 50
+    flag = False # Determines if a second chisel is applied to gem to make tips
     while t > 0:
+        move_mouse(125, 140, 120, 130) # move to first item in bank
+        random_wait(.05, .2)
+        click_object()
+        random_wait(.05, .1)
+
+        move_mouse(175, 190, 120, 130) # move to 2nd item in bank
+        random_wait(.05, .2)
+        click_object()
+        pyautogui.press('escape')
+        random_wait(.05, .1)
+
         move_mouse(650, 665,500, 515)  # move to first obj in inv (next box)
         random_wait(.05, .2)
         click_object()
@@ -83,26 +95,27 @@ if __name__ == "__main__":
         pyautogui.press('space')
         random_wait(33, 41)
 
-        move_mouse(650, 665,500, 515)  # move to first obj in inv (next box)
-        random_wait(.05, .2)
-        click_object()
-        random_wait(.05, .2)
+        if flag == True:
+            move_mouse(650, 665,500, 515)  # move to first obj in inv (next box)
+            random_wait(.05, .2)
+            click_object()
+            random_wait(.05, .2)
 
-        move_mouse(695, 710, 500, 515)  # move to 2nd obj in inv (nests)
-        random_wait(.05, .2)
-        click_object()
-        random_wait(1, 1.2)
-        pyautogui.press('space')
-        random_wait(80, 88)
+            move_mouse(695, 710, 500, 515)  # move to 2nd obj in inv (nests)
+            random_wait(.05, .2)
+            click_object()
+            random_wait(1, 1.2)
+            pyautogui.press('space')
+            random_wait(80, 88)
 
         move_mouse(425, 430, 370, 390)  # move to banker center screen
         random_wait(.05, .2)
         click_object()
         random_wait(.6, .75)
 
-        move_mouse(125, 140, 120, 130) # move to first item in bank
+        move_mouse(480, 490, 625, 635)  # empty all
         random_wait(.05, .2)
         click_object()
-        pyautogui.press('escape')
+        random_wait(.05, .2)
         t -= 1
         print(f'{t} actions remaining')

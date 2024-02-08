@@ -37,7 +37,7 @@ global timer_break
 global ibreak
 import slyautomation_title
 
-inv_cap = random.uniform(15, 20)
+inv_cap = random.uniform(14, 17)
 print(f'Dropping ore at {inv_cap}')
 
 class bcolors:
@@ -269,7 +269,7 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
             actions = drop_ore()
             #print_progress(time_left, spot, mined_text, powerlist, ore, actions)
             random_breaks(0.2, 0.7)
-            inv_cap = random.uniform(15, 18)
+            inv_cap = random.uniform(14, 17)
             print(f'Dropping ore at {inv_cap}')
         resize_quick()
         resizeImage()
@@ -327,6 +327,6 @@ if __name__ == "__main__":
     Run_Duration_hours = 4.5
 
                 # | ore | marker color | take break | how long to run for in hours
-    powerminer_text(iron, red, Take_Human_Break=False, Run_Duration_hours=Run_Duration_hours)
+    powerminer_text(tin, red, Take_Human_Break=True, Run_Duration_hours=Run_Duration_hours)
 
     #os.system('shutdown -s -f')
