@@ -46,5 +46,10 @@ def login(account:str,house_tab=False):
 
     print(count)
 
+def logout():
+    f.find_and_click('logout.png', 'logout_x.png')
+    f.find_and_click('logout.png', 'red_logout.png')
+
 if __name__ == "__main__":
-    login('alt2login')
+    # login('alt2login')
+    logout()

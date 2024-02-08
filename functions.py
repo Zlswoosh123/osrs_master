@@ -156,7 +156,7 @@ def safe_open(image, png):
         image = cv2.imread('images/' + png)
         print(f'Sleeping until image is created')
         time.sleep(2)
-        return image
+    return image
 
 def screen_front(runelite):
     print('Starting screen_front')
@@ -486,15 +486,15 @@ def make_enabled(make='make_craft.png'):
     return Image_count(make, threshold=0.95)
 
 
-def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=25, playarea=True,
+def image_Rec_clicker(image, object, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=25, playarea=True,
                       fast=False):
     print('Starting image_Rec_clicker')
     global icoord
     global iflag
     # Update images, convert to gray, match template, apply threshold
-    img_rgb = cv2.imread('images/inventshot.png')
+    img_rgb = cv2.imread('images/' + image)
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-    template = cv2.imread('images/' + image, 0)
+    template = cv2.imread('images/' + object, 0)
     w, h = template.shape[::-1]
     pt = None
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
@@ -519,8 +519,8 @@ def image_Rec_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
             cropy = 457
             iflag = True
             # i vars are constants todo add double randomness
-            x = random.randrange(iwidth, iwidth + ispace) + cropx
-            y = random.randrange(iheight, iheight + ispace) + cropy
+            x = random.randrange(iwidth, iwidth + ispace) # + cropx
+            y = random.randrange(iheight, iheight + ispace) # + cropy
             icoord = pt[0] + iheight + x
             icoord = (icoord, pt[1] + iwidth + y)
             b = super_random_breaks(.03, .12, .14, .25)
@@ -670,6 +670,7 @@ def image_count(object, image, threshold=0.7):  # counts how many objects in ima
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + object, 0)
     safe_open(template, object)
+    print(f'template is {template}')
     w, h = template.shape[::-1]
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
     # print(f'res is {res}')
@@ -719,6 +720,58 @@ def super_random_breaks(a, b, c, d):
     max1 = random.uniform(c, d) # e.g. 5-7
     wait = random.uniform(min1, max1) # e.g 2, 6
     return wait
+
+def find_and_click(image='screenshot.png', object='item.png', x1=0, x2=900, y1=0, y2=900,
+                   iheight=4, iwidth=4, threshold=0.8, clicker='left', ispace=10, num_objects = 1):
+    counter = 0
+    screen_Image(left=x1, right=x2, top=y1, bottom=y2, name=image)
+    print('Starting image_Rec_clicker')
+    global icoord
+    global iflag
+    # Update images, convert to gray, match template, apply threshold
+    img_rgb = cv2.imread('images/' + image)
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+    template = cv2.imread('images/' + object, 0)
+    w, h = template.shape[::-1]
+    pt = None
+    res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+    loc = np.where(res >= threshold)
+    # print(f'res is: {res}')
+    iflag = False
+
+    # for image where template match % > threshold
+    for pt in zip(*loc[::-1]):
+        # print('Starting our for loop in zip now!')
+        # print(f'Current pt is {pt}')
+        # resizeImage()  # update screenresize/text images
+        # invent_crop()  # update inventory.png
+        # confirm how below draws rectangles
+        cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+        if pt is None:
+            iflag = False
+            print('pt is None so iflag is False')
+        else:
+            # useless?
+            cropx = 620
+            cropy = 457
+            iflag = True
+            # i vars are constants
+            x = random.randrange(iwidth, iwidth + ispace)  # + cropx
+            y = random.randrange(iheight, iheight + ispace)  # + cropy
+            icoord = pt[0] + x
+            icoord = (icoord, pt[1] + y ) # + y in the ()
+            b = super_random_breaks(.03, .12, .14, .25)
+            print('Trying to move to coord in rec_clicker!')
+            pyautogui.moveTo(icoord, duration=b)
+            b = super_random_breaks(.03, .12, .14, .25)
+            print('Trying to click coord!')
+            pyautogui.click(icoord, duration=b, button=clicker)
+            counter += 1
+            if counter >= num_objects:
+                return
+    print('Ending image_Rec_clicker')
+    return iflag
+
 
 
 

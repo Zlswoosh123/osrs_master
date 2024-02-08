@@ -221,10 +221,15 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
 
 
 if __name__ == "__main__":
-    log = login.login('alt3login',house_tab=True)
-    if log:
-        high_alch_loop(6000, expensive=False, charge=False)
-    else:
-        print('Failed to login')
-        pass
+    while True:
+        log = login.login('alt3login',house_tab=True)
+        if log:
+            high_alch_loop(6000, expensive=False, charge=False)
+        else:
+            print('Failed to login')
+            pass
+        sleep_mins = 60
+        s_to_m = sleep_mins * 60
+        # time.sleep(random.uniform(s_to_m, s_to_m + 3600))
+        time.sleep(10)
     # superheat_items(100, 1) #100 items iron
