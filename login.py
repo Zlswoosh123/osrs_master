@@ -12,7 +12,7 @@ def login(account:str,house_tab=False):
     fail_safe = 0
     f.move_mouse(410, 411, 365, 366, True)  # failsafe for disconnect, clicks OK button
     time.sleep(1)
-    count = f.image_count('existing_user.png', 'loginarea.png', .9)
+    count = f.image_count('existing_user.PNG', 'loginarea.png', .9)
     print(f'count is {count}')
     box_count = f.image_count('redbox.png', 'clickplay.png', .6)
     if count >= 1:
