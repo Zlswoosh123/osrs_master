@@ -89,11 +89,11 @@ def charge_staff():
     time.sleep(random.uniform(.15, .5))
     pyautogui.press('esc') # Open inventory
     time.sleep(random.uniform(1, 2))
-    move_mouse(645, 660, 530, 540)  # Move to nature runes (1,2) x,y slot
+    move_mouse(645, 660, 510, 520)  # Move to nature runes (1,2) x,y slot
     time.sleep(random.uniform(.15, .5))
     pyautogui.click()  # Click nats
     time.sleep(random.uniform(.15, .5))
-    move_mouse(645, 660, 495, 505)  # Move to staff (1,1) x,y slot
+    move_mouse(645, 660, 475, 485)  # Move to staff (1,1) x,y slot
     time.sleep(random.uniform(.15, .5))
     pyautogui.click()  # Click nats
     time.sleep(random.uniform(.15, .5))
@@ -137,9 +137,9 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             time.sleep(random.uniform(.1,.3))
             pyautogui.press('f6')
             b = random.uniform(0.36, 0.52)
-            x = random.randrange(640, 645) + 5
+            x = random.randrange(640, 645) - 4
             print('x: ', x)
-            y = random.randrange(605, 615) + 5
+            y = random.randrange(605, 615) - 4
             print('y: ', y)
             d = random.uniform(0.11, 0.18)
             pyautogui.moveTo(x, y, duration=b)
@@ -151,7 +151,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
         # pyautogui.press('f6')
         high_alch_command()
         time.sleep(c)
-        high_alch_command()  # alchs same spot as alch spell location     #high_alch() alchs 3rd inventory spot
+        high_alch_command()  # alchs same spot as alch spell location
         c = random.uniform(1.8, 2.5)
         n = random.randint(1, 10)
         if exp:
@@ -222,12 +222,9 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
 
 if __name__ == "__main__":
     while True:
-        log = login.login('alt3login',house_tab=True)
-        if log:
-            high_alch_loop(6000, expensive=False, charge=False)
-        else:
-            print('Failed to login')
-            pass
+        login.login('alt1login',house_tab=True)
+        high_alch_loop(2, expensive=False, charge=True)
+        login.logout()
         sleep_mins = 60
         s_to_m = sleep_mins * 60
         # time.sleep(random.uniform(s_to_m, s_to_m + 3600))

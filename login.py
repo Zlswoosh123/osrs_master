@@ -7,10 +7,15 @@ import functions as f
 def login(account:str,house_tab=False):
     f.screen_Image(210,620, 200, 420,'loginarea.png')
     f.screen_Image(220, 620, 300, 450, 'redbox.png')
-    count = f.image_count('loginarea.png', 'existing_user.png', .7)
-    box_count = f.image_count('redbox.png', 'clickplay.png', .7)
+    disconnect = f.image_count('ok_button.png', 'loginarea.png', .7)
+    print(disconnect)
     fail_safe = 0
-    if count == 1:
+    f.move_mouse(410, 411, 365, 366, True)  # failsafe for disconnect, clicks OK button
+    time.sleep(1)
+    count = f.image_count('existing_user.png', 'loginarea.png', .9)
+    print(f'count is {count}')
+    box_count = f.image_count('redbox.png', 'clickplay.png', .6)
+    if count >= 1:
         f.move_mouse(490, 491, 335, 336, True)  # Click existing user
         time.sleep(.5)
         pyautogui.typewrite(account)  # Uses ahk to load creds
@@ -19,11 +24,12 @@ def login(account:str,house_tab=False):
         time.sleep(.5)
         f.move_mouse(300, 305, 360, 365, True)  # Clicks login
         f.move_mouse(25, 26, 25, 26, False)  # Moves mouse away
-        while box_count != 1 and fail_safe < 25:
+        print(f'box count is {box_count}')
+        while box_count <= 1 and fail_safe < 25:
             print(f'No red box found, waiting! Attempt {fail_safe}')
             time.sleep(2)
             f.screen_Image(220, 620, 300, 450, 'redbox.png')
-            box_count = f.image_count('redbox.png', 'clickplay.png', .9)
+            box_count = f.image_count('clickplay.png', 'redbox.png', .6)
             fail_safe += 1
         if fail_safe >= 25:
             print('Fail safe triggered, login failed!')
@@ -42,16 +48,17 @@ def login(account:str,house_tab=False):
         return True
     elif count >= 2:
         print('Found more than 1 existing user? Skipping')
+        return True
     else:
         print('Found no login button, login failed')
         return False
 
-    print(count)
-
 def logout():
-    f.find_and_click('logout.png', 'logout_x.png')
-    f.find_and_click('logout.png', 'red_logout.png')
+    # f.find_and_click('logout.png', 'logout_x.png')
+    # f.find_and_click('logout.png', 'red_logout.png')
+    f.move_mouse(803, 804, 40, 41, True)
+    f.move_mouse(715, 716, 700, 701, True)
 
 if __name__ == "__main__":
-    # login('alt2login')
-    logout()
+    login('blah')
+    # logout()
