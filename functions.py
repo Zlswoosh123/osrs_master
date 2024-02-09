@@ -676,9 +676,10 @@ def image_count(object, image, threshold=0.7):  # counts how many objects in ima
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + object, 0)
     safe_open(template, object)
-    print(f'template is {template}')
+    # print(f'template is {template}')
     w, h = template.shape[::-1]
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+    # res = cv2.matchTemplate(img_gray, template, cv2.TM_SQDIFF_NORMED)
     # print(f'res is {res}')
     loc = np.where(res >= threshold)
     # print(f'loc is {loc}')
@@ -730,8 +731,7 @@ def super_random_breaks(a, b, c, d):
 def find_and_click(image='screenshot.png', object='item.png', x1=0, x2=900, y1=0, y2=900,
                    iheight=4, iwidth=4, threshold=0.8, clicker='left', ispace=10, num_objects = 1):
     counter = 0
-    screen_Image(left=x1, right=x2, top=y1, bottom=y2, name=image)
-    print('Starting image_Rec_clicker')
+    # screen_Image(left=x1, right=x2, top=y1, bottom=y2, name=image)
     global icoord
     global iflag
     # Update images, convert to gray, match template, apply threshold
@@ -774,9 +774,9 @@ def find_and_click(image='screenshot.png', object='item.png', x1=0, x2=900, y1=0
             pyautogui.click(icoord, duration=b, button=clicker)
             counter += 1
             if counter >= num_objects:
-                return
+                return True
     print('Ending image_Rec_clicker')
-    return iflag
+    return False
 
 
 
