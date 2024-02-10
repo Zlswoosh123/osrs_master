@@ -245,8 +245,8 @@ if __name__ == "__main__":
         login.login('alt2login',house_tab=True)
         high_alch_loop(5000, expensive=False, charge=False)
         login.logout()
-        # sleep_mins = 60
-        # s_to_m = sleep_mins * 60
-        # time.sleep(random.uniform(s_to_m, s_to_m + 3600))
-        time.sleep(10)
+        sleep_mins = 60
+        s_to_m = sleep_mins * 60
+        time.sleep(random.uniform(s_to_m, s_to_m + 1800))
+        # time.sleep(10)
     # superheat_items(100, 1) #100 items iron
