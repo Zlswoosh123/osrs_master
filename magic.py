@@ -140,7 +140,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
         else:
             n = 5
             pass
-        if wait_roll > 0:  # Check if alch inventory slot still has alchs
+        if wait_roll % 5 ==  0:  # Check if alch inventory slot still has alchs
             time.sleep(1.8)
             pyautogui.press('f2')
             time.sleep(random.uniform(.1, .3))
@@ -243,7 +243,7 @@ if __name__ == "__main__":
     stop_flag = False
     while stop_flag == False:
         login.login('alt2login',house_tab=True)
-        high_alch_loop(4, expensive=False, charge=False)
+        high_alch_loop(5000, expensive=False, charge=False)
         login.logout()
         # sleep_mins = 60
         # s_to_m = sleep_mins * 60
