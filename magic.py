@@ -100,8 +100,15 @@ def charge_staff():
     pyautogui.click()  # Click nats
 
 
-
-
+def alch_check():
+    functions.screen_Image(642, 676, 600, 632, 'alch_slot.png')
+    alch = functions.image_count('empty_slot.png', 'alch_slot.png')
+    if alch > 0:
+        print('Stop flag is True! No more alchs! Terminating script')
+        return True
+    if alch == 0:
+        print(('Stop flag is False! We still have alchs! Keep going.'))
+        return False
 
 
 def high_alch_loop(vol=1200, expensive=False, charge=False):
@@ -109,7 +116,8 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
     charge_amt = t - (random.randint(900,1000))
     exp = expensive
     n = 5
-    while t > 0:
+    global stop_flag
+    while t > 0 and stop_flag == False:
         wait_roll = random.randint(1,1000)
         wait_time_long = random.randint(45,260)
         wait_time_short = random.randint(15, 60)
@@ -121,16 +129,25 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             charge_staff()
             n = 5
             charge_amt = t - (random.randint(900,1000))
-
         if wait_roll == 500:
             print(f'Weve initiated a long wait for anti-ban for {wait_time_long}s')
             time.sleep(wait_time_long)
             n = 5
-        if wait_roll % 250 == 0:
+        elif wait_roll % 250 == 0:
             print(f'Weve initiated a short wait for anti-ban for {wait_time_short}s')
             time.sleep(wait_time_short)
             n = 5
-        if n == 5:
+        else:
+            n = 5
+            pass
+        if wait_roll > 0:  # Check if alch inventory slot still has alchs
+            time.sleep(1.8)
+            pyautogui.press('f2')
+            time.sleep(random.uniform(.1, .3))
+            pyautogui.press('esc')
+            stop_flag = alch_check()
+            pyautogui.press('f6')
+        if wait_roll % 5 == 0:  # Fixes mouse location over high alch spot
             print(f'Were fixing mouse location and tab just in case')
             time.sleep(1.5)
             pyautogui.press('f2')
@@ -168,6 +185,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
         # todo rename vars
         t -= 1
         print(f'{t} alchs remaining')
+    return True
 
 
 # def pick_iron_items():
@@ -221,12 +239,14 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
 
 
 if __name__ == "__main__":
-    while True:
-        login.login('alt1login',house_tab=True)
-        high_alch_loop(5000, expensive=False, charge=True)
+    global stop_flag
+    stop_flag = False
+    while stop_flag == False:
+        login.login('alt2login',house_tab=True)
+        high_alch_loop(4, expensive=False, charge=False)
         login.logout()
-        sleep_mins = 60
-        s_to_m = sleep_mins * 60
-        time.sleep(random.uniform(s_to_m, s_to_m + 3600))
-        # time.sleep(10)
+        # sleep_mins = 60
+        # s_to_m = sleep_mins * 60
+        # time.sleep(random.uniform(s_to_m, s_to_m + 3600))
+        time.sleep(10)
     # superheat_items(100, 1) #100 items iron

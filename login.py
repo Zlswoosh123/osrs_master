@@ -10,7 +10,7 @@ def login(account:str,house_tab=False):
     disconnect = f.image_count('ok_button.png', 'loginarea.png', .7)
     print(disconnect)
     fail_safe = 0
-    f.move_mouse(410, 411, 365, 366, True)  # failsafe for disconnect, clicks OK button
+    f.move_mouse(415, 416, 330, 331, True)  # failsafe for disconnect, clicks OK button
     time.sleep(1)
     count = f.image_count('existing_user.PNG', 'loginarea.png', .9)
     print(f'count is {count}')
@@ -23,7 +23,7 @@ def login(account:str,house_tab=False):
         pyautogui.press('tab')
         time.sleep(.5)
         f.move_mouse(300, 305, 360, 365, True)  # Clicks login
-        f.move_mouse(25, 26, 25, 26, False)  # Moves mouse away
+        f.move_mouse(45, 46, 45, 46, False)  # Moves mouse away
         print(f'box count is {box_count}')
         while box_count <= 1 and fail_safe < 25:
             print(f'No red box found, waiting! Attempt {fail_safe}')
