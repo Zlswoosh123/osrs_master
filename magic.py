@@ -100,7 +100,7 @@ def charge_staff():
     pyautogui.click()  # Click nats
 
 
-def alch_check():
+def alch_check(): # todo add nat check
     functions.screen_Image(642, 676, 600, 632, 'alch_slot.png')
     alch = functions.image_count('empty_slot.png', 'alch_slot.png')
     if alch > 0:
@@ -109,6 +109,7 @@ def alch_check():
     if alch == 0:
         print(('Stop flag is False! We still have alchs! Keep going.'))
         return False
+
 
 
 def high_alch_loop(vol=1200, expensive=False, charge=False):

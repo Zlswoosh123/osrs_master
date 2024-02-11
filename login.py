@@ -1,8 +1,15 @@
 import time
 import random
 import pyautogui
-
 import functions as f
+
+def ok_check():
+    f.screen_Image(255, 550, 280, 360, 'disconnect_check.png')
+    count = f.image_count('ok_button.png', 'disconnect_check.png')
+    if count > 0:
+        return True
+    if count == 0:
+        return False
 
 def login(account:str,house_tab=False):
     f.screen_Image(210,620, 200, 420,'loginarea.png')
@@ -10,7 +17,12 @@ def login(account:str,house_tab=False):
     disconnect = f.image_count('ok_button.png', 'loginarea.png', .7)
     print(disconnect)
     fail_safe = 0
-    f.move_mouse(415, 416, 330, 331, True)  # failsafe for disconnect, clicks OK button
+    ok = ok_check()
+    if ok:
+        print('We see an ok button, clearing')
+        f.move_mouse(421, 425, 330, 331, True)  # failsafe for disconnect, clicks OK button
+    else:
+        print('No OK button found')
     time.sleep(1)
     count = f.image_count('existing_user.PNG', 'loginarea.png', .9)
     print(f'count is {count}')
