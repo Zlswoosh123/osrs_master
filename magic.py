@@ -102,12 +102,22 @@ def charge_staff():
 
 def alch_check(): # todo add nat check
     functions.screen_Image(642, 676, 600, 632, 'alch_slot.png')
-    alch = functions.image_count('empty_slot.png', 'alch_slot.png')
+    alch = functions.image_count('empty_slot_alch.png', 'alch_slot.png')
     if alch > 0:
         print('Stop flag is True! No more alchs! Terminating script')
         return True
     if alch == 0:
         print(('Stop flag is False! We still have alchs! Keep going.'))
+        return False
+
+def nat_check():
+    functions.screen_Image(642, 676, 525, 560, 'nat_slot.png')
+    nat = functions.image_count('empty_slot.png', 'nat_slot.png')
+    if nat > 0:
+        print('Stop flag is True! No more nats! Terminating script')
+        return True
+    if nat == 0:
+        print(('Stop flag is False! We still have nats! Keep going.'))
         return False
 
 
@@ -146,9 +156,11 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             pyautogui.press('f2')
             time.sleep(random.uniform(.1, .3))
             pyautogui.press('esc')
-            stop_flag = alch_check()
+            if alch_check() or nat_check():
+                stop_flag = True
             pyautogui.press('f6')
-        if wait_roll % 5 == 0:  # Fixes mouse location over high alch spot
+            n = 5
+        if wait_roll % 5 == 0 or n == 5:  # Fixes mouse location over high alch spot
             print(f'Were fixing mouse location and tab just in case')
             time.sleep(1.5)
             pyautogui.press('f2')
@@ -187,57 +199,6 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
         t -= 1
         print(f'{t} alchs remaining')
     return True
-
-
-# def pick_iron_items():
-#     pick_item(1510 - 1280, 123)
-#     random_breaks(0.5, 1.5)
-#
-#
-# def pick_bronze_items():
-#     pick_item(1560 - 1280, 123)
-#     random_breaks(0.5, 1.5)
-#     pick_item(1607 - 1280, 123)
-#     random_breaks(0.1, 0.5)
-#
-#
-# def bank_spot_varrock():
-#     find_Object(2)  # amber
-#
-#
-# def cast_superheat():
-#     pick_item(2029 - 1280, 573)
-#
-#
-# def pick_ore(type):
-#     Image_Rec_single(type, 'pick ores', 5, 5, 0.8, 'left', 20, 620, 480, False)
-#
-#
-# def superheat_items(num, bar):
-#     vol = [13, 27]
-#     j = round(num / vol[bar])
-#     pick_options = {0: pick_bronze_items,
-#                     1: pick_iron_items}
-#     orelist = ['copper.png', 'iron_ore.png']
-#     while j > 0:
-#         bank_spot_varrock()
-#         random_breaks(0.3, 0.5)
-#         deposit_secondItem()
-#         random_breaks(0.3, 0.5)
-#         pick_options[bar]()
-#         exit_bank()
-#         random_breaks(0.05, 0.2)
-#         inv = 27
-#         while inv != 0:
-#             cast_superheat()
-#             random_breaks(0.2, 0.4)
-#             pick_ore(orelist[bar])
-#             random_breaks(0.1, 0.2)
-#             inv -= 1
-#             print(inv)
-#         j -= 1
-#         random_breaks(0.4, 0.8)
-
 
 if __name__ == "__main__":
     global stop_flag
