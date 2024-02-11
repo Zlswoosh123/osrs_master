@@ -205,7 +205,7 @@ if __name__ == "__main__":
     stop_flag = False
     while stop_flag == False:
         login.login('alt2login',house_tab=True)
-        high_alch_loop(5000, expensive=False, charge=False)
+        high_alch_loop(3500, expensive=False, charge=False)
         login.logout()
         sleep_mins = 60
         s_to_m = sleep_mins * 60
