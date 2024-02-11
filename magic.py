@@ -141,7 +141,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
         else:
             n = 5
             pass
-        if wait_roll % 5 ==  0:  # Check if alch inventory slot still has alchs
+        if wait_roll % 50 ==  0 or t == vol:  # Check if alch inventory slot still has alchs
             time.sleep(1.8)
             pyautogui.press('f2')
             time.sleep(random.uniform(.1, .3))
