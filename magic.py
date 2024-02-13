@@ -149,7 +149,6 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             time.sleep(wait_time_short)
             n = 5
         else:
-            n = 5
             pass
         if wait_roll % 50 ==  0 or t == vol:  # Check if alch inventory slot still has alchs
             time.sleep(1.8)
@@ -183,7 +182,6 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
         time.sleep(c)
         high_alch_command()  # alchs same spot as alch spell location
         c = random.uniform(1.8, 2.5)
-        n = random.randint(1, 10)
         if exp:
             print('expensive')
             x = random.uniform(0.8, 1.2)
