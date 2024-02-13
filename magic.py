@@ -129,7 +129,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
     n = 5
     global stop_flag
     while t > 0 and stop_flag == False:
-        wait_roll = random.randint(1,1000)
+        wait_roll = random.randint(1,4000)
         wait_time_long = random.randint(45,260)
         wait_time_short = random.randint(15, 60)
         print(f'The anti-ban dice have been thrown! You rolled a {wait_roll}')
@@ -144,7 +144,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             print(f'Weve initiated a long wait for anti-ban for {wait_time_long}s')
             time.sleep(wait_time_long)
             n = 5
-        elif wait_roll % 250 == 0:
+        elif wait_roll % 800 == 0:
             print(f'Weve initiated a short wait for anti-ban for {wait_time_short}s')
             time.sleep(wait_time_short)
             n = 5
@@ -203,12 +203,19 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
 if __name__ == "__main__":
     global stop_flag
     stop_flag = False
+    round = 1
     while stop_flag == False:
-        login.login('alt2login',house_tab=True)
+        login.login('alt3login',house_tab=True)
         high_alch_loop(3500, expensive=False, charge=False)
         login.logout()
-        sleep_mins = 60
-        s_to_m = sleep_mins * 60
-        time.sleep(random.uniform(s_to_m, s_to_m + 1800))
+        print(f'End of Round {round}')
+        if round % 4 != 0:
+            wait = random.uniform(1800, 2700)
+            print(f'Short wait period before next round! Rolled {wait}s wait')
+        else:
+            wait = random.uniform(5400, 7200)
+            print(f'Long wait period before next round! Rolled {wait}s wait')
+        round += 1
+        time.sleep(wait)
         # time.sleep(10)
     # superheat_items(100, 1) #100 items iron
