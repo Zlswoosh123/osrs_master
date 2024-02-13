@@ -160,7 +160,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
                 stop_flag = True
             pyautogui.press('f6')
             n = 5
-        if wait_roll % 5 == 0 or n == 5:  # Fixes mouse location over high alch spot
+        if wait_roll % 10 == 0 or n == 5:  # Fixes mouse location over high alch spot
             print(f'Were fixing mouse location and tab just in case')
             time.sleep(1.5)
             pyautogui.press('f2')
@@ -174,7 +174,7 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             d = random.uniform(0.11, 0.18)
             pyautogui.moveTo(x, y, duration=b)
 
-        # n = random.randint(1, 10)
+        n = random.randint(6, 10)
         c = random.uniform(.05, .3)
         # pyautogui.press('f6')
         time.sleep(.1)
