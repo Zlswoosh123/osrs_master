@@ -64,10 +64,16 @@ if __name__ == "__main__": # Fixed version for vm
         click_object() # withdraw nest
         random_wait()
         pyautogui.press('escape')
-        # click nests here
-        for i in range(28):
-            s = random.uniform(0.03, 0.1)
-            move_mouse(*inventory_spots[i], s)
+        # click herbs here
+        nums = [0,1,4,5,8,9,12,13,16,17,20,21,24,25]
+        for i in range(28):  # pattern 1
+            if i in nums:
+                s = random.uniform(0, 0.07)
+                move_mouse(*inventory_spots[i], s)
+        for i in range(28):  # pattern 2
+            if i not in nums:
+                s = random.uniform(0, 0.07)
+                move_mouse(*inventory_spots[i], s)
 
 
         move_mouse(425, 430, 345, 365)  # move to banker center screen
