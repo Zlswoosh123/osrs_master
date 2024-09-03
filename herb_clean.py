@@ -7,7 +7,7 @@ import yaml
 
 
 import functions
-from functions import inventory_spots
+from functions import inventory_spots, move_mouse, click_object
 
 global hwnd
 global iflag
@@ -49,21 +49,6 @@ except BaseException:
 
 iflag = False
 
-
-def click_object():
-    # 3rd item
-    # d = random.uniform(0.11, 0.18)
-    # time.sleep(d)
-    pyautogui.click()
-    print('clicked something')
-
-def move_mouse(x1, x2, y1, y2, b=0):
-    if b == 0:
-        b = random.uniform(0.05, 0.25)
-    x_move = random.randrange(x1, x2) - 4
-    y_move = random.randrange(y1, y2) - 4
-    pyautogui.moveTo(x_move, y_move, duration=b)
-
 def random_wait(a=.1, b=.3):
     c = random.uniform(a, b)
     time.sleep(c)
@@ -73,28 +58,16 @@ def random_wait(a=.1, b=.3):
 if __name__ == "__main__": # Fixed version for vm
     t = (1314//14) + 1
     while t > 0:
-        dur = random.uniform(0.1, 0.35)
+        dur = random.uniform(0.1, 0.25)
         move_mouse(130, 140, 110, 130, dur)  # move to first obj in tab (nest)
         random_wait(.05, .2)
         click_object() # withdraw nest
         random_wait()
         pyautogui.press('escape')
         # click nests here
-        # x1_start = 650
-        # x2_start = 660
-        # y1_start = 500
-        # y2_start = 512
-
         for i in range(28):
-            move_mouse(*inventory_spots[i], True)
-        # for i in range(0,28):
-        #     quick_dur = random.uniform(.03,.1)
-        #     addx = i%4 * 45
-        #     addy = i//4 * 40
-        #     random_wait(.05, .2)
-        #     move_mouse(x1_start + addx, x2_start + addx, y1_start + addy, y2_start + addy, quick_dur)
-        #     random_wait(.05, .2)
-        #     click_object()
+            s = random.uniform(0.03, 0.1)
+            move_mouse(*inventory_spots[i], s)
 
 
         move_mouse(425, 430, 345, 365)  # move to banker center screen

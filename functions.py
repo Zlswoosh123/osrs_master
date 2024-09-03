@@ -30,42 +30,41 @@ window = 1
 fish_type = 'infernal_eel'
 import pytesseract
 
-def client_to_front():
-    with open("pybot-config.yaml", "r") as yamlfile:
-        data = yaml.load(yamlfile, Loader=yaml.FullLoader)
+with open("pybot-config.yaml", "r") as yamlfile:
+    data = yaml.load(yamlfile, Loader=yaml.FullLoader)
 
 
-    class bcolors:
-        OK = '\033[92m'  # GREEN
-        WARNING = '\033[93m'  # YELLOW
-        FAIL = '\033[91m'  # RED
-        RESET = '\033[0m'  # RESET COLOR
+class bcolors:
+    OK = '\033[92m'  # GREEN
+    WARNING = '\033[93m'  # YELLOW
+    FAIL = '\033[91m'  # RED
+    RESET = '\033[0m'  # RESET COLOR
 
 
-    with open("pybot-config.yaml", "r") as yamlfile:
-        data = yaml.load(yamlfile, Loader=yaml.FullLoader)
+with open("pybot-config.yaml", "r") as yamlfile:
+    data = yaml.load(yamlfile, Loader=yaml.FullLoader)
 
-    pytesseract.pytesseract.tesseract_cmd = data[0]['Config']['tesseract_path'] + "tesseract"
+pytesseract.pytesseract.tesseract_cmd = data[0]['Config']['tesseract_path'] + "tesseract"
+try:
+    im = Image.open("images/tynan_shop.png")
+    text = pytesseract.image_to_string(im)
+    print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
+except:
+    pass
+os.environ["TESSDATA_PREFIX"] = data[0]['Config']['tesseract_path']  # + "tessdata"
+try:
+    im = Image.open("images/tynan_shop.png")
+    text = pytesseract.image_to_string(im)
+    print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
+except:
+    os.environ["TESSDATA_PREFIX"] = data[0]['Config']['tesseract_path'] + "tessdata"
     try:
         im = Image.open("images/tynan_shop.png")
         text = pytesseract.image_to_string(im)
         print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
     except:
-        pass
-    os.environ["TESSDATA_PREFIX"] = data[0]['Config']['tesseract_path']  # + "tessdata"
-    try:
-        im = Image.open("images/tynan_shop.png")
-        text = pytesseract.image_to_string(im)
-        print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
-    except:
-        os.environ["TESSDATA_PREFIX"] = data[0]['Config']['tesseract_path'] + "tessdata"
-        try:
-            im = Image.open("images/tynan_shop.png")
-            text = pytesseract.image_to_string(im)
-            print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
-        except:
-            print(
-                bcolors.FAIL + "Error setting up tesseract: Check the pyconfig.yaml is set up to your tesseract path or is installed correctly, go here and install latest version: " + 'https://digi.bib.uni-mannheim.de/tesseract/?C=M;O=D')
+        print(
+            bcolors.FAIL + "Error setting up tesseract: Check the pyconfig.yaml is set up to your tesseract path or is installed correctly, go here and install latest version: " + 'https://digi.bib.uni-mannheim.de/tesseract/?C=M;O=D')
 
 # Constants
 gdi32 = ctypes.WinDLL('gdi32.dll')
@@ -103,6 +102,24 @@ inventory_spots = [
     (736, 746, 708, 715),  # Spot 27
     (779, 789, 708, 715),  # Spot 28
 ]
+
+
+def click_object():
+    # 3rd item
+    # d = random.uniform(0.11, 0.18)
+    # time.sleep(d)
+    pyautogui.click()
+    print('clicked something')
+
+
+def move_mouse(x1, x2, y1, y2, b=0, click = True):
+    if b == 0:
+        b = random.uniform(0.05, 0.25)
+    x_move = random.randrange(x1, x2) - 4
+    y_move = random.randrange(y1, y2) - 4
+    pyautogui.moveTo(x_move, y_move, duration=b)
+    if click == True:
+        pyautogui.click()
 
 
 class DeviceCap:
@@ -149,31 +166,35 @@ def get_os_configuration():
 
     return scale_factor, font_size, width, height
 
+
 def offscreen_mouse():
     print('Starting offscreen_mouse')
-    xcoord = random.uniform(925,1200)
-    ycoord = random. uniform(1000, 170)
+    xcoord = random.uniform(925, 1200)
+    ycoord = random.uniform(1000, 170)
     new_coord = (xcoord, ycoord)
     min, max = random.uniform(0.1, .25), random.uniform(0.35, .7)
     b = random.uniform(min, max)
     print('Trying to move to coord offscreen!')
     pyautogui.moveTo(new_coord, duration=b)
 
-def double_random(min, max, scaler = .5):
-    min = random.uniform(min * scaler, min*(1 + scaler))
-    max = random.uniform(max * scaler, max*(1 + scaler))
+
+def double_random(min, max, scaler=.5):
+    min = random.uniform(min * scaler, min * (1 + scaler))
+    max = random.uniform(max * scaler, max * (1 + scaler))
     if min > max:
         min, max = max, min
     wait = random.uniform(min, max)
     return wait
 
+
 def super_random_breaks(a, b, c, d):
-    min1 = random.uniform(a, b) # e.g. 1-3
-    max1 = random.uniform(c, d) # e.g. 5-7
+    min1 = random.uniform(a, b)  # e.g. 1-3
+    max1 = random.uniform(c, d)  # e.g. 5-7
     if min1 > max1:
         min1, max1 = max1, min1
-    wait = random.uniform(min1, max1) # e.g 2, 6
+    wait = random.uniform(min1, max1)  # e.g 2, 6
     return wait
+
 
 def safe_open(image, png):
     # print('Starting safe_open')
@@ -182,6 +203,7 @@ def safe_open(image, png):
         print(f'Sleeping until image is created')
         time.sleep(2)
     return image
+
 
 def screen_front(runelite):
     print('Starting screen_front')
@@ -194,6 +216,7 @@ def screen_front(runelite):
     except Exception as err:
         print(f"An exception occurred: {err}")
         time.sleep(7)
+
 
 # Usage
 scale_factor, font_size, width, height = get_os_configuration()
@@ -265,6 +288,7 @@ def invent_crop():  # Takes picture of inventory
     global window
     screen_Image(620, 820, 460, 780, 'inventshot.png')
 
+
 def resize_quick():
     print('Starting resize_quick')
     left = 30
@@ -291,17 +315,17 @@ def resize_quick_combat(l=30, t=49, r=113, b=68, image='screen_resize.png'):
     # print('Taking screen_resize.png!')
 
 
-def resizeImage():
+def resizeImage(image):
     # print('Starting resizeImage -- See resize_quick')
     resize_quick()
-    png = 'images/screen_resize.png'
+    png = 'images/' + image
     im = Image.open(png)
     # saves new cropped image
     width, height = im.size
-    new_size = (width * 4, height * 4)
+    new_size = (width * 7, height * 7)
     im1 = im.resize(new_size)
     # print('Taking textshot.png!')
-    im1.save('images/textshot.png')
+    im1.save(f'images/{image}_enhanced.png')
 
 
 def Miner_Image_quick():
@@ -347,6 +371,7 @@ def Image_to_Text(preprocess, image, parse_config='--psm 7'):
     # print(text)
     return text
 
+
 def resizeImage_combat(image, new_image='textshot.png'):
     # print('Starting resizeImage_combat -- See resize_quick')
     resize_quick_combat(image)
@@ -359,14 +384,16 @@ def resizeImage_combat(image, new_image='textshot.png'):
     # print('Taking textshot.png!')
     im1.save('images/' + new_image)
 
+
 def Image_to_Text_combat(preprocess, image, parse_config='--psm 7'):
     print('Starting image_to_text')
-    resizeImage_combat(image=image, new_image='textshot.png')
-    change_brown_black()
+    # resizeImage_combat(image=image, new_image='textshot.png')
+    # change_brown_black()
     # construct the argument parse and parse the arguments
     image = cv2.imread('images/' + image)
     image = cv2.bitwise_not(image)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  #
+    # gray = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # check to see if we should apply thresholding to preprocess the
     # image
     if preprocess == "thresh":
@@ -398,6 +425,7 @@ def Image_to_Text_combat(preprocess, image, parse_config='--psm 7'):
     time.sleep(random.uniform(.5, 1))
     return text
 
+
 def screen_Image_new(name='screenshot.png'):
     # print('Starting screen_image_new')
     x, y, w, h = core.getWindow(data[0]['Config']['client_title'])
@@ -405,15 +433,16 @@ def screen_Image_new(name='screenshot.png'):
     im.save('images/' + name, 'png')
 
 
-def screen_Image(left=0, right=800, top=0, bottom=800, name='screenshot.png'): # Takes image and gives a name
+def screen_Image(left=0, right=800, top=0, bottom=800, name='screenshot.png'):  # Takes image and gives a name
     # print('Starting screen_image')
     myScreenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
     myScreenshot.save('images/' + name)
 
+
 def screen_block(image):
-    image = cv2.rectangle(image, pt1=(540, 250), pt2=(800, 0), color=(0, 0, 0), thickness=-1) # blocks map
-    image = cv2.rectangle(image, pt1=(0, 650), pt2=(800, 800), color=(0, 0, 0), thickness=-1) # blocks chat
-    image = cv2.rectangle(image, pt1=(605, 450), pt2=(800, 800), color=(0, 0, 0), thickness=-1) # blocks inventory
+    image = cv2.rectangle(image, pt1=(540, 250), pt2=(800, 0), color=(0, 0, 0), thickness=-1)  # blocks map
+    image = cv2.rectangle(image, pt1=(0, 650), pt2=(800, 800), color=(0, 0, 0), thickness=-1)  # blocks chat
+    image = cv2.rectangle(image, pt1=(605, 450), pt2=(800, 800), color=(0, 0, 0), thickness=-1)  # blocks inventory
     return image
 
 
@@ -436,6 +465,7 @@ def change_brown_black():
 
     cv2.imwrite("images/textshot.png", image)
 
+
 def McropImage_quick():
     print('Starting mcropimage_quick')
     left = 0
@@ -445,6 +475,8 @@ def McropImage_quick():
 
     im = ImageGrab.grab(bbox=(left, top, right, bottom))
     im.save('images/screenshot2.png', 'png')
+
+
 #
 #
 def findarea_attack_quick(object, deep=8):
@@ -504,7 +536,6 @@ def findarea_attack_quick(object, deep=8):
     # cv2.imshow("Result", np.hstack([image, output]))
 
 
-
 def invent_enabled():
     return Image_count('inventory_enabled.png', threshold=0.95)
 
@@ -537,8 +568,8 @@ def image_Rec_clicker(image, object, iheight=5, iwidth=2, threshold=0.8, clicker
     for pt in zip(*loc[::-1]):
         # print('Starting our for loop in zip now!')
         # print(f'Current pt is {pt}')
-        resizeImage() # update screenresize/text images
-        invent_crop() # update inventory.png
+        resizeImage()  # update screenresize/text images
+        invent_crop()  # update inventory.png
         # confirm how below draws rectangles
         cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
         if pt is None:
@@ -550,8 +581,8 @@ def image_Rec_clicker(image, object, iheight=5, iwidth=2, threshold=0.8, clicker
             cropy = 457
             iflag = True
             # i vars are constants todo add double randomness
-            x = random.randrange(iwidth, iwidth + ispace) # + cropx
-            y = random.randrange(iheight, iheight + ispace) # + cropy
+            x = random.randrange(iwidth, iwidth + ispace)  # + cropx
+            y = random.randrange(iheight, iheight + ispace)  # + cropy
             icoord = pt[0] + iheight + x
             icoord = (icoord, pt[1] + iwidth + y)
             b = super_random_breaks(.03, .12, .14, .25)
@@ -563,6 +594,7 @@ def image_Rec_clicker(image, object, iheight=5, iwidth=2, threshold=0.8, clicker
             pyautogui.click(icoord, duration=b, button=clicker)
     print('Ending image_Rec_clicker')
     return iflag
+
 
 def bank_item_clicker(image, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=25):
     print('Starting bank_clicker')
@@ -583,8 +615,8 @@ def bank_item_clicker(image, iheight=5, iwidth=2, threshold=0.8, clicker='left',
     for pt in zip(*loc[0:1:-1]):
         # print('Starting our for loop in zip now!')
         # print(f'Current pt is {pt}')
-        resizeImage() # update screenresize/text images
-        invent_crop() # update inventory.png
+        resizeImage()  # update screenresize/text images
+        invent_crop()  # update inventory.png
         # confirm how below draws rectangles
         cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
         if pt is None:
@@ -608,6 +640,7 @@ def bank_item_clicker(image, iheight=5, iwidth=2, threshold=0.8, clicker='left',
             pyautogui.click(icoord, duration=b, button=clicker)
     print('Ending image_Rec_clicker')
     return iflag
+
 
 def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=8, playarea=True,
                       fast=False):
@@ -648,10 +681,6 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
         return iflag
 
 
-
-
-
-
 def Image_count(object, threshold=0.8, left=0, top=0, right=865, bottom=830):
     # Window 1: object, threshold=0.8, left=0, top=0, right=0, bottom=0
     # Window 2: object, threshold=0.88, left=1000, top=0, right=1920, bottom=800
@@ -669,7 +698,6 @@ def Image_count(object, threshold=0.8, left=0, top=0, right=865, bottom=830):
         cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
         counter += 1
     return counter
-
 
 
 def invent_count(object, threshold=0.7):
@@ -692,6 +720,7 @@ def invent_count(object, threshold=0.7):
         counter += 1
     return counter
 
+
 def image_count(object, image, threshold=0.7):  # counts how many objects in image
     global window
     print(f'Starting image_count')
@@ -713,6 +742,7 @@ def image_count(object, image, threshold=0.7):  # counts how many objects in ima
         counter += 1
     return counter
 
+
 def move_mouse(x1, x2, y1, y2, click=False):
     b = random.uniform(0.15, 0.45)
     x_move = random.randrange(x1, x2) - 4
@@ -720,6 +750,7 @@ def move_mouse(x1, x2, y1, y2, click=False):
     pyautogui.moveTo(x_move, y_move, duration=b)
     if click:
         pyautogui.click()
+
 
 def drop_item():
     print('Starting drop_item!')
@@ -747,14 +778,16 @@ def random_breaks(minsec, maxsec):
     e = random.uniform(minsec, maxsec)
     time.sleep(e)
 
+
 def super_random_breaks(a, b, c, d):
-    min1 = random.uniform(a, b) # e.g. 1-3
-    max1 = random.uniform(c, d) # e.g. 5-7
-    wait = random.uniform(min1, max1) # e.g 2, 6
+    min1 = random.uniform(a, b)  # e.g. 1-3
+    max1 = random.uniform(c, d)  # e.g. 5-7
+    wait = random.uniform(min1, max1)  # e.g 2, 6
     return wait
 
+
 def find_and_click(image='screenshot.png', object='item.png', x1=0, x2=900, y1=0, y2=900,
-                   iheight=4, iwidth=4, threshold=0.8, clicker='left', ispace=10, num_objects = 1):
+                   iheight=4, iwidth=4, threshold=0.8, clicker='left', ispace=10, num_objects=1):
     counter = 0
     # screen_Image(left=x1, right=x2, top=y1, bottom=y2, name=image)
     global icoord
@@ -790,7 +823,7 @@ def find_and_click(image='screenshot.png', object='item.png', x1=0, x2=900, y1=0
             x = random.randrange(iwidth, iwidth + ispace)  # + cropx
             y = random.randrange(iheight, iheight + ispace)  # + cropy
             icoord = pt[0] + x
-            icoord = (icoord, pt[1] + y ) # + y in the ()
+            icoord = (icoord, pt[1] + y)  # + y in the ()
             b = super_random_breaks(.03, .12, .14, .25)
             print('Trying to move to coord in rec_clicker!')
             pyautogui.moveTo(icoord, duration=b)
@@ -802,8 +835,6 @@ def find_and_click(image='screenshot.png', object='item.png', x1=0, x2=900, y1=0
                 return True
     print('Ending image_Rec_clicker')
     return False
-
-
 
 
 def findarea(object):
