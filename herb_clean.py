@@ -7,6 +7,7 @@ import yaml
 
 
 import functions
+from functions import inventory_spots
 
 global hwnd
 global iflag
@@ -79,18 +80,21 @@ if __name__ == "__main__": # Fixed version for vm
         random_wait()
         pyautogui.press('escape')
         # click nests here
-        x1_start = 650
-        x2_start = 660
-        y1_start = 500
-        y2_start = 512
-        for i in range(0,28):
-            quick_dur = random.uniform(.03,.1)
-            addx = i%4 * 45
-            addy = i//4 * 40
-            random_wait(.05, .2)
-            move_mouse(x1_start + addx, x2_start + addx, y1_start + addy, y2_start + addy, quick_dur)
-            random_wait(.05, .2)
-            click_object()
+        # x1_start = 650
+        # x2_start = 660
+        # y1_start = 500
+        # y2_start = 512
+
+        for i in range(28):
+            move_mouse(*inventory_spots[i], True)
+        # for i in range(0,28):
+        #     quick_dur = random.uniform(.03,.1)
+        #     addx = i%4 * 45
+        #     addy = i//4 * 40
+        #     random_wait(.05, .2)
+        #     move_mouse(x1_start + addx, x2_start + addx, y1_start + addy, y2_start + addy, quick_dur)
+        #     random_wait(.05, .2)
+        #     click_object()
 
 
         move_mouse(425, 430, 345, 365)  # move to banker center screen
