@@ -28,56 +28,81 @@ global ibreak
 runelite = 'RuneLite'
 window = 1
 fish_type = 'infernal_eel'
-
-# todo list
-# add arrow key movements
-# add breaks
-# add login?
-# Figure out walk logic back to a tile for combat
-
 import pytesseract
 
-with open("pybot-config.yaml", "r") as yamlfile:
-    data = yaml.load(yamlfile, Loader=yaml.FullLoader)
+def client_to_front():
+    with open("pybot-config.yaml", "r") as yamlfile:
+        data = yaml.load(yamlfile, Loader=yaml.FullLoader)
 
 
-class bcolors:
-    OK = '\033[92m'  # GREEN
-    WARNING = '\033[93m'  # YELLOW
-    FAIL = '\033[91m'  # RED
-    RESET = '\033[0m'  # RESET COLOR
+    class bcolors:
+        OK = '\033[92m'  # GREEN
+        WARNING = '\033[93m'  # YELLOW
+        FAIL = '\033[91m'  # RED
+        RESET = '\033[0m'  # RESET COLOR
 
 
-with open("pybot-config.yaml", "r") as yamlfile:
-    data = yaml.load(yamlfile, Loader=yaml.FullLoader)
+    with open("pybot-config.yaml", "r") as yamlfile:
+        data = yaml.load(yamlfile, Loader=yaml.FullLoader)
 
-pytesseract.pytesseract.tesseract_cmd = data[0]['Config']['tesseract_path'] + "tesseract"
-try:
-    im = Image.open("images/tynan_shop.png")
-    text = pytesseract.image_to_string(im)
-    print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
-except:
-    pass
-os.environ["TESSDATA_PREFIX"] = data[0]['Config']['tesseract_path']  # + "tessdata"
-try:
-    im = Image.open("images/tynan_shop.png")
-    text = pytesseract.image_to_string(im)
-    print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
-except:
-    os.environ["TESSDATA_PREFIX"] = data[0]['Config']['tesseract_path'] + "tessdata"
+    pytesseract.pytesseract.tesseract_cmd = data[0]['Config']['tesseract_path'] + "tesseract"
     try:
         im = Image.open("images/tynan_shop.png")
         text = pytesseract.image_to_string(im)
         print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
     except:
-        print(
-            bcolors.FAIL + "Error setting up tesseract: Check the pyconfig.yaml is set up to your tesseract path or is installed correctly, go here and install latest version: " + 'https://digi.bib.uni-mannheim.de/tesseract/?C=M;O=D')
+        pass
+    os.environ["TESSDATA_PREFIX"] = data[0]['Config']['tesseract_path']  # + "tessdata"
+    try:
+        im = Image.open("images/tynan_shop.png")
+        text = pytesseract.image_to_string(im)
+        print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
+    except:
+        os.environ["TESSDATA_PREFIX"] = data[0]['Config']['tesseract_path'] + "tessdata"
+        try:
+            im = Image.open("images/tynan_shop.png")
+            text = pytesseract.image_to_string(im)
+            print(bcolors.OK + "Testing Tesseract is configured: Passed |", text)
+        except:
+            print(
+                bcolors.FAIL + "Error setting up tesseract: Check the pyconfig.yaml is set up to your tesseract path or is installed correctly, go here and install latest version: " + 'https://digi.bib.uni-mannheim.de/tesseract/?C=M;O=D')
 
 # Constants
 gdi32 = ctypes.WinDLL('gdi32.dll')
 
 VERTRES = 10
 DESKTOPVERTRES = 117
+
+inventory_spots = [
+    (650, 660, 498, 505),  # Spot 1
+    (693, 703, 498, 505),  # Spot 2
+    (736, 746, 498, 505),  # Spot 3
+    (779, 789, 498, 505),  # Spot 4
+    (650, 660, 533, 540),  # Spot 5
+    (693, 703, 533, 540),  # Spot 6
+    (736, 746, 533, 540),  # Spot 7
+    (779, 789, 533, 540),  # Spot 8
+    (650, 660, 568, 575),  # Spot 9
+    (693, 703, 568, 575),  # Spot 10
+    (736, 746, 568, 575),  # Spot 11
+    (779, 789, 568, 575),  # Spot 12
+    (650, 660, 603, 610),  # Spot 13
+    (693, 703, 603, 610),  # Spot 14
+    (736, 746, 603, 610),  # Spot 15
+    (779, 789, 603, 610),  # Spot 16
+    (650, 660, 638, 645),  # Spot 17
+    (693, 703, 638, 645),  # Spot 18
+    (736, 746, 638, 645),  # Spot 19
+    (779, 789, 638, 645),  # Spot 20
+    (650, 660, 673, 680),  # Spot 21
+    (693, 703, 673, 680),  # Spot 22
+    (736, 746, 673, 680),  # Spot 23
+    (779, 789, 673, 680),  # Spot 24
+    (650, 660, 708, 715),  # Spot 25
+    (693, 703, 708, 715),  # Spot 26
+    (736, 746, 708, 715),  # Spot 27
+    (779, 789, 708, 715),  # Spot 28
+]
 
 
 class DeviceCap:
