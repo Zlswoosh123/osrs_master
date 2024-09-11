@@ -56,13 +56,16 @@ def click_heal():
     move_mouse(782,795, 535, 545, True)
     print('Heal end')
 
-def click_abs(abs_counter):
+def click_abs(abs_counter, spec=False):
     print('Abs start')
     pyautogui.press('f1')
     pyautogui.press('esc')
     row = (abs_counter * 4) + 8
     for i in range(row, row+4):
-        move_mouse(*inventory_spots[i], True)
+        if spec == True and i == 20:
+            pass
+        else:
+            move_mouse(*inventory_spots[i], True)
     print('Abs end')
 
 
@@ -86,6 +89,14 @@ def click_cake(times=28):
         pyautogui.click()
         time.sleep(.05)
     print('Cake end')
+
+def click_spec(energy=50):
+    times = 100//energy
+    move_mouse(678, 682, 180, 185, True)
+    time.sleep(3.5)
+    for i in range(times-1):
+        move_mouse(678,682,180,185, True)
+        time.sleep(2.4)
 
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
@@ -119,26 +130,29 @@ except BaseException:
 
 
 # end = time.now() + 10800
-end = dt.datetime.now() + dt.timedelta(hours=3)
+end = dt.datetime.now() + dt.timedelta(minutes=95)
 now = dt.datetime.now()
 repot = dt.datetime.now() + dt.timedelta(seconds=303)
 abs = dt.datetime.now() + dt.timedelta(seconds=90)
 heal = dt.datetime.now() + dt.timedelta(seconds=35)
 log = dt.datetime.now() + dt.timedelta(seconds=15)
+spec_t = dt.datetime.now()
 
 cake = True
 counter = 0
 repot_counter = 0
 abs_counter = 0
 abs_flag = False
+spec = True
 while now < end:
-    if cake == True and counter == 0:
+    if cake == True and counter == 0:  # opening sequence to start game
+        click_abs(abs_counter, spec = spec)
         click_buff(repot_counter)
         time.sleep(5)
         click_cake(22)
         repot_counter += 1
         for i in range(5):
-            click_abs(abs_counter)
+            click_abs(abs_counter, spec = spec)
             abs_counter += 1
         click_cake(2)
         abs_counter = 0
@@ -155,8 +169,9 @@ while now < end:
         repot_counter += 1
         abs_flag = True
     if abs < now or abs_flag == True:
-        abs = dt.datetime.now() + dt.timedelta(seconds=90)
-        click_abs(abs_counter)
+        sleep_abs = r.randint(80, 120)
+        abs = dt.datetime.now() + dt.timedelta(seconds=sleep_abs)
+        click_abs(abs_counter, spec = spec)
         abs_counter += 1
         if abs_counter >= 5:
             abs_counter = 0
@@ -172,6 +187,13 @@ while now < end:
         time.sleep(.05)
         click_heal()
         heal = dt.datetime.now() + dt.timedelta(seconds=sleep)
+    if spec_t < now:
+        pyautogui.press('f1')
+        pyautogui.press('esc')
+        move_mouse(*inventory_spots[20], True)
+        click_spec(50)
+        move_mouse(*inventory_spots[20], True)
+        spec_t = dt.datetime.now() + dt.timedelta(seconds=304)
     now = dt.datetime.now()
 
     counter += 1

@@ -341,7 +341,7 @@ def Miner_Image_quick():
 
 def Image_to_Text(preprocess, image, parse_config='--psm 7'):
     # print('Starting image_to_text')
-    resizeImage()
+    resizeImage(image)
     change_brown_black()
     # construct the argument parse and parse the arguments
     image = cv2.imread('images/' + image)
@@ -763,6 +763,14 @@ def drop_item():
     time.sleep(d)
     print('Ending drop_item!')
 
+def click_row(row_counter):
+    print('Abs start')
+    pyautogui.press('f1')
+    pyautogui.press('esc')
+    row = (row_counter * 4)
+    for i in range(row, row+4):
+        move_mouse(*inventory_spots[i], True)
+    print('Abs end')
 
 def release_drop_item():
     e = random.uniform(0.1, 0.3)
