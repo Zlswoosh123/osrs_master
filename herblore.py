@@ -12,8 +12,7 @@ global iflag
 global icoord
 import functions
 import yaml
-from functions import find_Object, deposit_all_Bank, deposit_secondItem, \
-    exit_bank, image_Rec_clicker, Image_Rec_single
+from functions import deposit_all_Bank, image_Rec_clicker, Image_Rec_single
 iflag = False
 icoord = []
 pyautogui.FAILSAFE = False

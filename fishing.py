@@ -19,9 +19,9 @@ from functions import image_Rec_clicker
 from functions import screen_Image
 from functions import release_drop_item
 from functions import drop_item
-from functions import Image_to_Text
-from functions import invent_crop
-from functions import resizeImage
+from functions_bkp import Image_to_Text
+from functions_bkp import invent_crop
+from functions_bkp import resizeImage
 from functions import random_breaks
 from functions import image_eel_clicker
 from functions import screen_front
@@ -177,7 +177,7 @@ def drop_fish():
 
 def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries=[([110, 100, 0], [195, 180, 60])]):
     global window
-    functions.screen_Image(left, top, right, bottom)
+    functions.screen_Image(left, right, top, bottom)
     image = cv2.imread('images/screenshot.png')
     safe_open(image, 'screenshot.png')
     image = cv2.rectangle(image, pt1=(600, 0), pt2=(850, 200), color=(0, 0, 0), thickness=-1)
@@ -193,6 +193,7 @@ def find_fish(showCoords=False, left=0, top=0, right=800, bottom=800, boundaries
         print(f'image before mask is {image}')
         contours = ""
         if image is not None:
+            print('Image is not none')
             mask = cv2.inRange(image, lower, upper)
             ret, thresh = cv2.threshold(mask, 40, 255, 0)
             contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
@@ -236,7 +237,7 @@ def timer_countdown():
         timer_log += 1
         time.sleep(1)
         if timer_log % 10 == 0:
-            functions.screen_Image(0, 0, 800, 800)
+            functions.screen_Image(0, 800, 0, 800)
 
 def powerfisher(fish_type, Run_Duration_hours):
     global ibreak, coords, fishing_text, time_left, powerlist, actions, t_end, fish_count, clue_count, invent_count
@@ -255,7 +256,7 @@ def powerfisher(fish_type, Run_Duration_hours):
         approved_text = ['fishing', 'ishing', 'fishin']
         if fishing_text.strip().strip("'").strip(';').lower() not in approved_text:
             random_breaks(0.2, 3)
-            pick_random_fishing_spot(fish_type,)
+            pick_random_fishing_spot(fish_type)
             if random.randint(1,6) == 3:
                 functions.offscreen_mouse()
             time.sleep(super_random_breaks(8, 11, 15, 18))
@@ -285,7 +286,7 @@ def powerfisher(fish_type, Run_Duration_hours):
             time.sleep(random.randint(3, 6))
         if invent >= inv_cap:
             random_breaks(0.2, 0.7)
-            dropx_fish()
+            drop_fish()
             random_breaks(0.2, 0.7)
             inv_cap = random.randint(16, 21)
 

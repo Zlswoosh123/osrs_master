@@ -198,10 +198,15 @@ def super_random_breaks(a, b, c, d):
 
 def safe_open(image, png):
     # print('Starting safe_open')
-    while image is None:
-        image = cv2.imread('images/' + png)
+    count = 0
+    while image is None and count < 5:
+        image = cv2.imread('C:/Users/Zlswo/PycharmProjects/osrs_master/images/' + png)
         print(f'Sleeping until image is created')
         time.sleep(2)
+        count += 1
+    if count == 5:
+        print('Safe open failed!')
+        return image
     return image
 
 
@@ -315,7 +320,7 @@ def resize_quick_combat(l=30, t=49, r=113, b=68, image='screen_resize.png'):
     # print('Taking screen_resize.png!')
 
 
-def resizeImage(image):
+def resizeImage(image='screen_resize.png'):
     # print('Starting resizeImage -- See resize_quick')
     resize_quick()
     png = 'images/' + image
@@ -436,7 +441,13 @@ def screen_Image_new(name='screenshot.png'):
 def screen_Image(left=0, right=800, top=0, bottom=800, name='screenshot.png'):  # Takes image and gives a name
     # print('Starting screen_image')
     myScreenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
-    myScreenshot.save('images/' + name)
+    width, height = myScreenshot.size  # Assuming myScreenshot is a PIL Image object
+    print('About to screenshot.save')
+    myScreenshot.save('C:/Users/Zlswo/PycharmProjects/osrs_master/images/' + name)
+    print(f"Screenshot size: {myScreenshot.size}")
+    print(f"Saving region: left={left}, top={top}, right={right}, bottom={bottom}")
+    assert 0 <= left < right, "Invalid horizontal coordinates"
+    assert 0 <= top < bottom, "Invalid vertical coordinates"
 
 
 def screen_block(image):

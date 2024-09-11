@@ -4,10 +4,10 @@ import pyautogui
 import win32gui
 import core
 import yaml
+from functions import inventory_spots
 
 
 import functions
-from functions import inventory_spots, move_mouse, click_object
 
 global hwnd
 global iflag
@@ -49,52 +49,56 @@ except BaseException:
 
 iflag = False
 
+
+def click_object():
+    # 3rd item
+    d = random.uniform(0.11, 0.18)
+    time.sleep(d)
+    pyautogui.click()
+    print('clicked something')
+
+def move_mouse(x1, x2, y1, y2):
+    b = random.uniform(0.1, 0.3)
+    x_move = random.randrange(x1, x2)
+    y_move = random.randrange(y1, y2)
+    pyautogui.moveTo(x_move, y_move, duration=b)
+
 def random_wait(a=.1, b=.3):
     c = random.uniform(a, b)
     time.sleep(c)
 
 
 
-if __name__ == "__main__": # Fixed version for vm
-    t = (21036//28) + 1
+if __name__ == "__main__":
+    t = (5000//14) + 1
     while t > 0:
-        wait_roll = random.randint(1,4000)
-        wait_time_long = random.randint(45,260)
-        wait_time_short = random.randint(15, 60)
-        print(f'The anti-ban dice have been thrown! You rolled a {wait_roll}')
-        if wait_roll == 500:
-            print(f'Weve initiated a long wait for anti-ban for {wait_time_long}s')
-            time.sleep(wait_time_long)
-            n = 5
-        elif wait_roll % 800 == 0:
-            print(f'Weve initiated a short wait for anti-ban for {wait_time_short}s')
-            time.sleep(wait_time_short)
-            n = 5
-        else:
-            pass
-
-        dur = random.uniform(0.1, 0.25)
-        move_mouse(130, 140, 117, 127, dur)  # move to first obj in tab (nest)
-        random_wait(.05, .2)
-        click_object() # withdraw nest
-        random_wait()
-        pyautogui.press('escape')
-        # click herbs here
-        nums = [0,1,4,5,8,9,12,13,16,17,20,21,24,25]
-        for i in range(28):  # pattern 1
-            if i in nums:
-                s = random.uniform(0, 0.07)
-                move_mouse(*inventory_spots[i], s)
-        for i in range(28):  # pattern 2
-            if i not in nums:
-                s = random.uniform(0, 0.07)
-                move_mouse(*inventory_spots[i], s)
-
-
-        move_mouse(425, 430, 345, 365)  # move to banker center screen
+        move_mouse(125, 140, 120,130) # move to first item in bank
         random_wait(.05, .2)
         click_object()
-        random_wait(.45,.65)
+        random_wait(.05, .1)
+
+        move_mouse(175, 190, 120, 130) # move to 2nd item in bank
+        random_wait(.05, .2)
+        click_object()
+        pyautogui.press('escape')
+        random_wait(.05, .1)
+
+        move_mouse(*inventory_spots[13])  # move to first obj in inv (next box)
+        random_wait(.05, .2)
+        click_object()
+        random_wait(.05, .2)
+
+        move_mouse(*inventory_spots[14])  # move to 2nd obj in inv (nests)
+        random_wait(.05, .2)
+        click_object()
+        random_wait(1, 1.2)
+        pyautogui.press('space')
+        random_wait(18, 22)
+
+        move_mouse(425, 430, 370, 390)  # move to banker center screen
+        random_wait(.05, .2)
+        click_object()
+        random_wait(.6, .75)
 
         move_mouse(480, 490, 625, 635)  # empty all
         random_wait(.05, .2)
