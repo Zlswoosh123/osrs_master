@@ -291,7 +291,7 @@ def deposit_all_Bank():
 def invent_crop():  # Takes picture of inventory
     print('Starting invent_crop')
     global window
-    screen_Image(620, 820, 460, 780, 'inventshot.png')
+    screen_Image(620, 812, 460, 735, 'inventshot.png')
 
 
 def resize_quick():
@@ -448,6 +448,11 @@ def screen_Image(left=0, right=800, top=0, bottom=800, name='screenshot.png'):  
     print(f"Saving region: left={left}, top={top}, right={right}, bottom={bottom}")
     assert 0 <= left < right, "Invalid horizontal coordinates"
     assert 0 <= top < bottom, "Invalid vertical coordinates"
+
+def screen_Image_trim(left=20, right=800, top=20, bottom=800, name='screenshot_trim.png'):  # Takes image and gives a name
+    # print('Starting screen_image')
+    myScreenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
+    myScreenshot.save('images/' + name)
 
 
 def screen_block(image):
@@ -754,13 +759,15 @@ def image_count(object, image, threshold=0.7):  # counts how many objects in ima
     return counter
 
 
-def move_mouse(x1, x2, y1, y2, click=False):
+def move_mouse(x1, x2, y1, y2, click=False, type='left'):
     b = random.uniform(0.15, 0.45)
     x_move = random.randrange(x1, x2) - 4
     y_move = random.randrange(y1, y2) - 4
     pyautogui.moveTo(x_move, y_move, duration=b)
-    if click:
+    if click and type == 'left':
         pyautogui.click()
+    if click and type == 'right':
+        pyautogui.rightClick()
 
 
 def drop_item():
@@ -805,8 +812,9 @@ def super_random_breaks(a, b, c, d):
     return wait
 
 
-def find_and_click(image='screenshot.png', object='item.png', x1=0, x2=900, y1=0, y2=900,
+def find_and_click(image='screenshot.png', object='item.png', xadd=0, x2=900, yadd=0, y2=900,
                    iheight=4, iwidth=4, threshold=0.8, clicker='left', ispace=10, num_objects=1):
+    screen_Image()
     counter = 0
     # screen_Image(left=x1, right=x2, top=y1, bottom=y2, name=image)
     global icoord
@@ -815,6 +823,9 @@ def find_and_click(image='screenshot.png', object='item.png', x1=0, x2=900, y1=0
     img_rgb = cv2.imread('images/' + image)
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + object, 0)
+    if template is None:
+        print('Ending find_and_click, no template found')
+        return False
     w, h = template.shape[::-1]
     pt = None
     res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
@@ -839,31 +850,34 @@ def find_and_click(image='screenshot.png', object='item.png', x1=0, x2=900, y1=0
             cropy = 457
             iflag = True
             # i vars are constants
-            x = random.randrange(iwidth, iwidth + ispace)  # + cropx
-            y = random.randrange(iheight, iheight + ispace)  # + cropy
+            x = random.randrange(iwidth, iwidth + ispace) + xadd # + cropx
+            y = random.randrange(iheight, iheight + ispace) +yadd  # + cropy
             icoord = pt[0] + x
             icoord = (icoord, pt[1] + y)  # + y in the ()
             b = super_random_breaks(.03, .12, .14, .25)
-            print('Trying to move to coord in rec_clicker!')
+            # print('Trying to move to coord in rec_clicker!')
             pyautogui.moveTo(icoord, duration=b)
             b = super_random_breaks(.03, .12, .14, .25)
-            print('Trying to click coord!')
+            # print('Trying to click coord!')
             pyautogui.click(icoord, duration=b, button=clicker)
             counter += 1
             if counter >= num_objects:
+                print('Found image and clicked')
                 return True
-    print('Ending image_Rec_clicker')
+    print('Ending find_and_click, no image found')
     return False
 
 
 def findarea(object):
     screen_Image()
     image = cv2.imread('images/screenshot.png')
+    # Blue/ Green/ Red
     red = ([0, 0, 180], [80, 80, 255])  # 0 Index
     green = ([0, 180, 0], [80, 255, 80])  # 1 Index
     amber = ([0, 200, 200], [60, 255, 255])  # 2 Index
     pickup_high = ([250, 0, 167], [255, 5, 172])  # 3 Index
     attack_blue = ([250, 250, 0], [255, 255, 5])
+    purple = [([192, 0, 192], [255, 64, 255])]
     object_list = [red, green, amber, pickup_high, attack_blue]
     boundaries = [object_list[object]]
     # loop over the boundaries
