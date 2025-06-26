@@ -56,7 +56,7 @@ def random_wait(a=.1, b=.3):
 
 
 if __name__ == "__main__": # Fixed version for vm
-    t = (21036//28) + 1
+    t = (4000   //28) + 1
     while t > 0:
         wait_roll = random.randint(1,4000)
         wait_time_long = random.randint(45,260)

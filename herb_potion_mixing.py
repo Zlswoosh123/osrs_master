@@ -70,7 +70,7 @@ def random_wait(a=.1, b=.3):
 
 
 if __name__ == "__main__":
-    t = (3000//14) + 1
+    t = (6000//14) + 1
     while t > 0:
         move_mouse(125, 140, 120,130) # move to first item in bank
         random_wait(.05, .2)
@@ -93,7 +93,7 @@ if __name__ == "__main__":
         click_object()
         random_wait(1, 1.2)
         pyautogui.press('space')
-        random_wait(18, 22)
+        random_wait(10, 16)
 
         move_mouse(425, 430, 370, 390)  # move to banker center screen
         random_wait(.1, .9)
