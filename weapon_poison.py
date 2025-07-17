@@ -87,9 +87,12 @@ def apply_poison_once():
     # sleep_tick(base=.1, variance=.08)
 
 def reopen_bank():
-    """Click bank to finish loop / prep next withdraw."""
-    move_and_click(*coords['bank_end'])
+    """Click bank, then click deposit all."""
+    move_and_click(*coords['bank_end'])        # Open bank
+    time.sleep(1.2)                             # Wait for bank UI to open
+    move_and_click(*coords['deposit_button'])  # Click Deposit Inventory
     sleep_tick()
+
 
 # ---------------------------
 # MAIN
