@@ -122,7 +122,7 @@ def nat_check():
 
 
 
-def high_alch_loop(vol=1200, expensive=False, charge=False):
+def high_alch_loop(vol=15, expensive=False, charge=False):
     t = vol
     charge_amt = t - (random.randint(900,1000))
     exp = expensive
@@ -155,8 +155,8 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             pyautogui.press('f2')
             time.sleep(random.uniform(.1, .3))
             pyautogui.press('esc')
-            if alch_check() or nat_check():
-                stop_flag = True
+            # if alch_check() or nat_check():
+            #     stop_flag = True
             pyautogui.press('f6')
             n = 5
         if wait_roll % 10 == 0 or n == 5:  # Fixes mouse location over high alch spot
@@ -166,9 +166,9 @@ def high_alch_loop(vol=1200, expensive=False, charge=False):
             time.sleep(random.uniform(.1,.3))
             pyautogui.press('f6')
             b = random.uniform(0.36, 0.52)
-            x = random.randrange(640, 645) + 5
+            x = random.randrange(796, 798) + 5
             print('x: ', x)
-            y = random.randrange(605, 615) + 5
+            y = random.randrange(584, 585) + 5
             print('y: ', y)
             d = random.uniform(0.11, 0.18)
             pyautogui.moveTo(x, y, duration=b)
@@ -202,10 +202,11 @@ if __name__ == "__main__":
     global stop_flag
     stop_flag = False
     round = 1
-    while stop_flag == False:
-        login.login('alt3login',house_tab=True)
-        high_alch_loop(3500, expensive=False, charge=False)
-        login.logout()
+    max_round = 1
+    while stop_flag == False and round <= max_round:
+        # login.login('alt1login',house_tab=True)
+        high_alch_loop(148, expensive=False, charge=False)
+        # login.logout()
         print(f'End of Round {round}')
         if round % 4 != 0:
             wait = random.uniform(1800, 2700)
@@ -214,6 +215,7 @@ if __name__ == "__main__":
             wait = random.uniform(5400, 7200)
             print(f'Long wait period before next round! Rolled {wait}s wait')
         round += 1
+        stop_flag = True
         time.sleep(wait)
         # time.sleep(10)
     # superheat_items(100, 1) #100 items iron

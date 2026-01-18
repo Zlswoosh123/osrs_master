@@ -1,6 +1,31 @@
+#- Config:
+#    client_title: RuneLite
+#    enable_on_start: false
+#    file_path_to_client: \.runelite\
+#    pc_profile: C:\Users\Zlswo
+#    tesseract_path: C:\Program Files\Tesseract-OCR\
+
 - Config:
-    client_title: RuneLite
+    client_title: "RuneLite"
     enable_on_start: false
-    file_path_to_client: \.runelite\
-    pc_profile: C:\Users\Zlswo
-    tesseract_path: C:\Program Files\Tesseract-OCR\
+    file_path_to_client: "\\.runelite\\"
+    pc_profile: "C:\\Users\\Zlswo"
+    tesseract_path: "C:\\Program Files\\Tesseract-OCR\\"
+
+  Nav:
+    minimap_region: [ 680, 60, 795, 165 ]   # client-relative bbox
+    to_facility_waypoints:
+      # [x, y] inside the client window (not absolute screen coords)
+#      - [125, 340]   # near facility/NPC/panel area
+    - [415, 420]   # near middle
+    to_mine_waypoints:
+#      - [680, 380]  # near the rock cluster
+    - [415, 420]   # near middle
+    step_pause: [5, 7]        # seconds between waypoint clicks
+    step_pause_back: [4, 5]
+
+  TurnIn:
+    deposit_region: [0, 0, 600, 750]   # client-relative search area
+    deposit_argb: "FF00ADFF"              # teal in BGRA
+    deposit_tol: 50                       # per-channel tolerance (0–255)
+    deposit_min_area: 40                 # reject tiny blobs

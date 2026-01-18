@@ -59,8 +59,8 @@ if __name__ == "__main__": # Fixed version for vm
     # --- SETTINGS ---
     x1, y1 = 423, 530  # Position of the knight
     x2, y2 = 654, 501  # Position of coin pouch
-    clicks_per_cycle = 100  # Number of pickpockets per cycle
-    max_repeats = 2  # Maximum number of full pickpocket+pouch cycles
+    clicks_per_cycle = random.randint(80,98)  # Number of pickpockets per cycle
+    max_repeats = 4  # Maximum number of full pickpocket+pouch cycles
 
     # --- LOOP ---
     try:
@@ -80,6 +80,7 @@ if __name__ == "__main__": # Fixed version for vm
             time.sleep(3)
             pyautogui.click(x2, y2)
             time.sleep(random.uniform(0.6, 1.2))  # Optional delay before next cycle
+            clicks_per_cycle = random.randint(80, 98)
 
         print("Done. All cycles completed.")
 

@@ -145,7 +145,7 @@ repot_counter = 0
 abs_counter = 0
 abs_flag = False
 spec = True
-test.bootup_seq()
+# test.bootup_seq()
 while now < end:
     if cake == True and counter == 0:  # opening sequence to start game
         click_abs(abs_counter, spec = spec)

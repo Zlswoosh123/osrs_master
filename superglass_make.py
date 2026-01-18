@@ -58,7 +58,7 @@ coords = {
     'deposit_all': (490, 630),          # Deposit All button in bank (replace with actual)
 }
 
-casts_to_do = 50  # Total casts you want to do
+casts_to_do = 77//3  # Total casts you want to do
 
 # ---------------------------
 # FUNCTIONS

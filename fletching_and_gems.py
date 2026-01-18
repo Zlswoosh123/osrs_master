@@ -64,12 +64,13 @@ def move_mouse(x1, x2, y1, y2):
 
 def random_wait(a=.1, b=.3):
     c = random.uniform(a, b)
+
     time.sleep(c)
 
 
 
 if __name__ == "__main__":
-    t = (2082//14) + 1
+    t = (450//27) + 1
     flag = False # Determines if a second chisel is applied to gem to make tips
     while t > 0:
         move_mouse(125, 140, 120, 130) # move to first item in bank

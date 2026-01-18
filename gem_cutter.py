@@ -69,13 +69,13 @@ def random_wait(a=.1, b=.3):
 
 
 if __name__ == "__main__":
-    t = (800//27) + 1
+    t = (150//27) + 1
     flag = True # Determines if a second chisel is applied to gem to make tips
     while t > 0:
-        move_mouse(125, 140, 120,130) # move to first item in bank
-        random_wait(.05, .2)
-        click_object()
-        random_wait(.05, .1)
+        # move_mouse(125, 140, 120,130) # move to first item in bank
+        # random_wait(.05, .2)
+        # click_object()
+        # random_wait(.05, .1)
 
         move_mouse(175, 190, 120, 130) # move to 2nd item in bank
         random_wait(.05, .2)

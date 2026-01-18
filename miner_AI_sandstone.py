@@ -1,6 +1,6 @@
-
 import datetime
 import win32gui
+from threading import Thread
 import core
 import yaml
 import math
@@ -36,6 +36,7 @@ global hwnd
 global iflag
 global icoord
 iflag = False
+global timer
 import slyautomation_title
 
 inv_cap = random.uniform(14, 17)
@@ -60,6 +61,11 @@ class BotState:
         remaining = max(0, self.t_end - time.time())
         return str(datetime.timedelta(seconds=round(remaining)))
 
+# --- Window globals: must always exist
+x_win = 0
+y_win = 0
+w_win = 0
+h_win = 0
 
 @contextmanager
 def shift_held():
@@ -70,16 +76,6 @@ def shift_held():
     finally:
         time.sleep(random.uniform(0.06, 0.14))
         pyautogui.keyUp('shift')
-
-def debug_color_snapshot(region, target_bgr, tol=50, path_prefix="dbg_deposit"):
-    img_bgr, (L, T) = grab_client_region(region)
-    B,G,R = target_bgr
-    lower = np.array([clamp255(B - tol), clamp255(G - tol), clamp255(R - tol)], np.uint8)
-    upper = np.array([clamp255(B + tol), clamp255(G + tol), clamp255(R + tol)], np.uint8)
-    mask = cv2.inRange(img_bgr, lower, upper)
-    cv2.imwrite(f"{path_prefix}_region.png", img_bgr)
-    cv2.imwrite(f"{path_prefix}_mask.png", mask)
-    # print(f"[debug] wrote {path_prefix}_region.png and {path_prefix}_mask.png")
 
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
@@ -93,6 +89,12 @@ def gfindWindow(data):  # find window name returns PID of the window
 
 with open("pybot-config.yaml", "r") as yamlfile:
     data = yaml.load(yamlfile, Loader=yaml.FullLoader)
+    print("YAML top-level type:", type(data).__name__)
+    print("YAML[0] keys:", list(data[0].keys()))
+    print("Nav present?:", 'Nav' in data[0])
+    if 'Nav' in data[0]:
+        print("to_facility_waypoints:", data[0]['Nav'].get('to_facility_waypoints'))
+        print("to_mine_waypoints:", data[0]['Nav'].get('to_mine_waypoints'))
 
 try:
     gfindWindow(data[0]['Config']['client_title'])
@@ -106,7 +108,33 @@ try:
 except BaseException:
     print("Unable to find window:", data[0]['Config']['client_title'], "| Please see list of window names below:")
     core.printWindows()
-    pass
+    # Fallback: try Win32 directly; keep safe defaults if it also fails
+    try:
+        hwnd_local = win32gui.FindWindow(None, data[0]['Config']['client_title'])
+        l, t, r, b = win32gui.GetWindowRect(hwnd_local)
+        x_win, y_win, w_win, h_win = l, t, r - l, b - t
+    except Exception:
+        x_win = y_win = 0
+        w_win = h_win = 0
+
+def parse_argb_hex(hex8: str):
+    """
+    Parse 'FF00ADFF' as ARGB -> return BGR tuple for OpenCV.
+    A=FF, R=00, G=AD, B=FF  ==>  BGR = (255, 173, 0)
+    """
+    s = hex8.strip().lstrip('#')
+    if len(s) != 8:
+        raise ValueError(f"Expected 8-hex ARGB like 'FF00ADFF', got '{hex8}'")
+    a = int(s[0:2], 16)  # ignored
+    r = int(s[2:4], 16)
+    g = int(s[4:6], 16)
+    b = int(s[6:8], 16)
+    return (b, g, r)
+
+
+def timer():
+    startTime = time.time()
+    return startTime
 
 def ensure_client_foreground():
     """Bring the client window to the front (best-effort; safe if it fails)."""
@@ -117,42 +145,6 @@ def ensure_client_foreground():
         win32gui.SetActiveWindow(window)
     except Exception:
         pass
-
-def Miner_Image_quick(left = 0, top = 150, right = 800, bottom = 770):
-    # left = 150
-    # top = 150
-    # right = 650
-    # bottom = 750
-    print('About to Miner_image_quick')
-    im = ImageGrab.grab(bbox=(left, top, right, bottom))
-    print(f"Saving region: left={left}, top={top}, right={right}, bottom={bottom}")
-    im.save('images/miner_img.png', 'png')
-
-INVENT_CAPACITY = 28
-INV_LEFT, INV_TOP, INV_RIGHT, INV_BOTTOM = 620, 460, 812, 735
-
-def click_client(x, y, jitter=0, move_dur=(0.12, 0.25)):
-    x0, y0 = get_client_origin()
-    tx = x0 + x + random.randint(-jitter, jitter)
-    ty = y0 + y + random.randint(-jitter, jitter)
-    pyautogui.moveTo(tx, ty, duration=random.uniform(*move_dur))
-    pyautogui.click()
-
-def print_mouse_pos_relative(seconds=10, hz=10):
-    """
-    Move your mouse over the target UI to capture client-relative coords.
-    """
-    ensure_client_foreground()
-    x0, y0 = get_client_origin()
-    if (x0, y0) == (0, 0):
-        print("[calibrate] WARNING: client origin unknown; if your window isn't at (0,0), values will be off.")
-    end = time.time() + seconds
-    print("\n[calibrate] Move mouse over the UI target…")
-    while time.time() < end:
-        x, y = pyautogui.position()
-        print(f"client-rel: [{x - x0}, {y - y0}]", end='\r')
-        time.sleep(1.0 / hz)
-    print("\n[calibrate] Done.\n")
 
 def get_client_origin():
     """
@@ -178,6 +170,30 @@ def get_client_origin():
                 # Leave (0,0); caller may warn if window isn't pinned there
                 x0, y0 = 0, 0
     return x0, y0
+
+
+def click_client(x, y, jitter=4, move_dur=(0.12, 0.25)):
+    x0, y0 = get_client_origin()
+    tx = x0 + x + random.randint(-jitter, jitter)
+    ty = y0 + y + random.randint(-jitter, jitter)
+    pyautogui.moveTo(tx, ty, duration=random.uniform(*move_dur))
+    pyautogui.click()
+
+def print_mouse_pos_relative(seconds=10, hz=10):
+    """
+    Move your mouse over the target UI to capture client-relative coords.
+    """
+    ensure_client_foreground()
+    x0, y0 = get_client_origin()
+    if (x0, y0) == (0, 0):
+        print("[calibrate] WARNING: client origin unknown; if your window isn't at (0,0), values will be off.")
+    end = time.time() + seconds
+    print("\n[calibrate] Move mouse over the UI target…")
+    while time.time() < end:
+        x, y = pyautogui.position()
+        print(f"client-rel: [{x - x0}, {y - y0}]", end='\r')
+        time.sleep(1.0 / hz)
+    print("\n[calibrate] Done.\n")
 
 
 def grab_client_region(region=None):
@@ -243,7 +259,7 @@ def find_template_client(template_path, region=None, threshold=0.86, scales=(1.0
     cy = y + h // 2 + (0 if region is None else region[1])
     return (cx, cy, score)
 
-def click_template_client(template_path, region=None, threshold=0.86, max_tries=3, jitter=0, pause=(0.35, 0.6)):
+def click_template_client(template_path, region=None, threshold=0.86, max_tries=3, jitter=4, pause=(0.35, 0.6)):
     """
     Tries to find and click the template up to max_tries.
     Returns True/False and last score.
@@ -278,196 +294,67 @@ def parse_bgra_hex(hex8: str):
 def clamp255(x):
     return max(0, min(255, int(x)))
 
-# def click_color_bgr_in_region(
-#     target_bgr=(255,173,0),          # teal in BGR (from FF00ADFF BGRA)
-#     tol=45,                           # ±tolerance per channel
-#     region=None,                      # [l,t,r,b] client-relative
-#     min_area=30,                     # minimum contour area to accept
-#     max_tries=3,
-#     morph_kernel=3,
-#     debug=True
-# ):
-#     """
-#     Find a blob of the target BGR color in the region and click its centroid.
-#     Returns (ok:bool, info:dict).
-#     """
-#     ensure_client_foreground()
-#     k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (morph_kernel, morph_kernel))
-#     last_info = {}
-#     for attempt in range(max_tries):
-#         img_bgr, (abs_left, abs_top) = grab_client_region(region)  # uses your existing grab
-#         B, G, R = target_bgr
-#         lower = np.array([clamp255(B - tol), clamp255(G - tol), clamp255(R - tol)], dtype=np.uint8)
-#         upper = np.array([clamp255(B + tol), clamp255(G + tol), clamp255(R + tol)], dtype=np.uint8)
-#
-#         mask = cv2.inRange(img_bgr, lower, upper)
-#         if morph_kernel > 1:
-#             mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, k, iterations=1)
-#             mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, k, iterations=1)
-#
-#         # Find largest contour
-#         cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-#         if not cnts:
-#             last_info = {"attempt": attempt+1, "area": 0, "found": 0}
-#             time.sleep(random.uniform(0.15, 0.30))
-#             continue
-#
-#         c = max(cnts, key=cv2.contourArea)
-#         area = cv2.contourArea(c)
-#         last_info = {"attempt": attempt+1, "area": float(area), "found": len(cnts)}
-#
-#         if area < float(min_area):
-#             # Too small; try again
-#             if debug:
-#                 print(f"[color] small area={area:.1f} < {min_area}, retrying…")
-#             time.sleep(random.uniform(0.15, 0.30))
-#             continue
-#
-#         M = cv2.moments(c)
-#         if M["m00"] == 0:
-#             time.sleep(random.uniform(0.1, 0.2))
-#             continue
-#         cx = int(M["m10"] / M["m00"])
-#         cy = int(M["m01"] / M["m00"])
-#
-#         # convert to client-relative coords
-#         rel_x = cx + (0 if region is None else region[0])
-#         rel_y = cy + (0 if region is None else region[1])
-#
-#         if debug:
-#             print(f"[color] click @ client-rel [{rel_x}, {rel_y}] area={area:.1f}")
-#
-#         click_client(rel_x, rel_y, jitter=4)
-#         time.sleep(random.uniform(0.45, 0.8))
-#         return True, last_info
-#
-#     return False, last_info
-
 def click_color_bgr_in_region(
-    target_bgr=(255,173,0),          # teal in BGR (FF00ADFF -> ARGB -> BGR)
-    tol=45,                           # per-channel tolerance (try 45–60 while tuning)
-    region=None,                      # [l,t,r,b] client-relative (None = whole client)
-    min_area=30,                      # accept small blobs; we'll still click centroid fallback
+    target_bgr=(255,173,0),          # teal in BGR (from FF00ADFF BGRA)
+    tol=30,                           # ±tolerance per channel
+    region=None,                      # [l,t,r,b] client-relative
+    min_area=120,                     # minimum contour area to accept
     max_tries=3,
     morph_kernel=3,
-    post_click_sleep=(0.45, 0.9),
-    debug=True,
-    use_hsv=False                     # set True if BGR path is flaky
+    debug=False
 ):
     """
-    Find a blob of the target color in the region and click its centroid.
-    Returns (ok: bool, info: dict). Writes dbg images when debug=True.
+    Find a blob of the target BGR color in the region and click its centroid.
+    Returns (ok:bool, info:dict).
     """
     ensure_client_foreground()
-    last_info = {}
     k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (morph_kernel, morph_kernel))
-
-
+    last_info = {}
     for attempt in range(max_tries):
-        img_bgr, _ = grab_client_region(region)
+        img_bgr, (abs_left, abs_top) = grab_client_region(region)  # uses your existing grab
+        B, G, R = target_bgr
+        lower = np.array([clamp255(B - tol), clamp255(G - tol), clamp255(R - tol)], dtype=np.uint8)
+        upper = np.array([clamp255(B + tol), clamp255(G + tol), clamp255(R + tol)], dtype=np.uint8)
 
-        if use_hsv:
-            # --- HSV masking (more robust to AA/lighting) ---
-            tgt = np.uint8([[list(target_bgr)]])
-            tH, tS, tV = cv2.cvtColor(tgt, cv2.COLOR_BGR2HSV)[0, 0]
-            tH, tS, tV = int(tH), int(tS), int(tV)  # avoid uint8 overflow
-            h_tol = 10
-            s_tol = max(50, tol)
-            v_tol = max(50, tol)
-            h_lo, h_hi = tH - h_tol, tH + h_tol
-            s_lo, s_hi = max(0, tS - s_tol), min(255, tS + s_tol)
-            v_lo, v_hi = max(0, tV - v_tol), min(255, tV + v_tol)
-
-            img_hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
-            if h_lo < 0:
-                lo1 = np.array([0,   s_lo, v_lo], np.uint8)
-                hi1 = np.array([min(179, h_hi), s_hi, v_hi], np.uint8)
-                lo2 = np.array([179 + h_lo, s_lo, v_lo], np.uint8)
-                hi2 = np.array([179,        s_hi, v_hi], np.uint8)
-                mask = cv2.bitwise_or(cv2.inRange(img_hsv, lo1, hi1),
-                                      cv2.inRange(img_hsv, lo2, hi2))
-            elif h_hi > 179:
-                lo1 = np.array([max(0, h_lo), s_lo, v_lo], np.uint8)
-                hi1 = np.array([179,          s_hi, v_hi], np.uint8)
-                lo2 = np.array([0,            s_lo, v_lo], np.uint8)
-                hi2 = np.array([h_hi - 179,   s_hi, v_hi], np.uint8)
-                mask = cv2.bitwise_or(cv2.inRange(img_hsv, lo1, hi1),
-                                      cv2.inRange(img_hsv, lo2, hi2))
-            else:
-                lo = np.array([h_lo, s_lo, v_lo], np.uint8)
-                hi = np.array([h_hi, s_hi, v_hi], np.uint8)
-                mask = cv2.inRange(img_hsv, lo, hi)
-        else:
-            # --- Original BGR masking ---
-            B, G, R = target_bgr
-            lower = np.array([clamp255(B - tol), clamp255(G - tol), clamp255(R - tol)], np.uint8)
-            upper = np.array([clamp255(B + tol), clamp255(G + tol), clamp255(R + tol)], np.uint8)
-            mask = cv2.inRange(img_bgr, lower, upper)
-
-        # Thicken/close holes so thin outlines become solid blobs
+        mask = cv2.inRange(img_bgr, lower, upper)
         if morph_kernel > 1:
-            mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, k, iterations=2)
-            mask = cv2.dilate(mask, k, iterations=1)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, k, iterations=1)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, k, iterations=1)
 
+        # Find largest contour
         cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
         if not cnts:
-            # ---- Fallback: centroid of all non-zero pixels ----
-            nz = cv2.findNonZero(mask)
-            if nz is not None and len(nz) > 0:
-                cx = int(np.mean(nz[:, 0, 0]))
-                cy = int(np.mean(nz[:, 0, 1]))
-                rel_x = cx + (0 if region is None else region[0])
-                rel_y = cy + (0 if region is None else region[1])
-                if debug:
-                    cv2.imwrite("dbg_deposit_region.png", img_bgr)
-                    cv2.imwrite("dbg_deposit_mask.png", mask)
-                    print(f"[color] attempt {attempt+1}: no contours; using nonzero centroid @{rel_x},{rel_y}")
-                click_client(rel_x, rel_y, jitter=0)
-                time.sleep(random.uniform(*post_click_sleep))
-                return True, {"attempt": attempt+1, "area": 0.0, "found": 0, "fallback": "nonzero-centroid"}
-            # else truly nothing detected
-            last_info = {"attempt": attempt+1, "area": 0.0, "found": 0}
-            if debug:
-                cv2.imwrite("dbg_deposit_region.png", img_bgr)
-                cv2.imwrite("dbg_deposit_mask.png", mask)
-                print(f"[color] attempt {attempt+1}: empty mask; wrote dbg images")
+            last_info = {"attempt": attempt+1, "area": 0, "found": 0}
             time.sleep(random.uniform(0.15, 0.30))
             continue
 
-        # Largest contour
         c = max(cnts, key=cv2.contourArea)
-        area = float(cv2.contourArea(c))
-        last_info = {"attempt": attempt+1, "area": area, "found": len(cnts)}
+        area = cv2.contourArea(c)
+        last_info = {"attempt": attempt+1, "area": float(area), "found": len(cnts)}
 
-        # Compute click point (moments with robust fallback)
         if area < float(min_area):
-            nz = cv2.findNonZero(mask)
-            if nz is None or len(nz) == 0:
-                if debug:
-                    print(f"[color] attempt {attempt+1}: small area={area:.1f}, no nonzero; retrying…")
-                time.sleep(random.uniform(0.15, 0.30))
-                continue
-            cx = int(np.mean(nz[:, 0, 0]))
-            cy = int(np.mean(nz[:, 0, 1]))
-        else:
-            M = cv2.moments(c)
-            if M["m00"] == 0:
-                x, y, w, h = cv2.boundingRect(c)
-                cx = x + w // 2
-                cy = y + h // 2
-            else:
-                cx = int(M["m10"] / M["m00"])
-                cy = int(M["m01"] / M["m00"])
+            # Too small; try again
+            if debug:
+                print(f"[color] small area={area:.1f} < {min_area}, retrying…")
+            time.sleep(random.uniform(0.15, 0.30))
+            continue
 
+        M = cv2.moments(c)
+        if M["m00"] == 0:
+            time.sleep(random.uniform(0.1, 0.2))
+            continue
+        cx = int(M["m10"] / M["m00"])
+        cy = int(M["m01"] / M["m00"])
+
+        # convert to client-relative coords
         rel_x = cx + (0 if region is None else region[0])
         rel_y = cy + (0 if region is None else region[1])
 
         if debug:
-            print(f"[color] click @ client-rel [{rel_x}, {rel_y}] area={area:.1f} found={len(cnts)}")
+            print(f"[color] click @ client-rel [{rel_x}, {rel_y}] area={area:.1f}")
 
-        click_client(rel_x, rel_y, jitter=0)
-        time.sleep(random.uniform(*post_click_sleep))
+        click_client(rel_x, rel_y, jitter=4)
+        time.sleep(random.uniform(0.45, 0.8))
         return True, last_info
 
     return False, last_info
@@ -488,7 +375,7 @@ def wait_until_still(region, settle_ms=250, timeout_s=8, check_hz=10, delta_thre
         img_prev = img_cur
     return False
 
-def click_waypoints(pts, jitter=0, pause=(0.45, 0.75), long_every=None, long_extra=(0.4, 0.8)):
+def click_waypoints(pts, jitter=4, pause=(0.45, 0.75), long_every=None, long_extra=(0.4, 0.8)):
     """
     Walk through client-relative waypoints with human-like pacing.
     If Nav.minimap_region exists, wait for 'stillness' after each click; else sleep.
@@ -510,6 +397,21 @@ def click_waypoints(pts, jitter=0, pause=(0.45, 0.75), long_every=None, long_ext
         else:
             time.sleep(base)
 
+
+
+def Miner_Image_quick(left = 0, top = 150, right = 800, bottom = 770):
+    # left = 150
+    # top = 150
+    # right = 650
+    # bottom = 750
+    print('About to Miner_image_quick')
+    im = ImageGrab.grab(bbox=(left, top, right, bottom))
+    print(f"Saving region: left={left}, top={top}, right={right}, bottom={bottom}")
+    im.save('images/miner_img.png', 'png')
+
+INVENT_CAPACITY = 28
+INV_LEFT, INV_TOP, INV_RIGHT, INV_BOTTOM = 620, 460, 812, 735
+
 def bank_prompt():
     """
     Blocking pop-up: tells you to bank manually, then choose to continue or stop.
@@ -528,23 +430,7 @@ def bank_prompt():
     choice = pyautogui.confirm(text=msg, title='Banking Needed', buttons=['Repeat', 'Cancel'])
     return choice == 'Repeat'
 
-def parse_argb_hex(hex8: str):
-    """
-    Parse 'FF00ADFF' as ARGB -> return BGR tuple for OpenCV.
-    A=FF, R=00, G=AD, B=FF  ==>  BGR = (255, 173, 0)
-    """
-    s = hex8.strip().lstrip('#')
-    if len(s) != 8:
-        raise ValueError(f"Expected 8-hex ARGB like 'FF00ADFF', got '{hex8}'")
-    a = int(s[0:2], 16)  # ignored
-    r = int(s[2:4], 16)
-    g = int(s[4:6], 16)
-    b = int(s[6:8], 16)
-    return (b, g, r)
-
-
-def turn_in_cycle():
-    print('Starting turn in cycle')
+def turn_in_cycle() -> bool:
     """
     Navigate -> (optional) open -> color-click deposit -> verify -> return.
     Uses ARGB teal from YAML and color detection.
@@ -552,12 +438,12 @@ def turn_in_cycle():
     nav = data[0].get('Nav', {}) or {}
     ti  = data[0].get('TurnIn', {}) or {}
 
-    # to_facility = nav.get('to_facility_waypoints') or []
-    # to_mine     = nav.get('to_mine_waypoints') or []
-    # if not to_facility or not to_mine:
-    #     print("[turn-in] Missing waypoints → simple sleep fallback")
-    #     time.sleep(2.0); time.sleep(1.2); time.sleep(1.6)
-    #     return True
+    to_facility = nav.get('to_facility_waypoints') or []
+    to_mine     = nav.get('to_mine_waypoints') or []
+    if not to_facility or not to_mine:
+        print("[turn-in] Missing waypoints → simple sleep fallback")
+        time.sleep(2.0); time.sleep(1.2); time.sleep(1.6)
+        return True
 
     # pacing from YAML
     step_pause      = tuple(nav.get('step_pause', [1.3, 2.0]))
@@ -567,16 +453,14 @@ def turn_in_cycle():
 
     # deposit config
     # Support both names for backward compatibility (see item 4):
-    # --- deposit config (use YAML exactly as provided) ---
     deposit_hex_key = 'deposit_argb' if 'deposit_argb' in ti else 'deposit_bgra'
-    deposit_hex = ti.get(deposit_hex_key, 'FF00ADFF')
-    target_bgr = parse_argb_hex(deposit_hex)
+    deposit_hex     = ti.get(deposit_hex_key, 'FF00ADFF')
+    target_bgr      = parse_argb_hex(deposit_hex) if deposit_hex_key == 'deposit_argb' else parse_bgra_hex(deposit_hex)
 
-
-    deposit_region = ti.get('deposit_region')  # [l,t,r,b] client-relative or None
-    deposit_tol = int(ti.get('deposit_tol', 35))
-    deposit_min_area = int(ti.get('deposit_min_area', 80))
-    morph_kernel = int(ti.get('deposit_morph_kernel', 5))
+    deposit_region   = ti.get('deposit_region')                  # [l,t,r,b] or None
+    deposit_tol      = int(ti.get('deposit_tol', 35))
+    deposit_min_area = int(ti.get('deposit_min_area', 120))
+    morph_kernel     = int(ti.get('deposit_morph_kernel', 3))
 
     open_xy   = ti.get('open_click')   # optional
     close_xy  = ti.get('close_click')  # optional
@@ -591,18 +475,9 @@ def turn_in_cycle():
     # run toggle (optional)
     run_key = data[0]['Config'].get('run_toggle_key')
 
-    x0, y0 = get_client_origin()
-    print(f"[turn-in] origin={x0},{y0} win={w_win}x{h_win}")
-
-    print("[turn-in] deposit_region:", deposit_region)  # client-relative or None
-    print("[turn-in] target_bgr:", target_bgr)  # should be ~ (255, 173, 0)
-
-    img, _ = grab_client_region(deposit_region)
-    print("[turn-in] grabbed shape:", img.shape)  # non-zero (h, w, 3)
-
     # Count before (for verification)
     try:
-        before = inv_count('mlm')
+        before = count_tracked_inventory()
     except Exception:
         before = None
 
@@ -617,7 +492,7 @@ def turn_in_cycle():
     # 2) Open (optional)
     if open_xy:
         print("[turn-in] Opening turn-in panel…")
-        click_client(open_xy[0], open_xy[1], jitter=0)
+        click_client(open_xy[0], open_xy[1], jitter=5)
         time.sleep(p_open)
 
     # 3) Deposit via color detection (primary)
@@ -625,30 +500,30 @@ def turn_in_cycle():
     time.sleep(p_pre_deposit)
     ok, info = click_color_bgr_in_region(
         target_bgr=target_bgr,
-        tol=deposit_tol,  # try 30–45 if needed
-        region=deposit_region,  # ← from YAML
-        min_area=deposit_min_area,  # try 60–120
+        tol=deposit_tol,
+        region=deposit_region,
+        min_area=deposit_min_area,
         max_tries=3,
-        morph_kernel=morph_kernel,  # 3 or 5
-        debug=True  # write dbg_deposit_region.png/dbg_deposit_mask.png
+        morph_kernel=morph_kernel,
+        debug=False
     )
-
-    print('ok is: ', ok, ' and info is: ', info)
+    time.sleep(3)  # EXTRA post-click pause here
     if not ok:
-        print("[turn-in] Region miss → whole-client fallback")
+        print(f"[turn-in] Color not found in region (tries={info.get('attempt','?')}, area={info.get('area',0)}). "
+              f"Trying whole-client fallback…")
         ok, info = click_color_bgr_in_region(
             target_bgr=target_bgr,
             tol=max(deposit_tol, 45),
-            region=deposit_region,  # whole client
-            min_area=max(40, int(deposit_min_area * 0.6)),
+            region=None,
+            min_area=max(60, int(deposit_min_area * 0.6)),
             max_tries=2,
             morph_kernel=morph_kernel,
-            debug=True
+            debug=False
         )
 
     if not ok and dep_xy_fb:
         print("[turn-in] Fallback: fixed deposit_click")
-        click_client(dep_xy_fb[0], dep_xy_fb[1], jitter=0)
+        click_client(dep_xy_fb[0], dep_xy_fb[1], jitter=5)
         time.sleep(p_post_deposit)
     else:
         time.sleep(p_post_deposit)
@@ -656,50 +531,46 @@ def turn_in_cycle():
     # 4) Close (optional)
     if close_xy:
         print("[turn-in] Closing panel…")
-        click_client(close_xy[0], close_xy[1], jitter=0)
+        click_client(close_xy[0], close_xy[1], jitter=3)
         time.sleep(p_close)
 
     # 5) Verify inventory reduced; one retry if not
-    time.sleep(3)
     try:
-        after = inv_count('mlm')
+        after = count_tracked_inventory()
         if before is not None:
             if after < before:
                 print(f"[turn-in] Inventory decreased: {before} -> {after} ✔")
-                return 1
             else:
                 print(f"[turn-in] WARNING: inventory not reduced ({before} -> {after}). Retrying deposit once…")
-                time.sleep(10)  #Bin may be full, waiting
-                return 0
-                # ok2, _ = click_color_bgr_in_region(
-                #     target_bgr=target_bgr,
-                #     tol=min(60, deposit_tol + 10),
-                #     region=deposit_region,
-                #     min_area=max(60, int(deposit_min_area * 0.6)),
-                #     max_tries=2,
-                #     morph_kernel=morph_kernel,
-                #     debug=True
-                # )
-                # if not ok2 and dep_xy_fb:
-                #     click_client(dep_xy_fb[0], dep_xy_fb[1], jitter=5)
-                #     time.sleep(0.8)
-                # final = inv_count('mlm')
-                # print(f"[turn-in] Post-retry inventory: {after} -> {final}")
+                ok2, _ = click_color_bgr_in_region(
+                    target_bgr=target_bgr,
+                    tol=min(60, deposit_tol + 10),
+                    region=deposit_region,
+                    min_area=max(60, int(deposit_min_area * 0.6)),
+                    max_tries=2,
+                    morph_kernel=morph_kernel,
+                    debug=False
+                )
+                if not ok2 and dep_xy_fb:
+                    click_client(dep_xy_fb[0], dep_xy_fb[1], jitter=5)
+                    time.sleep(0.8)
+                final = count_tracked_inventory()
+                print(f"[turn-in] Post-retry inventory: {after} -> {final}")
     except Exception:
-        return 0
         pass
 
     # 6) Return (paced)
     print("[turn-in] Returning to mine…")
-    # click_waypoints(to_mine, pause=step_pause_back, long_every=long_every, long_extra=long_extra)
+    click_waypoints(to_mine, pause=step_pause_back, long_every=long_every, long_extra=long_extra)
 
-    # if run_key:
-    #     pyautogui.press(run_key); time.sleep(0.1)
-    # return True
+    if run_key:
+        pyautogui.press(run_key); time.sleep(0.1)
+    return True
+
 
 def Miner_Image():
     screen_Image(0, 900, 0, 900, 'images/miner_img.png')
-    # print('Taking Miner_image photo)')
+    print('Taking Miner_image photo)')
 
 def _half_pair_order():
     """
@@ -755,7 +626,6 @@ def findarea_single(ore, cropx, cropy):
     image = cv2.imread(r"images/miner_img.png")
     safe_open(image, 'miner_img.png')
 
-
     # B, G, R ranges
     tin = ([103, 86, 65], [145, 133, 128])
     copper = ([35, 70, 120], [65, 110, 170])
@@ -796,9 +666,6 @@ def findarea_single(ore, cropx, cropy):
     pyautogui.click(duration=random.uniform(0.07, 0.11))
     return (tx, ty)
 
-def count_mlm_ore():
-    return Image_count('mlm_ore.png', threshold=0.8, left=0, top=0, right=800, bottom=790)
-
 def count_gems():
     return Image_count('gem_icon.png', threshold=0.8, left=0, top=0, right=800, bottom=750)
 
@@ -809,7 +676,7 @@ def count_gems2():
     return Image_count('gem_icon2.png', threshold=0.8, left=0, top=0, right=800, bottom=750)
 
 def inv_count(name):
-    return Image_count(name + '_ore.png', threshold=0.8, left=0, top=0, right=810, bottom=750)
+    return Image_count(name + '_ore.png', threshold=0.8, left=0, top=0, right=800, bottom=750)
 
 def timer_printer(state: BotState, stop_event: Event):
     # prints once per second until stop_event is set or time expires
@@ -819,11 +686,11 @@ def timer_printer(state: BotState, stop_event: Event):
             spot = state.spot
             mined = state.mined_text
             act = state.actions
-        # print(
-        #     bcolors.OK +
-        #     f'\rtime left: {tl} | status: {mined}',
-        #     end=''
-        # )
+        print(
+            bcolors.OK +
+            f'\rtime left: {tl} | status: {mined}',
+            end=''
+        )
         time.sleep(.3)
 
 TRACKED_ORES = ['1kg', '2kg', '5kg', '10kg']
@@ -865,15 +732,12 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
 
     print("Mine Ore Selected:", powerlist[ore])
     spot = (0, 0)  # local cursor target
-    inv_check = 0
-    count = 0
-    safety = 0
 
     while time.time() < state.t_end:
         # --- inventory visibility + decision logic ---
-        inventory = inv_count('mlm') #todo
-        print('Inventory Count is: ', inventory)
-        if inventory == 0:
+        inventory = count_tracked_inventory()
+        inv_check = 0
+        if inventory == 0 and inv_check == 0:
             # Try once to reveal inventory (prefer F1 if bound; Esc if you truly rely on it)
             with state.lock:
                 state.actions = 'opening inventory'
@@ -888,36 +752,28 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
             # Prefer a specific tab key over Esc to avoid toggling closed; adjust if needed
             pyautogui.press('esc')
             time.sleep(0.3)
-            inventory = count_mlm_ore()
+            inventory = count_tracked_inventory()
             inv_check += 1
 
-            print(f"Inventory has {inventory} tracked ores")
+        print(f"Inventory has {inventory} tracked ores")
 
         with state.lock:
             state.actions = 'None'
 
         if BANK_MODE:
-            # Banking flow: pop up when we hit threshold
+            # === PHASE 1: replace manual popup with automated stub ===
             if inventory >= BANK_THRESHOLD:
                 with state.lock:
-                    # state.actions = 'Awaiting manual banking...'
-                    cb = count
-                    count += turn_in_cycle()
-                    if cb == count:
-                        safety += 1
-                    else:
-                        safety = 0
-                    if safety >= 10:
-                        print('Safety break applied')
-                        break
-                    print('We turned in! Count is: ', count)
-                if count == 7:
-                    if not bank_prompt():
-                        print("\nStopping per user choice (Cancel).")
-                        break  # exit mining loop
-                    count = 0
-                    # You clicked Repeat → resume
-                    print(f"Resuming. Next auto-drop threshold (if used later): {inv_cap}")
+                    state.actions = 'turn-in'
+                ok = turn_in_cycle()
+                if not ok:
+                    print("\nTurn-in failed; stopping.")
+                    break  # exit mining loop
+                inv_cap = random.uniform(14, 17)
+                print(f"Resuming. Next auto-drop threshold (if used later): {inv_cap}")
+                # After turn-in, continue loop (return to mining section)
+                continue
+            # === END PHASE 1 ===
         else:
             # Powerminer (auto-drop) flow
             if inventory >= inv_cap:
@@ -932,11 +788,9 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
 
         resize_quick()
         resizeImage()
-        functions.mlm_text()
-        mined_text_local = Image_to_Text('thresh', 'mlm.png')
-        # print('Mined text local is:', mined_text_local)
+        mined_text_local = Image_to_Text('thresh', 'textshot.png').strip().lower()
 
-        if mined_text_local.strip().lower().replace(",","") not in ('mining', 'mininq,', 'Mining', 'Mining,'):
+        if mined_text_local not in ('mining', 'mininq'):
             mined_text_local = 'Not Mining'
             # Find a target; may return None
             # new_spot = findarea_single(num, 150, 150)
@@ -947,14 +801,13 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
                 spot = new_spot
                 if Take_Human_Break:
                     time.sleep(random.triangular(0.05, 6, 0.5))
-            time.sleep(random.uniform(3, 4.5))  # ~1–1.5s pause to let mining start
+            time.sleep(random.uniform(1.5, 1.8))  # ~1–1.5s pause to let mining start
 
         else:
-            pass
-            # mined_text_local = 'mining'
+            mined_text_local = 'Mining'
 
         with state.lock:
-            # state.mined_text = mined_text_local
+            state.mined_text = mined_text_local
             state.spot = spot
 
     # Stop the printer thread
@@ -963,16 +816,17 @@ def powerminer_text(ore, num, Take_Human_Break=False, Run_Duration_hours=5):
 
 spot = (0, 0)
 actions = 'None'
-# mined_text = 'Not Mining'
+mined_text = 'Not Mining'
 time_left = 0
-BANK_MODE = True          # set True to enable pop-up + manual banking flow
-BANK_THRESHOLD = 25       # trigger when inventory has 27 or more items
+BANK_MODE = True          # set True to enable turn-in stub (Phase 1)
+BANK_THRESHOLD = 27      # trigger when inventory has 27 or more items
 #-------------------------------
 
 powerlist = ['tin', 'copper', 'coal', 'iron', 'gold', 'clay', 'red', 'green', 'amber']
 
 
 #-------------------------------
+
 
 if __name__ == "__main__":
 
@@ -990,7 +844,7 @@ if __name__ == "__main__":
     amber = 8
 
     # --------- CHANGE TO RUN FOR AMOUNT OF HOURS ----------------
-    Run_Duration_hours = 4.5
+    Run_Duration_hours = 1.5
 
                 # | ore | marker color | take break | how long to run for in hours
     powerminer_text(iron, red, Take_Human_Break=True, Run_Duration_hours=Run_Duration_hours)

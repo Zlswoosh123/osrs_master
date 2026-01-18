@@ -289,18 +289,23 @@ def deposit_all_Bank():
 
 
 def invent_crop():  # Takes picture of inventory
-    print('Starting invent_crop')
+    # print('Starting invent_crop')
     global window
-    screen_Image(620, 812, 460, 735, 'inventshot.png')
+    screen_Image(624, 473, 814, 737, 'inventshot.png')
 
+
+def mlm_text():  # Takes picture of inventory
+    # print('Starting invent_crop')
+    global window
+    screen_Image(60, 120, 114, 138, 'mlm.png')
 
 def resize_quick():
-    print('Starting resize_quick')
+    # print('Starting resize_quick')
     left = 30
     top = 49
     right = 113
     bottom = 70
-    screen_Image(left, right, top, bottom, 'screen_resize.png')
+    screen_Image(left, top, right, bottom, 'screen_resize.png')
     # print('Taking screen_resize.png!')
 
 
@@ -334,7 +339,7 @@ def resizeImage(image='screen_resize.png'):
 
 
 def Miner_Image_quick():
-    print('Starting miner_image_quick')
+    # print('Starting miner_image_quick')
     left = 0
     top = 0
     right = 865
@@ -438,14 +443,13 @@ def screen_Image_new(name='screenshot.png'):
     im.save('images/' + name, 'png')
 
 
-def screen_Image(left=0, right=800, top=0, bottom=800, name='screenshot.png'):  # Takes image and gives a name
+def screen_Image(left=0, top = 0, right=800, bottom=800, name='screenshot.png'):  # Takes image and gives a name
     # print('Starting screen_image')
     myScreenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
-    width, height = myScreenshot.size  # Assuming myScreenshot is a PIL Image object
-    print('About to screenshot.save')
+    # print('About to screen_image: ', name)
     myScreenshot.save('C:/Users/Zlswo/PycharmProjects/osrs_master/images/' + name)
-    print(f"Screenshot size: {myScreenshot.size}")
-    print(f"Saving region: left={left}, top={top}, right={right}, bottom={bottom}")
+    # print(f"Screenshot size: {myScreenshot.size}")
+    # print(f"Saving region: left={left}, top={top}, right={right}, bottom={bottom}")
     assert 0 <= left < right, "Invalid horizontal coordinates"
     assert 0 <= top < bottom, "Invalid vertical coordinates"
 
@@ -564,52 +568,59 @@ def make_enabled(make='make_craft.png'):
     return Image_count(make, threshold=0.95)
 
 
-def image_Rec_clicker(image, object, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=25, playarea=True,
-                      fast=False):
+def image_Rec_clicker(image, object, iheight=5, iwidth=2, threshold=0.8,
+                      clicker='left', ispace=25, playarea=True, fast=False):
     print('Starting image_Rec_clicker')
-    global icoord
-    global iflag
-    # Update images, convert to gray, match template, apply threshold
-    img_rgb = cv2.imread('images/' + image)
-    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-    template = cv2.imread('images/' + object, 0)
-    w, h = template.shape[::-1]
-    pt = None
-    res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
-    loc = np.where(res >= threshold)
-    print(f'res is: {res}')
+    global icoord, iflag
     iflag = False
 
-    # for image where template match % > threshold
-    for pt in zip(*loc[::-1]):
-        # print('Starting our for loop in zip now!')
-        # print(f'Current pt is {pt}')
-        resizeImage()  # update screenresize/text images
-        invent_crop()  # update inventory.png
-        # confirm how below draws rectangles
-        cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
-        if pt is None:
-            iflag = False
-            print('pt is None so iflag is False')
-        else:
-            # useless?
-            cropx = 620
-            cropy = 457
-            iflag = True
-            # i vars are constants todo add double randomness
-            x = random.randrange(iwidth, iwidth + ispace)  # + cropx
-            y = random.randrange(iheight, iheight + ispace)  # + cropy
-            icoord = pt[0] + iheight + x
-            icoord = (icoord, pt[1] + iwidth + y)
-            b = super_random_breaks(.03, .12, .14, .25)
-            print('Trying to move to coord in rec_clicker!')
-            pyautogui.moveTo(icoord, duration=b)
-            b = super_random_breaks(.03, .12, .14, .25)
-            print('Trying to click coord!')
-            pyautogui.keyDown('shift')
-            pyautogui.click(icoord, duration=b, button=clicker)
-    print('Ending image_Rec_clicker')
-    return iflag
+    scene_path = 'images/' + image
+    templ_path = 'images/' + object
+
+    img_rgb = cv2.imread(scene_path)
+    if img_rgb is None:
+        raise FileNotFoundError(f"Scene image not found: {scene_path}")
+
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+
+    template = cv2.imread(templ_path, 0)
+    if template is None:
+        raise FileNotFoundError(f"Template image not found: {templ_path}")
+
+    w, h = template.shape[::-1]
+
+    # Run the match
+    res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+    loc = np.where(res >= threshold)
+
+    # If nothing matched, exit cleanly
+    points = list(zip(*loc[::-1]))
+    if not points:
+        print('Ending image_Rec_clicker (no match)')
+        return False
+
+    # Take the first match (or add a max_clicks loop)
+    pt = points[0]
+    # (Optional) cv2.rectangle for debug:
+    # cv2.rectangle(img_rgb, pt, (pt[0]+w, pt[1]+h), (0,0,255), 2)
+
+    # These calls are heavy; consider moving them OUTSIDE this function if not needed per click
+    # resizeImage()
+    # invent_crop()
+
+    # Randomize a bit inside the match box
+    x = random.randrange(iwidth, iwidth + ispace)
+    y = random.randrange(iheight, iheight + ispace)
+    icoord = (pt[0] + iheight + x, pt[1] + iwidth + y)
+
+    b = super_random_breaks(.03, .12, .14, .25)
+    pyautogui.moveTo(icoord, duration=b)
+    b = super_random_breaks(.03, .12, .14, .25)
+    pyautogui.click(icoord, duration=b, button=clicker)
+
+    iflag = True
+    print('Ending image_Rec_clicker (clicked)')
+    return True
 
 
 def bank_item_clicker(image, iheight=5, iwidth=2, threshold=0.8, clicker='left', ispace=25):
@@ -697,14 +708,14 @@ def image_eel_clicker(image, event, iheight=5, iwidth=2, threshold=0.8, clicker=
         return iflag
 
 
-def Image_count(object, threshold=0.8, left=0, top=0, right=865, bottom=830):
+def Image_count(object, image = 'inventshot', threshold=0.8, left=624, top=473, right=814, bottom=737):
     # Window 1: object, threshold=0.8, left=0, top=0, right=0, bottom=0
     # Window 2: object, threshold=0.88, left=1000, top=0, right=1920, bottom=800
     counter = 0
-    screen_Image(left, right, top, bottom, name='screenshot.png')
-    invent_crop()
-    img_rgb = cv2.imread('images/inventshot.png')
-    safe_open(img_rgb, 'inventshot.png')
+    # invent_crop()
+    screen_Image(left, top, right, bottom, image+'.png')
+    img_rgb = cv2.imread('images/' + image + '.png')
+    safe_open(img_rgb, image +'.png')
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + object, 0)
     w, h = template.shape[::-1]
@@ -718,7 +729,7 @@ def Image_count(object, threshold=0.8, left=0, top=0, right=865, bottom=830):
 
 def invent_count(object, threshold=0.7):
     global window
-    print(f'Starting invent_count')
+    # print(f'Starting invent_count')
     invent_crop()
     counter = 0
     img_rgb = cv2.imread('images/inventshot.png')
@@ -771,15 +782,13 @@ def move_mouse(x1, x2, y1, y2, click=False, type='left'):
 
 
 def drop_item():
+    """Hold Shift down (for shift-click drop)."""
     print('Starting drop_item!')
-    pyautogui.keyUp('shift')
-    c = random.uniform(0.1, 0.2)
-    d = random.uniform(0.1, 0.23)
-
-    time.sleep(c)
+    # make sure it's down (idempotent)
     pyautogui.keyDown('shift')
-    time.sleep(d)
-    print('Ending drop_item!')
+    # tiny human pause
+    time.sleep(random.uniform(0.08, 0.18))
+    print('Shift DOWN (drop_item)')
 
 def click_row(row_counter):
     print('Abs start')
@@ -791,13 +800,11 @@ def click_row(row_counter):
     print('Abs end')
 
 def release_drop_item():
-    e = random.uniform(0.1, 0.3)
-    f = random.uniform(0.1, 0.2)
-
-    time.sleep(e)
+    """Release Shift and do NOT tap it."""
+    # small pause before release for realism
+    time.sleep(random.uniform(0.08, 0.18))
     pyautogui.keyUp('shift')
-    pyautogui.press('shift')
-    time.sleep(f)
+    print('Shift UP (release_drop_item)')
 
 
 def random_breaks(minsec, maxsec):

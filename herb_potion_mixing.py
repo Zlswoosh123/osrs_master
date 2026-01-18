@@ -70,7 +70,7 @@ def random_wait(a=.1, b=.3):
 
 
 if __name__ == "__main__":
-    t = (2068 //14) + 1
+    t = (180 //14) + 1
     while t > 0:
         move_mouse(125, 140, 120,130) # move to first item in bank
         random_wait(.2, .3)
