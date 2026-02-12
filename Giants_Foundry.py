@@ -274,7 +274,7 @@ def click_color_bgr_in_region(
 
         last_info["click_x"] = rel_x
         last_info["click_y"] = rel_y
-
+        time.sleep(1.2)
         return True, last_info
 
     return False, last_info
@@ -337,6 +337,7 @@ def _color_present_in_region(
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, k, iterations=1)
 
     matched = int(cv2.countNonZero(mask))
+    print('Found pixels:', matched)
     return matched >= int(min_pixels)
 
 def wait_for_expected_arrow(stage: str, timeout=7.0, poll_sleep=0.10) -> bool:
@@ -388,8 +389,8 @@ def wait_until_color_gone(
     click_x,
     click_y,
     halfsize=50,
-    timeout=0.01,
-    poll_sleep=0.02,
+    timeout=0.2,
+    poll_sleep=0.01,
     use_hsv=True,
     morph_kernel=3,
     min_pixels=60,
@@ -453,7 +454,7 @@ def random_wait(a=.1, b=.3):
     time.sleep(c)
 
 def stage_check():
-    screen_Image(60, 767, 143, 786, 'gf_stage.png')
+    screen_Image(60, 623, 143, 645, 'gf_stage.png')
     stage = Image_to_Text('thresh', 'gf_stage.png')
     stage_stripped = strip_nums_parens_percent(stage).lower()
     grind_words = ['grind']
@@ -495,10 +496,22 @@ if __name__ == "__main__":
     PINK_BGR  = (240, 0, 255)
     GREEN_BGR = (0, 255, 0)
     PURPLE_BGR = (65, 4, 41)
-
+    last_stage = None
     while time.time() < t_end:
-        last_stage = None
         stage=stage_check()
+        if _color_present_in_region(
+            target_bgr=PURPLE_BGR,
+            tol=15,
+            region=ACTIVE_BOUNDS,
+            use_hsv=False,
+            morph_kernel=3,
+            min_pixels=50
+        ):
+            print('Purple in region!')
+            move_mouse(650, 665, 500, 515)  # move to first obj in inv (next box)
+            random_wait(.05, .2)
+            click_object()
+            random_wait(.05, .2)
         if stage != last_stage:
             count = bar_check_green()
             count2 = bar_check_yellow()
@@ -556,7 +569,6 @@ if __name__ == "__main__":
             use_hsv=True
         )
         if pink_ok:
-            time.sleep(1.2)
             print("[pink] click:", pink_info.get("click_x"), pink_info.get("click_y"), "area:", pink_info.get("area"))
             log(f"[click] PINK {fmt_xy(pink_info)} stage={stage}")
             arrow_found = wait_for_expected_arrow(stage, timeout=7.0, poll_sleep=0.10)

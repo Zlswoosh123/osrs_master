@@ -205,7 +205,7 @@ if __name__ == "__main__":
     max_round = 1
     while stop_flag == False and round <= max_round:
         # login.login('alt1login',house_tab=True)
-        high_alch_loop(148, expensive=False, charge=False)
+        high_alch_loop(1568, expensive=False, charge=False)
         # login.logout()
         print(f'End of Round {round}')
         if round % 4 != 0:
