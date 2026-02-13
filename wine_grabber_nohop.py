@@ -37,37 +37,37 @@ except Exception as e:
 ahk = AHK(executable_path="C:\\Program Files\\AutoHotkey\\v1.1.37.02\\AutoHotkeyU64.exe")
 
 def main_script():
-    # Clear input
-    ahk.run_script("""
-    SendMode Input
-    Send, {Ctrl Down}{Backspace Down}{Backspace Up}{Ctrl Up}
-    """)
-
-    # Type `::hop 534` at the start of the script
-    ahk.run_script("""
-    SendMode Input
-    Send, ::hop 534{Enter}
-    """)
-    time.sleep(10)
+    # # Clear input
+    # ahk.run_script("""
+    # SendMode Input
+    # Send, {Ctrl Down}{Backspace Down}{Backspace Up}{Ctrl Up}
+    # """)
+    #
+    # # Type `::hop 534` at the start of the script
+    # ahk.run_script("""
+    # SendMode Input
+    # Send, ::hop 534{Enter}
+    # """)
+    # time.sleep(10)
 
     # Set a random loop limit between 27 and 30
-    loop_limit = random.randint(27, 29)
+    loop_limit = 28 # random.randint(27, 29)
     print(f"Looping {loop_limit} times.")
 
     for i in range(loop_limit):
         print(f"Iteration {i + 1}/{loop_limit}")
 
         # Step 1: Click a tile to pick up the item
-        tile_x, tile_y = 415, 425  # Example coordinates
+        tile_x, tile_y = random.randint(410,414), random.randint(418,422)  # Example coordinates
         pyautogui.click(tile_x, tile_y)
-        time.sleep(2)  # Pause to ensure the click is registered
+        time.sleep(random.randint(60,65))  # Pause to ensure the click is registered
 
-        # Step 2: Use CTRL+SHIFT+LEFT to hop worlds
-        ahk.run_script("""
-        SendMode Input
-        Send, {Ctrl Down}{Shift Down}{Left}{Shift Up}{Ctrl Up}
-        """)
-        time.sleep(random.randint(20, 25))  # Allow time for the world to load
+        # # Step 2: Use CTRL+SHIFT+LEFT to hop worlds
+        # ahk.run_script("""
+        # SendMode Input
+        # Send, {Ctrl Down}{Shift Down}{Left}{Shift Up}{Ctrl Up}
+        # """)
+        # time.sleep(random.randint(20, 25))  # Allow time for the world to load
 
     print("Script has completed the loop limit.")
     repeat_prompt()

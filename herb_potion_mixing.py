@@ -68,9 +68,10 @@ def random_wait(a=.1, b=.3):
     time.sleep(c)
 
 
+type = 2 # 1 for creating unf, 2 for creating potions
 
 if __name__ == "__main__":
-    t = (2500 //14) + 1
+    t = (3500 //14) + 1
     while t > 0:
         move_mouse(125, 140, 120,130) # move to first item in bank
         random_wait(.2, .3)
@@ -93,8 +94,10 @@ if __name__ == "__main__":
         click_object()
         random_wait(1, 1.2)
         pyautogui.press('space')
-        # random_wait(10, 16)
-        random_wait(15, 22)
+        if type == 1:
+            random_wait(10, 16)
+        if type == 2:
+            random_wait(18, 25)
 
         move_mouse(425, 430, 370, 390)  # move to banker center screen
         random_wait(.1, .9)

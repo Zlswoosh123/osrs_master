@@ -43,8 +43,8 @@ coords = {
     'deposit_button': (490, 630), # NEW - Deposit Inventory button
 }
 
-
-loops_to_do = 10  # <-- how many full inventories to process
+arrows = 2000
+loops_to_do = (arrows//26)  # <-- how many full inventories to process
 
 # ---------------------------
 # HELPERS

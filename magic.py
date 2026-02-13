@@ -122,7 +122,7 @@ def nat_check():
 
 
 
-def high_alch_loop(vol=15, expensive=False, charge=False):
+def high_alch_loop(vol=1200, expensive=False, charge=False):
     t = vol
     charge_amt = t - (random.randint(900,1000))
     exp = expensive

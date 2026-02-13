@@ -6,7 +6,8 @@ import cv2
 import yaml
 import pyautogui
 import random
-from PIL import ImageGrab
+from PIL import Image, ImageGrab
+import functions
 
 DEBUG = True  # flip False to quiet logs
 def gfindWindow(data):  # find window name returns PID of the window
@@ -125,7 +126,11 @@ def safe_open(image, png):
         return image
     return image
 
-def Image_count(object, image = 'inventshot', threshold=0.8, left=624, top=473, right=814, bottom=737):
+def random_wait(a=.1, b=.3):
+    c = random.uniform(a, b)
+    time.sleep(c)
+
+def Image_count(object, image = 'inventshot.png', threshold=0.8, left=624, top=473, right=814, bottom=737):
     # Window 1: object, threshold=0.8, left=0, top=0, right=0, bottom=0
     # Window 2: object, threshold=0.88, left=1000, top=0, right=1920, bottom=800
     counter = 0
@@ -155,7 +160,9 @@ def click_color_bgr_in_region(
     morph_kernel=3,
     post_click_sleep=(0.45, 0.9),
     debug=False,
-    use_hsv=True                     # set True if BGR path is flaky
+    use_hsv=True,
+    click = True
+        # set True if BGR path is flaky
 ):
     """
     Find a blob of the target color in the region and click its centroid.
@@ -278,7 +285,8 @@ def click_color_bgr_in_region(
         if debug:
             print(f"[color] click @ client-rel [{rel_x}, {rel_y}] area={area:.1f} found={len(cnts)}")
 
-        click_client(rel_x, rel_y, jitter=0)
+        if click:
+            click_client(rel_x, rel_y, jitter=0)
         time.sleep(random.uniform(*post_click_sleep))
 
         last_info["click_x"] = rel_x
@@ -289,5 +297,51 @@ def click_color_bgr_in_region(
     return False, last_info
 
 
-def inv_count(name):
-    return Image_count(name + '.png', threshold=0.8, left=0, top=0, right=810, bottom=750)
+def inv_count(name, threshhold = .8):
+    return Image_count(name + '.png', threshold=threshhold, left=0, top=0, right=810, bottom=750)
+
+def resizeImage(image=None):
+    # print('Starting resizeImage -- See resize_quick')
+    # resize_quick()
+    png = 'images/' + image
+    im = Image.open(png)
+    # saves new cropped image
+    width, height = im.size
+    new_size = (width * 7, height * 7)
+    im1 = im.resize(new_size)
+    # print('Taking textshot.png!')
+    im1.save(f'images/{image}_enhanced.png')
+
+def Image_to_Text(preprocess, image, parse_config='--psm 7'):
+    resizeImage(image)
+    # functions.change_brown_black()
+
+    image = cv2.imread('images/' + image + '_enhanced.png')
+
+    # ✅ Better grayscale for colored text:
+    gray = np.max(image, axis=2).astype(np.uint8)
+    gray = cv2.normalize(gray, None, 0, 255, cv2.NORM_MINMAX)
+    gray = cv2.bitwise_not(gray)
+
+    if preprocess == "thresh":
+        gray = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+
+    if preprocess == "blur":
+        gray = cv2.medianBlur(gray, 3)
+
+    if preprocess == 'adaptive':
+        gray = cv2.adaptiveThreshold(
+            gray, 255,
+            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY,
+            31, 2
+        )
+
+    filename = "{}.png".format(functions.os.getpid())
+    cv2.imwrite(filename, gray)
+
+    with functions.Image.open(filename) as im:
+        text = functions.pytesseract.image_to_string(im, config=parse_config)
+
+    functions.os.remove(filename)
+    return text
