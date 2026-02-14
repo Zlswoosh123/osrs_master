@@ -68,10 +68,10 @@ def random_wait(a=.1, b=.3):
     time.sleep(c)
 
 
-type = 2 # 1 for creating unf, 2 for creating potions
+type = 1 # 1 for creating unf, 2 for creating potions
 
 if __name__ == "__main__":
-    t = (3500 //14) + 1
+    t = (1570 //14) + 1
     while t > 0:
         move_mouse(125, 140, 120,130) # move to first item in bank
         random_wait(.2, .3)

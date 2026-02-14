@@ -119,7 +119,7 @@ def safe_open(image, png):
     while image is None and count < 5:
         image = cv2.imread('C:/Users/Zlswo/PycharmProjects/osrs_master/images/' + png)
         print(f'Sleeping until image is created')
-        time.sleep(2)
+        # time.sleep(.3)
         count += 1
     if count == 5:
         print('Safe open failed!')
@@ -249,7 +249,7 @@ def click_color_bgr_in_region(
                 cv2.imwrite("dbg_deposit_region.png", img_bgr)
                 cv2.imwrite("dbg_deposit_mask.png", mask)
                 print(f"[color] attempt {attempt+1}: empty mask; wrote dbg images")
-            time.sleep(random.uniform(0.15, 0.30))
+            # time.sleep(random.uniform(0.15, 0.30))
             continue
 
         # Largest contour
@@ -265,7 +265,7 @@ def click_color_bgr_in_region(
             if nz is None or len(nz) == 0:
                 if debug:
                     print(f"[color] attempt {attempt+1}: small area={area:.1f}, no nonzero; retrying…")
-                time.sleep(random.uniform(0.15, 0.30))
+                # time.sleep(random.uniform(0.15, 0.30))
                 continue
             cx = int(np.mean(nz[:, 0, 0]))
             cy = int(np.mean(nz[:, 0, 1]))
@@ -287,11 +287,10 @@ def click_color_bgr_in_region(
 
         if click:
             click_client(rel_x, rel_y, jitter=0)
-        time.sleep(random.uniform(*post_click_sleep))
+        # time.sleep(random.uniform(*post_click_sleep))
 
         last_info["click_x"] = rel_x
         last_info["click_y"] = rel_y
-        time.sleep(1.2)
         return True, last_info
 
     return False, last_info

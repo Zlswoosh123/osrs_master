@@ -112,7 +112,7 @@ def see_order():
     return p1_code, p2_code, p3_code
 
 def create_potion(potion_code):
-    check = f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180,560,780), click=False)[0]
+    check = f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180, 600, 635), click=False)[0]
     iter = 0
     retry = 0
     # new_count = inv
@@ -121,26 +121,28 @@ def create_potion(potion_code):
         for p in potion_code:
             print('Starting create_potion for: ', potion_code, ' on ', p)
             # wait = random.uniform(.6, .7)
-            if p == 'M':
-                f.click_color_bgr_in_region(target_bgr=BLUE_BGR, region=(0, 180, 560, 780))
-            elif p == 'A':
-                f.click_color_bgr_in_region(target_bgr=GREEN_BGR, region=(0, 180, 560, 780))
-            elif p == 'L':
-                f.click_color_bgr_in_region(target_bgr=RED_BGR, region=(0, 180, 560, 780))
+            if p == 'M' or p == 'W':
+                f.click_color_bgr_in_region(target_bgr=BLUE_BGR, region=(0, 180, 600, 635))
+            elif p == 'A' or p == 'R':
+                f.click_color_bgr_in_region(target_bgr=GREEN_BGR, region=(0, 180, 600, 635))
+            elif p == 'L' or p =='I':
+                f.click_color_bgr_in_region(target_bgr=RED_BGR, region=(0, 180, 600, 635), debug=True)
             else:
-                print('Letter not found no make potion! We have an issue')
+                print(f'Letter {p} not found no make potion! We have an issue')
                 time.sleep(10000000)
                 break
             if iter == 0:
-                time.sleep(3)
+                time.sleep(3.6)
+            else:
+                f.random_wait(.1,.4)
             iter +=1
-            # time.sleep(wait)
         while retry <= 1 and not pink_check():
             print('Trying to create potion (purple). Retry:', retry)
             # print('new_count is: ', new_count, ' and inv is: ', inv)
             pyautogui.moveRel(0, 10)
-            f.click_color_bgr_in_region(target_bgr=PURPLE_BGR, region=(0, 180, 560, 780))
-            new_count = inv_count('potion_unf')
+            f.click_color_bgr_in_region(target_bgr=PURPLE_BGR, region=(0, 180, 600, 635))
+            time.sleep(1.8)
+            # new_count = inv_count('potion_unf')
             retry += 1
     else:
         pass
@@ -148,17 +150,24 @@ def create_potion(potion_code):
 def process_potion():
     print('Starting process_potion, clicking pink')
     wait = random.randint(10,12)
-    f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180, 560, 780))
-    time.sleep(wait)
+    f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180, 600, 635))
+    iter = 0
+    while pink_check():
+        time.sleep(1)
+        iter += 1
+        if iter >= 15:
+            print('We may have misclicked pink, we waited 10s now trying again')
+            f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180, 600, 635))
+            iter = 0
 
 def deposit_potions():
     print('Starting deposit_potion, clicking yellow')
-    wait = random.randint(4,7)
-    f.click_color_bgr_in_region(target_bgr=YELLOW_BGR, region=(0, 180, 560, 780))
+    wait = random.uniform(4,5.5)
+    f.click_color_bgr_in_region(target_bgr=YELLOW_BGR, region=(0, 180, 600, 635))
     time.sleep(wait)
 
 def pink_check():
-    check = f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180, 560, 780),click=False)[0]
+    check = f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180, 600, 635),click=False)[0]
     if check:
         print('Pink Found!')
         return True
@@ -176,10 +185,10 @@ if __name__ == "__main__":
     RED_BGR = (0, 0, 255)
     YELLOW_BGR = (0, 255, 255)
 
-    SEARCH_REGION = [0, 130, 600, 700]
+    SEARCH_REGION = [0, 180, 600, 635]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
-    Run_Duration_hours = 1.5
+    Run_Duration_hours = .5
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
 
     while time.time() < t_end:
@@ -201,6 +210,3 @@ if __name__ == "__main__":
         else:
             deposit_potions()
 
-        # create_potion(p2)
-        # f.click_color_bgr_in_region(target_bgr=RED_BGR, region=(0, 180,560,780))
-        # f.click_color_bgr_in_region(target_bgr=GREEN_BGR, region=(0, 180, 560, 780))
