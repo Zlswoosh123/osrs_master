@@ -236,7 +236,8 @@ def add_metals(metal1='mithril', metal2='adamant'):
         'adamant': '5',
         'rune': '6'
               }
-    while inv_count('bar.png') > 0:
+    while inv_count('bar.png') > 2 and f2.click_color_bgr_in_region(target_bgr=f2.BLUE_BGR,
+                                 region=f2.SEARCH_REGION, debug=False, click=False)[0] == True:
         f2.click_color_bgr_in_region(target_bgr=f2.BLUE_BGR, region=f2.SEARCH_REGION)
         time.sleep(random.uniform(3, 4.5))
         pyautogui.press(metals[metal1])
@@ -255,6 +256,7 @@ def add_metals(metal1='mithril', metal2='adamant'):
                 time.sleep(random.uniform(1.3,3))
                 pyautogui.press('escape')
                 time.sleep(2)
+        failsafe += 1
     print('add_metals end')
 
 
