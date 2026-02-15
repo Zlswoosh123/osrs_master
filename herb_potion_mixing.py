@@ -67,11 +67,17 @@ def random_wait(a=.1, b=.3):
     c = random.uniform(a, b)
     time.sleep(c)
 
+def random_afk_roll():
+    roll = random.randint(0, 50)
+    if roll == 1:
+        wait = random.randint(30,220)
+        print('Afk roll success. Pausing for: ', wait)
+        time.sleep(wait)
 
-type = 1 # 1 for creating unf, 2 for creating potions
+type = 2 # 1 for creating unf, 2 for creating potions
 
 if __name__ == "__main__":
-    t = (1570 //14) + 1
+    t = (3380 //14) + 1
     while t > 0:
         move_mouse(125, 140, 120,130) # move to first item in bank
         random_wait(.2, .3)
@@ -99,6 +105,8 @@ if __name__ == "__main__":
         if type == 2:
             random_wait(18, 25)
 
+        random_afk_roll()
+
         move_mouse(425, 430, 370, 390)  # move to banker center screen
         random_wait(.1, .9)
         click_object()
@@ -110,3 +118,4 @@ if __name__ == "__main__":
         random_wait(.1, .9)
         t -= 1
         print(f'{t} actions remaining')
+        random_afk_roll()
