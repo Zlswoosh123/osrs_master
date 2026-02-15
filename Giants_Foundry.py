@@ -4,6 +4,7 @@ import yaml
 from functions import (Image_count, invent_enabled,
                        move_mouse, click_object, screen_Image, Image_to_Text, resizeImage)
 from PIL import ImageGrab, Image
+import functions2 as f2
 import os, re
 import numpy as np
 import cv2
@@ -432,22 +433,22 @@ def strip_nums_parens_percent(text: str) -> str:
     return text
 
 def inv_count(name):
-    return Image_count(name + '.png', threshold=0.8, left=0, top=0, right=810, bottom=750)
+    return f2.Image_count(name + '.png', threshold=0.8, left=0, top=0, right=810, bottom=750)
 
 def icon_check(name='empty_all_icon'):
-    return Image_count(name + '.png','bank_image', threshold=0.7, left=388, top=603, right=552, bottom=648)
+    return f2.Image_count(name + '.png','bank_image', threshold=0.7, left=388, top=603, right=552, bottom=648)
 
 def bar_check_all(name='gf_arrow_green'):
-    return Image_count(name + '.png','gf_bar.enhanced', threshold=0.8, left=99, top=80, right=539, bottom=105)
+    return f2.Image_count(name + '.png','gf_bar.enhanced', threshold=0.8, left=99, top=80, right=539, bottom=105)
 
 def bar_check_green(name='gf_arrow_green'):
-    return Image_count(name + '.png','gf_bar_green', threshold=0.8, left=165, top=80, right=222, bottom=105)
+    return f2.Image_count(name + '.png','gf_bar_green', threshold=0.8, left=165, top=80, right=222, bottom=105)
 
 def bar_check_yellow(name='gf_arrow_yellow'):
-    return Image_count(name + '.png','gf_bar_yellow', threshold=0.8, left=265, top=80, right=330, bottom=105)
+    return f2.Image_count(name + '.png','gf_bar_yellow', threshold=0.8, left=265, top=80, right=330, bottom=105)
 
 def bar_check_red(name='gf_arrow_red'):
-    return Image_count(name + '.png','gf_bar_red', threshold=0.8, left=460, top=80, right=520, bottom=105)
+    return f2.Image_count(name + '.png','gf_bar_red', threshold=0.8, left=460, top=80, right=520, bottom=105)
 
 def random_wait(a=.1, b=.3):
     c = random.uniform(a, b)
@@ -480,7 +481,7 @@ if __name__ == "__main__":
     Run_Duration_hours = 0.5
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
 
-    SEARCH_REGION = [0, 130, 600, 700]
+    SEARCH_REGION = [0, 180,560,780]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
     # --- Per-color wait tuning (THIS is how you control wait times) ---
@@ -499,14 +500,7 @@ if __name__ == "__main__":
     last_stage = None
     while time.time() < t_end:
         stage=stage_check()
-        if _color_present_in_region(
-            target_bgr=PURPLE_BGR,
-            tol=15,
-            region=ACTIVE_BOUNDS,
-            use_hsv=False,
-            morph_kernel=3,
-            min_pixels=50
-        ):
+        if f2.click_color_bgr_in_region(target_bgr=PURPLE_BGR)[0]:
             print('Purple in region!')
             move_mouse(650, 665, 500, 515)  # move to first obj in inv (next box)
             random_wait(.05, .2)
@@ -527,7 +521,7 @@ if __name__ == "__main__":
         log(f"[arrows] green={count} yellow={count2} red={count3} stage={stage}")
 
         # ---- 1) Blue first ----
-        blue_ok, blue_info = click_color_bgr_in_region(
+        blue_ok, blue_info = f2.click_color_bgr_in_region(
             target_bgr=BLUE_BGR,
             tol=20,
             region=SEARCH_REGION,
@@ -557,7 +551,7 @@ if __name__ == "__main__":
             continue
 
         # ---- 2) PINK next ----
-        pink_ok, pink_info = click_color_bgr_in_region(
+        pink_ok, pink_info = f2.click_color_bgr_in_region(
             target_bgr=PINK_BGR,
             tol=20,
             region=SEARCH_REGION,
@@ -577,7 +571,7 @@ if __name__ == "__main__":
             continue
 
         # ---- 3) GREEN last ----
-        green_ok, green_info = click_color_bgr_in_region(
+        green_ok, green_info = f2.click_color_bgr_in_region(
             target_bgr=GREEN_BGR,
             tol=20,
             region=SEARCH_REGION,

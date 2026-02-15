@@ -10,6 +10,58 @@ from PIL import Image, ImageGrab
 import functions
 
 DEBUG = True  # flip False to quiet logs
+
+BLUE_BGR = (255, 0, 0)
+PINK_BGR = (255, 0, 255)
+GREEN_BGR = (0, 255, 0)
+PURPLE_BGR = (65, 4, 41)
+RED_BGR = (0, 0, 255)
+YELLOW_BGR = (0, 255, 255)
+
+SEARCH_REGION = [0, 180, 600, 635]
+ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
+
+inventory_spots = [
+    (650, 660, 498, 505),  # Spot 1
+    (693, 703, 498, 505),  # Spot 2
+    (736, 746, 498, 505),  # Spot 3
+    (779, 789, 498, 505),  # Spot 4
+    (650, 660, 533, 540),  # Spot 5
+    (693, 703, 533, 540),  # Spot 6
+    (736, 746, 533, 540),  # Spot 7
+    (779, 789, 533, 540),  # Spot 8
+    (650, 660, 568, 575),  # Spot 9
+    (693, 703, 568, 575),  # Spot 10
+    (736, 746, 568, 575),  # Spot 11
+    (779, 789, 568, 575),  # Spot 12
+    (650, 660, 603, 610),  # Spot 13
+    (693, 703, 603, 610),  # Spot 14
+    (736, 746, 603, 610),  # Spot 15
+    (779, 789, 603, 610),  # Spot 16
+    (650, 660, 638, 645),  # Spot 17
+    (693, 703, 638, 645),  # Spot 18
+    (736, 746, 638, 645),  # Spot 19
+    (779, 789, 638, 645),  # Spot 20
+    (650, 660, 673, 680),  # Spot 21
+    (693, 703, 673, 680),  # Spot 22
+    (736, 746, 673, 680),  # Spot 23
+    (779, 789, 673, 680),  # Spot 24
+    (650, 660, 708, 715),  # Spot 25
+    (693, 703, 708, 715),  # Spot 26
+    (736, 746, 708, 715),  # Spot 27
+    (779, 789, 708, 715),  # Spot 28
+]
+
+bank_spots = [
+    (125, 140, 120,130), # Spot 1
+    (175, 190, 120, 130), # Spot 2
+    (226, 235, 120, 130), # Spot 3
+]
+
+special_spots = {
+    'empty':(480, 490, 625, 635)
+} # call using: move_mouse(*special_spots["empty"])
+
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
     hwnd = win32gui.FindWindow(None, data)
@@ -151,6 +203,16 @@ def Image_count(object, image = 'inventshot.png', threshold=0.8, left=624, top=4
 def clamp255(x):
     return max(0, min(255, int(x)))
 
+def move_mouse(x1, x2, y1, y2, click=False, type='left'):
+    b = random.uniform(0.15, 0.45)
+    x_move = random.randrange(x1, x2) # - 4
+    y_move = random.randrange(y1, y2) # - 4
+    pyautogui.moveTo(x_move, y_move, duration=b)
+    if click and type == 'left':
+        pyautogui.click()
+    if click and type == 'right':
+        pyautogui.rightClick()
+
 def click_color_bgr_in_region(
     target_bgr=(255,173,0),          # teal in BGR (FF00ADFF -> ARGB -> BGR)
     tol=45,                           # per-channel tolerance (try 45–60 while tuning)
@@ -233,7 +295,9 @@ def click_color_bgr_in_region(
                     cv2.imwrite("dbg_deposit_region.png", img_bgr)
                     cv2.imwrite("dbg_deposit_mask.png", mask)
                     print(f"[color] attempt {attempt+1}: no contours; using nonzero centroid @{rel_x},{rel_y}")
-                click_client(rel_x, rel_y, jitter=0)
+                if click:
+                    click_client(rel_x, rel_y, jitter=0)
+                    click_client(rel_x, rel_y, jitter=0)
                 time.sleep(random.uniform(*post_click_sleep))
                 return True, {
                     "attempt": attempt + 1,
@@ -297,7 +361,11 @@ def click_color_bgr_in_region(
 
 
 def inv_count(name, threshhold = .8):
-    return Image_count(name + '.png', threshold=threshhold, left=0, top=0, right=810, bottom=750)
+    return Image_count(name, threshold=threshhold, left=0, top=0, right=810, bottom=750)
+
+def icon_check(name='empty_all_icon.png', image = 'bank_image.png',  threshold=0.7,
+               left=462, top=595, right=522, bottom=655):
+    return Image_count(name, image, threshold=threshold, left=left, top=top, right=right, bottom=bottom)
 
 def resizeImage(image=None):
     # print('Starting resizeImage -- See resize_quick')
@@ -344,3 +412,11 @@ def Image_to_Text(preprocess, image, parse_config='--psm 7'):
 
     functions.os.remove(filename)
     return text
+
+def first_bank_item(click=True):
+    move_mouse(125, 140, 120, 130, click=click)  # move to first item in bank
+
+def withdraw():
+    coords = {1:(125, 140, 120, 130),
+              2: (175, 190, 120, 130),
+              'empty':(480, 490, 625, 635)}
