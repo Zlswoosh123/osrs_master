@@ -150,6 +150,11 @@ def make_sword():
     count = 0
     while count < 1 and end == False:
         color_check = f2.click_color_bgr_in_region(target_bgr=f2.GREEN_BGR, region=f2.SEARCH_REGION, debug=False, click = False)[0]
+        # color_check_sp = f2.click_color_bgr_in_region(target_bgr=f2.PURPLE_BGR, region=f2.SEARCH_REGION, debug=False, click = False)[0]
+        #
+        # if color_check_sp:
+        #     f2.click_color_bgr_in_region(target_bgr=f2.PURPLE_BGR, region=f2.SEARCH_REGION, debug=False, click=True)
+
         if color_check:
             # print('Green region found, should be actively making sword')
             count = 0

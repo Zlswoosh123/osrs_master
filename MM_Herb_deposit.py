@@ -84,7 +84,7 @@ if __name__ == "__main__":
     failsafe = 0
     local_check = time.time()
     lap = 0
-    max_lap = 750 // 27
+    max_lap = 500 // 27
     print('Ending after ', max_lap, ' laps')
     while time.time() < t_end and lap <= max_lap:
         print('Starting cycle!')
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         count2 = inv_count('herb2')
 
         while count > 0 or count2 > 0:
-            wait = random.randint(2, 6)
+            wait = random.uniform(.05, .25)
             f.click_color_bgr_in_region(target_bgr=BLUE_BGR)
             time.sleep(wait)
             print(count)

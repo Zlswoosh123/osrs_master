@@ -17,6 +17,8 @@ GREEN_BGR = (0, 255, 0)
 PURPLE_BGR = (65, 4, 41)
 RED_BGR = (0, 0, 255)
 YELLOW_BGR = (0, 255, 255)
+TEAL_BGR = (255, 255, 0)
+ORANGE_BGR = (0, 130, 255)
 
 SEARCH_REGION = [0, 180, 600, 635]
 ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
@@ -101,7 +103,7 @@ def ensure_client_foreground():
 INVENT_CAPACITY = 28
 INV_LEFT, INV_TOP, INV_RIGHT, INV_BOTTOM = 620, 460, 812, 735
 
-def click_client(x, y, jitter=0, move_dur=(0.12, 0.25)):
+def click_client(x, y, jitter=0, move_dur=(0.001, 0.002)):
     x0, y0 = get_client_origin()
     tx = x0 + x + random.randint(-jitter, jitter)
     ty = y0 + y + random.randint(-jitter, jitter)
@@ -133,8 +135,28 @@ def get_client_origin():
                 x0, y0 = 0, 0
     return x0, y0
 
-
 def grab_client_region(region=None):
+    x0, y0 = get_client_origin()
+    ww = globals().get('w_win', 0)
+    hh = globals().get('h_win', 0)
+
+    if region is None:
+        left, top = x0, y0
+        right  = x0 + (ww or 865)
+        bottom = y0 + (hh or 830)
+    else:
+        l, t, r, b = region
+        left, top, right, bottom = x0 + l, y0 + t, x0 + r, y0 + b
+
+    im = ImageGrab.grab(bbox=(left, top, right, bottom))
+
+    rgb = np.asarray(im)          # RGB
+    bgr = rgb[..., ::-1].copy()   # BGR faster than cvtColor for this conversion
+    return bgr, (left, top)
+
+
+
+def grab_client_region_bkp(region=None):
     x0, y0 = get_client_origin()
     ww = globals().get('w_win', 0)
     hh = globals().get('h_win', 0)
@@ -203,8 +225,8 @@ def Image_count(object, image = 'inventshot.png', threshold=0.8, left=624, top=4
 def clamp255(x):
     return max(0, min(255, int(x)))
 
-def move_mouse(x1, x2, y1, y2, click=False, type='left'):
-    b = random.uniform(0.15, 0.45)
+def move_mouse(x1, x2, y1, y2, click=False, type='left', min_wait = .15, max_wait = .45):
+    b = random.uniform(min_wait, max_wait)
     x_move = random.randrange(x1, x2) # - 4
     y_move = random.randrange(y1, y2) # - 4
     pyautogui.moveTo(x_move, y_move, duration=b)
@@ -284,6 +306,7 @@ def click_color_bgr_in_region(
         cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         if not cnts:
+            # print('not cnts fired')
             # ---- Fallback: centroid of all non-zero pixels ----
             nz = cv2.findNonZero(mask)
             if nz is not None and len(nz) > 0:
@@ -297,7 +320,7 @@ def click_color_bgr_in_region(
                     print(f"[color] attempt {attempt+1}: no contours; using nonzero centroid @{rel_x},{rel_y}")
                 if click:
                     click_client(rel_x, rel_y, jitter=0)
-                    click_client(rel_x, rel_y, jitter=0)
+                    # click_client(rel_x, rel_y, jitter=0)
                 time.sleep(random.uniform(*post_click_sleep))
                 return True, {
                     "attempt": attempt + 1,
@@ -313,8 +336,11 @@ def click_color_bgr_in_region(
                 cv2.imwrite("dbg_deposit_region.png", img_bgr)
                 cv2.imwrite("dbg_deposit_mask.png", mask)
                 print(f"[color] attempt {attempt+1}: empty mask; wrote dbg images")
-            # time.sleep(random.uniform(0.15, 0.30))
+            time.sleep(random.uniform(0.15, 0.30))
+
             continue
+
+
 
         # Largest contour
         c = max(cnts, key=cv2.contourArea)
@@ -350,7 +376,7 @@ def click_color_bgr_in_region(
             print(f"[color] click @ client-rel [{rel_x}, {rel_y}] area={area:.1f} found={len(cnts)}")
 
         if click:
-            click_client(rel_x, rel_y, jitter=0)
+            click_client(rel_x, rel_y, jitter=0, move_dur=(.001, .002))
         # time.sleep(random.uniform(*post_click_sleep))
 
         last_info["click_x"] = rel_x

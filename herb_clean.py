@@ -4,6 +4,7 @@ import pyautogui
 import win32gui
 import core
 import yaml
+import functions2 as f2
 
 
 import functions
@@ -18,6 +19,7 @@ newTime_break = False
 global timer
 global timer_break
 global ibreak
+
 
 
 def gfindWindow(data):  # find window name returns PID of the window
@@ -56,7 +58,7 @@ def random_wait(a=.1, b=.3):
 
 
 if __name__ == "__main__": # Fixed version for vm
-    t = (4500//28) + 1
+    t = (818//28) + 1
     while t > 0:
         wait_roll = random.randint(1,4000)
         wait_time_long = random.randint(45,260)
@@ -84,11 +86,11 @@ if __name__ == "__main__": # Fixed version for vm
         for i in range(28):  # pattern 1
             if i in nums:
                 s = random.uniform(0, 0.07)
-                move_mouse(*inventory_spots[i], s)
+                f2.move_mouse(*inventory_spots[i], s, min_wait=.05, max_wait=.2)
         for i in range(28):  # pattern 2
             if i not in nums:
                 s = random.uniform(0, 0.07)
-                move_mouse(*inventory_spots[i], s)
+                f2.move_mouse(*inventory_spots[i], s, min_wait=.05, max_wait=.2)
 
 
         move_mouse(425, 430, 345, 365)  # move to banker center screen

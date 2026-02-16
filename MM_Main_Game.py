@@ -12,6 +12,8 @@ import yaml
 import requests
 import simplejson
 
+from functions2 import TEAL_BGR
+
 global hwnd
 global iflag
 global icoord
@@ -25,6 +27,13 @@ from functions import Image_to_Text_combat, resizeImage_combat, offscreen_mouse
 import functions
 import core
 import functions2 as f
+
+BLUE_BGR = (255, 0, 0)
+PINK_BGR = (255, 0, 255)
+GREEN_BGR = (0, 255, 0)
+PURPLE_BGR = (65, 4, 41)
+RED_BGR = (0, 0, 255)
+YELLOW_BGR = (0, 255, 255)
 
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
@@ -132,9 +141,9 @@ def create_potion(potion_code):
                 time.sleep(10000000)
                 break
             if iter == 0:
-                time.sleep(3.6)
+                time.sleep(3.8)
             else:
-                f.random_wait(.1,.4)
+                f.random_wait(.25,.5)
             iter +=1
         while retry <= 1 and not pink_check():
             print('Trying to create potion (purple). Retry:', retry)
@@ -151,14 +160,16 @@ def process_potion():
     print('Starting process_potion, clicking pink')
     wait = random.randint(10,12)
     f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180, 600, 635))
-    iter = 0
-    while pink_check():
-        time.sleep(1)
-        iter += 1
-        if iter >= 15:
+    clock = time.time() + 16
+    while pink_check() or color_check(f.ORANGE_BGR):
+        if color_check(f.ORANGE_BGR):
+            print('Teal found for special click')
+            f.click_color_bgr_in_region(target_bgr=f.ORANGE_BGR, region=(0, 180, 600, 635))
+            time.sleep(.6)
+        if time.time() > clock:
             print('We may have misclicked pink, we waited 10s now trying again')
             f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180, 600, 635))
-            iter = 0
+            clock = time.time() + 16
 
 def deposit_potions():
     print('Starting deposit_potion, clicking yellow')
@@ -169,21 +180,25 @@ def deposit_potions():
 def pink_check():
     check = f.click_color_bgr_in_region(target_bgr=PINK_BGR, region=(0, 180, 600, 635),click=False)[0]
     if check:
-        print('Pink Found!')
+        # print('Pink Found!')
         return True
     else:
-        print('Pink not found!')
+        # print('Pink not found!')
+        return False
+
+def color_check(color=PINK_BGR, click = False):
+    check = f.click_color_bgr_in_region(target_bgr=color, region=(0, 180, 600, 635),click=click)[0]
+    if check:
+        print(color, ' Found!')
+        return True
+    else:
+        # print(color, ' not found!')
         return False
 
 if __name__ == "__main__":
     print('Ensure this script is started zoomed very far out with black background for the text')
     # Colors (B, G, R)
-    BLUE_BGR  = (255, 0, 0)
-    PINK_BGR  = (255, 0, 255)
-    GREEN_BGR = (0, 255, 0)
-    PURPLE_BGR = (65, 4, 41)
-    RED_BGR = (0, 0, 255)
-    YELLOW_BGR = (0, 255, 255)
+
 
     SEARCH_REGION = [0, 180, 600, 635]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
