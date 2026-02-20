@@ -62,7 +62,7 @@ def move_mouse(x1, x2, y1, y2):
     x_move = random.randrange(x1, x2)
     y_move = random.randrange(y1, y2)
     pyautogui.moveTo(x_move, y_move, duration=b)
-
+ 
 def random_wait(a=.1, b=.3):
     c = random.uniform(a, b)
     time.sleep(c)
