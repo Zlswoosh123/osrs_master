@@ -283,7 +283,7 @@ time_left = 0
 #-------------------------------
 
 if __name__ == "__main__":
-    Run_Duration_hours = 2
+    Run_Duration_hours = 1.5
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
 
     metal1 = 'mithril'

@@ -134,7 +134,7 @@ def create_potion(potion_code):
                 f.click_color_bgr_in_region(target_bgr=BLUE_BGR, region=(0, 180, 600, 635))
             elif p == 'A' or p == 'R':
                 f.click_color_bgr_in_region(target_bgr=GREEN_BGR, region=(0, 180, 600, 635))
-            elif p == 'L' or p =='I':
+            elif p == 'L' or p =='I' or p == 'U':
                 f.click_color_bgr_in_region(target_bgr=RED_BGR, region=(0, 180, 600, 635), debug=True)
             else:
                 print(f'Letter {p} not found no make potion! We have an issue')
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     SEARCH_REGION = [0, 180, 600, 635]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
-    Run_Duration_hours = .5
+    Run_Duration_hours = 1
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
 
     while time.time() < t_end:

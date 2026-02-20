@@ -68,7 +68,7 @@ if __name__ == "__main__":
     SEARCH_REGION = [0, 130, 600, 700]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
-    Run_Duration_hours = 2.5
+    Run_Duration_hours = 4.5
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
     failsafe = 0
     local_check = time.time()
