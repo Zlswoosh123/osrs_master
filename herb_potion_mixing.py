@@ -5,6 +5,7 @@ import win32gui
 import core
 import yaml
 from functions import inventory_spots
+import functions2 as f2
 
 
 import functions
@@ -107,9 +108,11 @@ if __name__ == "__main__":
 
         random_afk_roll()
 
-        move_mouse(425, 430, 370, 390)  # move to banker center screen
-        random_wait(.1, .9)
-        click_object()
+        # move_mouse(425, 430, 370, 390)  # move to banker center screen
+        # random_wait(.1, .9)
+        # click_object()
+        # random_wait(.6, 4)
+        f2.click_color_bgr_in_region(target_bgr=f2.PINK_BGR, region=(0, 180, 600, 635),click=True)
         random_wait(.6, 4)
 
         move_mouse(480, 490, 625, 635)  # empty all
