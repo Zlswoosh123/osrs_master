@@ -25,6 +25,7 @@ from functions import Image_to_Text_combat, resizeImage_combat, offscreen_mouse
 import functions
 import core
 import functions2 as f
+import runtime_vars as v
 
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
@@ -79,12 +80,12 @@ if __name__ == "__main__":
     SEARCH_REGION = [0, 130, 600, 700]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
-    Run_Duration_hours = 2.5
+    Run_Duration_hours = v.run_duration_hours
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
     failsafe = 0
     local_check = time.time()
     lap = 0
-    max_lap = 500 // 27
+    max_lap = v.amount_to_do_mm_herb // 27
     print('Ending after ', max_lap, ' laps')
     while time.time() < t_end and lap <= max_lap:
         print('Starting cycle!')

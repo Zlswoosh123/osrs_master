@@ -11,14 +11,10 @@ import cv2
 import time
 import random
 import pyautogui
-import pytesseract
-
 from functions2 import icon_check, bank_spots, inventory_spots, inv_count, special_spots
+import runtime_vars as v
 
 global hwnd
-global iflag
-global icoord
-iflag = False
 
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
@@ -283,7 +279,7 @@ time_left = 0
 #-------------------------------
 
 if __name__ == "__main__":
-    Run_Duration_hours = 1.5
+    Run_Duration_hours = v.run_duration_hours
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
 
     metal1 = 'mithril'

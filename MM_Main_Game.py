@@ -27,6 +27,7 @@ from functions import Image_to_Text_combat, resizeImage_combat, offscreen_mouse
 import functions
 import core
 import functions2 as f
+import runtime_vars as v
 
 BLUE_BGR = (255, 0, 0)
 PINK_BGR = (255, 0, 255)
@@ -203,7 +204,7 @@ if __name__ == "__main__":
     SEARCH_REGION = [0, 180, 600, 635]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
-    Run_Duration_hours = 1
+    Run_Duration_hours = v.run_duration_hours
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
 
     while time.time() < t_end:

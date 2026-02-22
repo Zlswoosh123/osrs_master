@@ -25,6 +25,7 @@ from functions import Image_to_Text_combat, resizeImage_combat, offscreen_mouse
 import functions
 import core
 import functions2 as f2
+import runtime_vars as v
 
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
@@ -80,7 +81,7 @@ if __name__ == "__main__":
     SEARCH_REGION = [0, 130, 600, 635]  # f2.SEARCH_REGION  # [0, 130, 600, 640]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
-    Run_Duration_hours = 4.5
+    Run_Duration_hours = v.run_duration_hours
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
     failsafe = 0
     local_check = time.time()

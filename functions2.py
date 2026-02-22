@@ -136,6 +136,13 @@ def get_client_origin():
                 x0, y0 = 0, 0
     return x0, y0
 
+def random_afk_roll():
+    roll = random.randint(0, 50)
+    if roll == 1:
+        wait = random.randint(30,220)
+        print('Afk roll success. Pausing for: ', wait)
+        time.sleep(wait)
+
 def grab_client_region(region=None):
     x0, y0 = get_client_origin()
     ww = globals().get('w_win', 0)

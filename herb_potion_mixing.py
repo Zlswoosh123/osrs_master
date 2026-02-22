@@ -1,4 +1,3 @@
-import random
 import time
 import pyautogui
 import win32gui
@@ -6,19 +5,10 @@ import core
 import yaml
 from functions import inventory_spots
 import functions2 as f2
-
-
-import functions
+import runtime_vars as v
 
 global hwnd
-global iflag
-global icoord
-iflag = False
-global newTime_break
-newTime_break = False
-global timer
-global timer_break
-global ibreak
+
 
 
 def gfindWindow(data):  # find window name returns PID of the window
@@ -48,77 +38,46 @@ except BaseException:
     core.printWindows()
     pass
 
-iflag = False
 
 
-def click_object():
-    # 3rd item
-    d = random.uniform(0.11, 0.18)
-    time.sleep(d)
-    pyautogui.click()
-    print('clicked something')
-
-def move_mouse(x1, x2, y1, y2):
-    b = random.uniform(0.1, 0.3)
-    x_move = random.randrange(x1, x2)
-    y_move = random.randrange(y1, y2)
-    pyautogui.moveTo(x_move, y_move, duration=b)
- 
-def random_wait(a=.1, b=.3):
-    c = random.uniform(a, b)
-    time.sleep(c)
-
-def random_afk_roll():
-    roll = random.randint(0, 50)
-    if roll == 1:
-        wait = random.randint(30,220)
-        print('Afk roll success. Pausing for: ', wait)
-        time.sleep(wait)
-
-type = 2 # 1 for creating unf, 2 for creating potions
+type = v.potion_mixing_type # 1 for creating unf, 2 for creating potions
+Run_Duration_hours = v.run_duration_hours
+t_end = time.time() + (60 * 60 * Run_Duration_hours)
 
 if __name__ == "__main__":
-    t = (3380 //14) + 1
-    while t > 0:
-        move_mouse(125, 140, 120,130) # move to first item in bank
-        random_wait(.2, .3)
-        click_object()
-        random_wait(.2, .3)
+    print('Startup Instructions: Ensure bank is opened and first 2 items in tab are vial/ingredients')
+    print('Ensure banker is tagged as pink and inventory is opened')
+    t = (v.amount_to_do_herb //14) + 1
+    while t > 0 and time.time() < t_end:
+        f2.move_mouse(125, 140, 120,130, click=True) # move to first item in bank
+        f2.random_wait(.2, .3)
 
-        move_mouse(175, 190, 120, 130) # move to 2nd item in bank
-        random_wait(.05, .2)
-        click_object()
+        f2.move_mouse(175, 190, 120, 130, click=True) # move to 2nd item in bank
+        f2.random_wait(.05, .2)
         pyautogui.press('escape')
-        random_wait(.05, .1)
+        f2.random_wait(.05, .1)
 
-        move_mouse(*inventory_spots[13])  # move to first obj in inv (next box)
-        random_wait(.05, .2)
-        click_object()
-        random_wait(.05, .2)
+        f2.move_mouse(*inventory_spots[13], click=True)  # move to first obj in inv (next box)
+        f2.random_wait(.05, .2)
 
-        move_mouse(*inventory_spots[14])  # move to 2nd obj in inv (nests)
-        random_wait(.05, .2)
-        click_object()
-        random_wait(1, 1.2)
+        f2.move_mouse(*inventory_spots[14], click=True)  # move to 2nd obj in inv (nests)
+        f2.random_wait(1, 1.2)
         pyautogui.press('space')
         if type == 1:
-            random_wait(10, 16)
+            f2.random_wait(10, 16)
         if type == 2:
-            random_wait(18, 25)
+            f2.random_wait(18, 25)
 
-        random_afk_roll()
+        if v.breaks:
+            f2.random_afk_roll()
 
-        # move_mouse(425, 430, 370, 390)  # move to banker center screen
-        # random_wait(.1, .9)
-        # click_object()
-        # random_wait(.6, 4)
-        f2.click_color_bgr_in_region(target_bgr=f2.PINK_BGR, region=(0, 180, 600, 635),click=True)
-        random_wait(.6, 4)
+        f2.click_color_bgr_in_region(target_bgr=f2.PINK_BGR, region=(0, 180, 600, 635),click=True) # click banker (pink)
+        f2.random_wait(.6, 4)
 
-        move_mouse(480, 490, 625, 635)  # empty all
-        random_wait(.6, 4)
-        click_object()
-        random_wait(.1, .9)
+        f2.move_mouse(*f2.special_spots['empty'], click=True)  # empty all
+        f2.random_wait(.7, 3)
+
         t -= 1
         print(f'{t} actions remaining')
-        random_afk_roll()
+        if v.breaks:
+            f2.random_afk_roll()
