@@ -24,7 +24,7 @@ from functions import image_Rec_clicker
 from functions import Image_to_Text_combat, resizeImage_combat, offscreen_mouse
 import functions
 import core
-import functions2 as f
+import functions2 as f2
 
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
@@ -55,40 +55,59 @@ except BaseException:
 
 
 def bar_check_green(name='gf_arrow_green'):
-    return f.Image_count(name + '.png','gf_bar_green', threshold=0.8, left=165, top=80, right=222, bottom=105)
+    return f2.Image_count(name + '.png','gf_bar_green', threshold=0.8, left=165, top=80, right=222, bottom=105)
 
+
+def spec_wep():
+    f2.move_mouse(*f2.inventory_spots[20], click=True)  # move to spec wep
+    f2.random_wait(.75, 1.5)
+    f2.move_mouse(*f2.special_spots['spec_orb'], click=True)
+    f2.random_wait(.75, 1.5)
+    f2.move_mouse(*f2.inventory_spots[20], click=True)
+    f2.random_wait(.75, 1.5)
+    # click_object()
+    # f2.random_wait(.05, .2)
 
 if __name__ == "__main__":
+    print('Startup Directions: Ensure Crab is tagged pink (all versions) and the entrances (3) are tagged Blue')
+    print('Zoom out far for safety')
     # Colors (B, G, R)
     BLUE_BGR  = (255, 0, 0)
     PINK_BGR  = (240, 0, 255)
     GREEN_BGR = (0, 255, 0)
     PURPLE_BGR = (65, 4, 41)
 
-    SEARCH_REGION = [0, 130, 600, 700]
+    SEARCH_REGION = [0, 130, 600, 635]  # f2.SEARCH_REGION  # [0, 130, 600, 640]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
     Run_Duration_hours = 4.5
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
     failsafe = 0
     local_check = time.time()
+    spec_timer = time.time() - 1
     while time.time() < t_end and failsafe < 5:
+        if time.time() > spec_timer:
+            print('Spec time!')
+            spec_wait = random.randint(310, 400)
+            spec_wep()
+            f2.click_color_bgr_in_region(target_bgr=PINK_BGR)
+            spec_timer = time.time() + spec_wait
         print('Starting cycle!')
         wait = random.randint(5,25)
         # If name is found, look for pink color and click it
-        name_check = f.onscreen_check('gemcrab_name.png')
+        name_check = f2.onscreen_check('gemcrab_name.png')
         if name_check:
             print('found crab name')
             if time.time() > local_check:
                 print('clicking crab')
-                f.click_color_bgr_in_region(target_bgr=PINK_BGR)
+                f2.click_color_bgr_in_region(target_bgr=PINK_BGR)
                 local_check = time.time() + random.randint(200,290)
             print('Waiting for: ', wait)
             time.sleep(wait)
             failsafe = 0
         else:
             print('Could not find grab, seeking blue. Failsafe is: ', failsafe)
-            f.click_color_bgr_in_region(target_bgr=BLUE_BGR)
+            f2.click_color_bgr_in_region(target_bgr=BLUE_BGR)
             local_check = time.time()
             time.sleep(random.randint(10,25))
             failsafe += 1

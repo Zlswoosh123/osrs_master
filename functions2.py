@@ -61,7 +61,8 @@ bank_spots = [
 ]
 
 special_spots = {
-    'empty':(480, 490, 625, 635)
+    'empty':(480, 490, 625, 635),
+    'spec_orb':(675, 687, 175, 188)
 } # call using: move_mouse(*special_spots["empty"])
 
 def gfindWindow(data):  # find window name returns PID of the window
