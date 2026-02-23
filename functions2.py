@@ -212,14 +212,56 @@ def random_wait(a=.1, b=.3):
     c = random.uniform(a, b)
     time.sleep(c)
 
-def Image_count(object, image = 'inventshot.png', threshold=0.8, left=624, top=473, right=814, bottom=737):
+def Image_count(object, image='inventshot.png', threshold=0.8,
+                left=624, top=465, right=814, bottom=737,
+                retries=5, retry_sleep=0.05, pad=2):
+
+    screen_Image(left, top, right, bottom, image)
+
+    # Minimal retry (not safe_open, just basic robustness)
+    img_rgb = None
+    for _ in range(retries):
+        img_rgb = cv2.imread('images/' + image)
+        if img_rgb is not None:
+            break
+        time.sleep(retry_sleep)
+    if img_rgb is None:
+        return 0
+
+    template = cv2.imread('images/' + object, 0)
+    if template is None:
+        raise FileNotFoundError(f"Template not found: images/{object}")
+
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+    w, h = template.shape[::-1]
+
+    res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+
+    count = 0
+    while True:
+        _, max_val, _, (x, y) = cv2.minMaxLoc(res)
+        if max_val < threshold:
+            break
+
+        count += 1
+
+        # Suppress a slightly larger region to avoid double-counting
+        x0 = max(x - pad, 0)
+        y0 = max(y - pad, 0)
+        x1 = min(x + w + pad, res.shape[1])
+        y1 = min(y + h + pad, res.shape[0])
+        res[y0:y1, x0:x1] = -1.0
+
+    return count
+
+def Image_count_bkp(object, image = 'inventshot.png', threshold=0.8, left=624, top=473, right=814, bottom=737):
     # Window 1: object, threshold=0.8, left=0, top=0, right=0, bottom=0
     # Window 2: object, threshold=0.88, left=1000, top=0, right=1920, bottom=800
     counter = 0
     # invent_crop()
     screen_Image(left, top, right, bottom, image)
     img_rgb = cv2.imread('images/' + image)
-    safe_open(img_rgb, image)
+    # safe_open(img_rgb, image)
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
     template = cv2.imread('images/' + object, 0)
     w, h = template.shape[::-1]
@@ -242,6 +284,10 @@ def move_mouse(x1, x2, y1, y2, click=False, type='left', min_wait = .15, max_wai
         pyautogui.click()
     if click and type == 'right':
         pyautogui.rightClick()
+    if click and type == 'drop':
+        pyautogui.keyDown('shift')
+        pyautogui.click()
+        pyautogui.keyUp('shift')
 
 def click_color_bgr_in_region(
     target_bgr=(255,173,0),          # teal in BGR (FF00ADFF -> ARGB -> BGR)
@@ -412,6 +458,14 @@ def resizeImage(image=None):
     im1 = im.resize(new_size)
     # print('Taking textshot.png!')
     im1.save(f'images/{image}_enhanced.png')
+
+def check_last_inv_slot():
+    left, right, top, bottom = inventory_spots[27]
+    count = Image_count(object = 'empty_slot.png', image='inventshot.png', threshold=0.8, left=left, top=top, right=right, bottom=bottom)
+    if count >= 1:
+        return False  # Slot is empty
+    else:
+        return True  # Slot is not empty
 
 def Image_to_Text(preprocess, image, parse_config='--psm 7'):
     resizeImage(image)
