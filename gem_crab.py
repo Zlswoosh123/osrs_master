@@ -87,7 +87,7 @@ if __name__ == "__main__":
     local_check = time.time()
     spec_timer = time.time() - 1
     while time.time() < t_end and failsafe < 5:
-        if time.time() > spec_timer:
+        if time.time() > spec_timer and v.gc_spec:
             print('Spec time!')
             spec_wait = random.randint(310, 400)
             spec_wep()
