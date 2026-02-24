@@ -44,14 +44,18 @@ def salvage():
 def drop_loot(count = 28):
     print('Starting drop loot!')
     nums = [0, 1, 4, 5, 8, 9, 12, 13, 16, 17, 20, 21, 24, 25]
+    pyautogui.keyDown('shift')
     for i in range(count):  # pattern 1
         if i in nums:
             s = random.uniform(0, 0.07)
-            f2.move_mouse(*f2.inventory_spots[i], min_wait=.01, max_wait=.05, click=True, type='drop')
+            f2.move_mouse(*f2.inventory_spots[i], min_wait=.01, max_wait=.05, click=True, type='left')
     for i in range(count):  # pattern 2
         if i not in nums:
             s = random.uniform(0, 0.07)
-            f2.move_mouse(*f2.inventory_spots[i], min_wait=.01, max_wait=.05, click = True, type= 'drop')
+            f2.move_mouse(*f2.inventory_spots[i], min_wait=.01, max_wait=.05, click = True, type= 'left')
+    pyautogui.keyUp('shift')
+    time.sleep(1)
+    f2.click_color_bgr_in_region(target_bgr=f2.YELLOW_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
     print('Ending drop loot!')
 
 
@@ -87,6 +91,7 @@ if __name__ == "__main__":
                 print("Salvage delay met — clicking yellow")
                 salvage()
                 last_change_time = time.time()  # reset timer after clicking
+                time.sleep(6)
 
             failsafe = 0
         else:
@@ -95,8 +100,9 @@ if __name__ == "__main__":
             if failsafe >= 5:
                 f2.hop_worlds()
                 time.sleep(10)
-        if count > 10:
+        if count >= 27:
             drop_loot(count)
+        time.sleep(.6)
         # If (while?) seeing pink, click yellow to start salvage
             # If full, cleanup action
         # If no pink, swap worlds
