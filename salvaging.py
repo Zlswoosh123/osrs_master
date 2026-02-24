@@ -36,20 +36,23 @@ except BaseException:
     core.printWindows()
     pass
 
-DARK_YELLOW_BGR = (4, 143, 143)
 
 def salvage():
     print('Starting salvage!')
     v = f2.click_color_bgr_in_region(target_bgr=f2.YELLOW_BGR, region=f2.SEARCH_REGION, click=False, debug=True, tol=60)[0]
     if v == False:
-        f2.click_color_bgr_in_region(target_bgr=DARK_YELLOW_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
+        f2.click_color_bgr_in_region(target_bgr=f2.DARK_YELLOW_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
     else:
         f2.click_color_bgr_in_region(target_bgr=f2.YELLOW_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
 
     print('Ending Salvage')
 
 def clean_loot():
-    f2.click_color_bgr_in_region(target_bgr=f2.BLUE_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
+    v = f2.click_color_bgr_in_region(target_bgr=f2.BLUE_BGR, region=f2.SEARCH_REGION, click=False, debug=True, tol=60)[0]
+    if v == False:
+        f2.click_color_bgr_in_region(target_bgr=f2.DARK_BLUE_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
+    else:
+        f2.click_color_bgr_in_region(target_bgr=f2.BLUE_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
     f2.random_wait(53, 56)
 
 
@@ -116,6 +119,7 @@ if __name__ == "__main__":
         else:
             failsafe += 1
             time.sleep(1)
+            pyautogui.press('space')
             if failsafe >= 5:
                 f2.hop_worlds()
                 time.sleep(10)

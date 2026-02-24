@@ -19,6 +19,8 @@ RED_BGR = (0, 0, 255)
 YELLOW_BGR = (0, 255, 255)
 TEAL_BGR = (255, 255, 0)
 ORANGE_BGR = (0, 130, 255)
+DARK_YELLOW_BGR = (4, 143, 143)
+DARK_BLUE_BGR = (181, 0, 0)
 
 SEARCH_REGION = [0, 180, 600, 635]
 ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
@@ -200,6 +202,7 @@ def hop_worlds(world = None):
     while current == new_world:
         r = random.randint(0, len(worlds) - 1)
         new_world = worlds[r]
+    pyautogui.hotkey('ctrl', 'backspace')
     hopmsg = '::hop ' + str(new_world)
     pyautogui.typewrite(hopmsg, .03)
     pyautogui.press('enter')
