@@ -36,10 +36,22 @@ except BaseException:
     core.printWindows()
     pass
 
+DARK_YELLOW_BGR = (4, 143, 143)
+
 def salvage():
     print('Starting salvage!')
-    f2.click_color_bgr_in_region(target_bgr=f2.YELLOW_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
+    v = f2.click_color_bgr_in_region(target_bgr=f2.YELLOW_BGR, region=f2.SEARCH_REGION, click=False, debug=True, tol=60)[0]
+    if v == False:
+        f2.click_color_bgr_in_region(target_bgr=DARK_YELLOW_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
+    else:
+        f2.click_color_bgr_in_region(target_bgr=f2.YELLOW_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
+
     print('Ending Salvage')
+
+def clean_loot():
+    f2.click_color_bgr_in_region(target_bgr=f2.BLUE_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
+    f2.random_wait(53, 56)
+
 
 def drop_loot(count = 28):
     print('Starting drop loot!')
@@ -73,9 +85,11 @@ if __name__ == "__main__":
     lap = 0
     last_count = -1
     last_change_time = time.time()
-    SALVAGE_DELAY = 30  # seconds
+    SALVAGE_DELAY = v.SALVAGE_DELAY  # seconds
+    salvage_item = v.salvage
+    stuck = 0
     while time.time() < t_end:
-        count = f2.Image_count('small_salvage.png')
+        count = f2.Image_count(salvage_item)
         print('count is: ', count)
         if count == 0:
             f2.open_inventory_menu()
@@ -85,12 +99,17 @@ if __name__ == "__main__":
             if count != last_count:
                 last_count = count
                 last_change_time = time.time()
+                stuck = 0
 
             # only salvage if stuck for 20 seconds OR count == 0
             if (time.time() - last_change_time >= SALVAGE_DELAY) or count == 0:
                 print("Salvage delay met — clicking yellow")
                 salvage()
                 last_change_time = time.time()  # reset timer after clicking
+                stuck += 1
+                if stuck > 5:
+                    drop_loot()
+                    stuck = 0
                 time.sleep(6)
 
             failsafe = 0
@@ -101,6 +120,7 @@ if __name__ == "__main__":
                 f2.hop_worlds()
                 time.sleep(10)
         if count >= 27:
+            clean_loot()
             drop_loot(count)
         time.sleep(.6)
         # If (while?) seeing pink, click yellow to start salvage
