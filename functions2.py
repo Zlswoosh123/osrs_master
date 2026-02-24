@@ -65,6 +65,22 @@ special_spots = {
     'spec_orb':(675, 687, 175, 188)
 } # call using: move_mouse(*special_spots["empty"])
 
+worlds = [303, 304, 305, 306, 307, 310, 311, 312, 313, 314, 315, 317, 319, 320, 321, 322, 323,
+          324, 325, 327, 328, 329, 331, 332, 333, 334, 336, 337, 338, 339, 340, 341, 342, 343, 344, 346, 347, 348, 349,
+          350, 351, 352, 353,
+          354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 373, 374, 375, 376, 377, 378,
+          386,
+          387, 388, 389, 390, 391, 395, 396, 416, 420, 421, 422, 423, 424, 425, 428, 429, 441, 443, 444, 445, 446, 447,
+          448,
+          449, 450, 459, 463, 464, 465, 466, 467, 474, 477, 478, 479, 480, 481, 482, 484, 485, 486, 487, 488, 489, 490,
+          491, 492, 493, 494,
+          495, 496, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524,
+          525, 526, 527,
+          528, 529, 531, 532, 534, 535]
+
+INVENT_CAPACITY = 28
+INV_LEFT, INV_TOP, INV_RIGHT, INV_BOTTOM = 620, 460, 812, 735
+
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
     hwnd = win32gui.FindWindow(None, data)
@@ -100,9 +116,6 @@ def ensure_client_foreground():
         win32gui.SetActiveWindow(window)
     except Exception:
         pass
-
-INVENT_CAPACITY = 28
-INV_LEFT, INV_TOP, INV_RIGHT, INV_BOTTOM = 620, 460, 812, 735
 
 def click_client(x, y, jitter=0, move_dur=(0.001, 0.002)):
     x0, y0 = get_client_origin()
@@ -180,6 +193,16 @@ def grab_client_region_bkp(region=None):
     im = ImageGrab.grab(bbox=(left, top, right, bottom))
     bgr = cv2.cvtColor(np.array(im), cv2.COLOR_RGB2BGR)
     return bgr, (left, top)
+
+def hop_worlds(world = None):
+    current = world
+    new_world = world
+    while current == new_world:
+        r = random.randint(0, len(worlds) - 1)
+        new_world = worlds[r]
+    hopmsg = '::hop ' + str(new_world)
+    pyautogui.typewrite(hopmsg, .03)
+    pyautogui.press('enter')
 
 def screen_Image(left=0, top = 0, right=800, bottom=800, name='screenshot.png'):  # Takes image and gives a name
     # print('Starting screen_image')
@@ -276,6 +299,20 @@ def clamp255(x):
     return max(0, min(255, int(x)))
 
 def move_mouse(x1, x2, y1, y2, click=False, type='left', min_wait = .15, max_wait = .45):
+    b = random.uniform(min_wait, max_wait)
+    x_move = random.randrange(x1, x2) # - 4
+    y_move = random.randrange(y1, y2) # - 4
+    pyautogui.moveTo(x_move, y_move, duration=b)
+    if click and type == 'left':
+        pyautogui.click()
+    if click and type == 'right':
+        pyautogui.rightClick()
+    if click and type == 'drop':
+        pyautogui.keyDown('shift')
+        pyautogui.click()
+        pyautogui.keyUp('shift')
+
+def move_mouse_alt(x1, y1, x2, y2, click=False, type='left', min_wait = .15, max_wait = .45):
     b = random.uniform(min_wait, max_wait)
     x_move = random.randrange(x1, x2) # - 4
     y_move = random.randrange(y1, y2) # - 4
@@ -459,13 +496,22 @@ def resizeImage(image=None):
     # print('Taking textshot.png!')
     im1.save(f'images/{image}_enhanced.png')
 
-def check_last_inv_slot():
-    left, right, top, bottom = inventory_spots[27]
-    count = Image_count(object = 'empty_slot.png', image='inventshot.png', threshold=0.8, left=left, top=top, right=right, bottom=bottom)
+def inv_slot_empty(slot = 27):
+    left, right, top, bottom = inventory_spots[slot]
+    count = Image_count(object = 'empty_slot.png', image='slot.png', threshold=0.8, left=left, top=top, right=right, bottom=bottom)
     if count >= 1:
-        return False  # Slot is empty
+        return True  # Slot is empty
     else:
-        return True  # Slot is not empty
+        return False  # Slot is not empty
+
+def open_inventory_menu():
+    pyautogui.press('F1')
+    time.sleep(.1)
+    pyautogui.press('escape')
+
+def spot_to_bbox_xyxy(spot_xx_yy):
+    x1, x2, y1, y2 = spot_xx_yy
+    return (x1, y1, x2, y2)
 
 def Image_to_Text(preprocess, image, parse_config='--psm 7'):
     resizeImage(image)
