@@ -74,7 +74,7 @@ worlds = [303, 304, 305, 306, 307, 310, 311, 312, 313, 314, 315, 317, 319, 320, 
           386,
           387, 388, 389, 390, 391, 395, 396, 416, 420, 421, 422, 423, 424, 425, 428, 429, 441, 443, 444, 445, 446, 447,
           448,
-          449, 450, 459, 463, 464, 465, 466, 467, 474, 477, 478, 479, 480, 481, 482, 484, 485, 486, 487, 488, 489, 490,
+          449, 450, 459, 463, 464, 465, 466, 467, 477, 478, 479, 480, 481, 482, 484, 485, 486, 487, 488, 489, 490,
           491, 492, 493, 494,
           495, 496, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524,
           525, 526, 527,
@@ -151,8 +151,8 @@ def get_client_origin():
                 x0, y0 = 0, 0
     return x0, y0
 
-def random_afk_roll():
-    roll = random.randint(0, 50)
+def random_afk_roll(max = 50):
+    roll = random.randint(0, max)
     if roll == 1:
         wait = random.randint(30,220)
         print('Afk roll success. Pausing for: ', wait)
@@ -511,6 +511,7 @@ def open_inventory_menu():
     pyautogui.press('F1')
     time.sleep(.1)
     pyautogui.press('escape')
+    time.sleep(.1)
 
 def spot_to_bbox_xyxy(spot_xx_yy):
     x1, x2, y1, y2 = spot_xx_yy

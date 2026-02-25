@@ -1,5 +1,5 @@
 # General
-run_duration_hours = 3.5
+run_duration_hours = 5
 breaks = True
 
 # Herb Params
