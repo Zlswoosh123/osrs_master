@@ -96,7 +96,7 @@ if __name__ == "__main__":
     SALVAGE_DELAY = v.SALVAGE_DELAY  # seconds
     salvage_item = v.salvage
     stuck = 0
-    exclude = [27, 26, 25, 24, 23, 22, 21]
+    exclude = [27, 26, 25, 24, 23, 22, 21, 20, 19]
     salvage()
     while time.time() < t_end:
         count = f2.Image_count(salvage_item)
