@@ -517,6 +517,24 @@ def spot_to_bbox_xyxy(spot_xx_yy):
     x1, x2, y1, y2 = spot_xx_yy
     return (x1, y1, x2, y2)
 
+def drop_loot(count = 28, exclude = []):
+    print('Starting drop loot!')
+    nums = [0, 1, 4, 5, 8, 9, 12, 13, 16, 17, 20, 21, 24, 25]
+    open_inventory_menu()
+    time.sleep(.2)
+    pyautogui.keyDown('shift')
+    for i in range(count):  # pattern 1
+        if i in nums and i not in exclude:
+            s = random.uniform(0, 0.07)
+            move_mouse(*inventory_spots[i], min_wait=.1, max_wait=.2, click=True, type='left')
+    for i in range(count):  # pattern 2
+        if i not in nums and i not in exclude:
+            s = random.uniform(0, 0.07)
+            move_mouse(*inventory_spots[i], min_wait=.1, max_wait=.2, click = True, type= 'left')
+    pyautogui.keyUp('shift')
+    time.sleep(1)
+print('Ending drop loot!')
+
 def Image_to_Text(preprocess, image, parse_config='--psm 7'):
     resizeImage(image)
     # functions.change_brown_black()

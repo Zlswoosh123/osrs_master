@@ -69,7 +69,7 @@ if __name__ == "__main__":
             f2.random_wait(18, 25)
 
         if v.breaks:
-            f2.random_afk_roll()
+            f2.random_afk_roll(100)
 
         f2.click_color_bgr_in_region(target_bgr=f2.PINK_BGR, region=(0, 180, 600, 635),click=True) # click banker (pink)
         f2.random_wait(.6, 4)
@@ -80,4 +80,4 @@ if __name__ == "__main__":
         t -= 1
         print(f'{t} actions remaining')
         if v.breaks:
-            f2.random_afk_roll()
+            f2.random_afk_roll(100)
