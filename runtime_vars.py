@@ -1,5 +1,5 @@
 # General
-run_duration_hours = 2
+run_duration_hours = 5
 breaks = True
 exclude = [0]
 
