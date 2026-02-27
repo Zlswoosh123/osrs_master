@@ -75,7 +75,7 @@ if __name__ == "__main__":
     last_change_time = time.time()
     stuck = 0
     exclude = []
-    while time.time() < t_end:
+    while time.time() < t_end and stuck <= 6:
         f2.screen_Image(18, 48, 142, 71, 'wc_action.png')
         time.sleep(.1)
         empty_count = f2.Image_count('empty_slot.png')
@@ -114,12 +114,12 @@ if __name__ == "__main__":
 
             # print('Mined text local is:', mined_text_local)
         # only salvage if stuck for 20 seconds OR count == 0
-        # if (time.time() - last_change_time >= v.chop_delay) or empty_count == (28 - len(exclude)):
-        #     print("Delay met — clicking tree")
-        #     find_tree()
-        #     last_change_time = time.time()  # reset timer after clicking
-        #     stuck += 1
-        #     time.sleep(6)
+        if (time.time() - last_change_time >= v.chop_delay) or empty_count == (28 - len(exclude)):
+            print("Delay met — clicking tree")
+            find_tree()
+            last_change_time = time.time()  # reset timer after clicking
+            stuck += 1
+            time.sleep(6)
 
         if empty_count == 0:
             if v.log_basket:
