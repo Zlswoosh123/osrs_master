@@ -23,5 +23,5 @@ SALVAGE_DELAY = 30
 
 # Woodcutting params
 log_basket = True
-chop_delay = 15
+chop_delay = 45
 wc_spec= True
