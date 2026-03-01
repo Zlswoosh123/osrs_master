@@ -25,3 +25,7 @@ SALVAGE_DELAY = 30
 log_basket = True
 chop_delay = 45
 wc_spec= True
+
+# Blast Furnace Params
+gold = True
+ore = 'adamant'

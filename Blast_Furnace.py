@@ -9,15 +9,8 @@ import cv2
 import time
 import random
 import pyautogui
-
-global hwnd
-global iflag
-global icoord
-iflag = False
-
-
-inv_cap = random.uniform(14, 17)
-print(f'Dropping ore at {inv_cap}')
+import runtime_vars as v
+import functions2 as f2
 
 def debug_color_snapshot(region, target_bgr, tol=50, path_prefix="dbg_deposit"):
     img_bgr, (L, T) = grab_client_region(region)
@@ -276,72 +269,91 @@ def random_wait(a=.1, b=.3):
     c = random.uniform(a, b)
     time.sleep(c)
 
-def withdraw_ore(lap, ore = 'mithril'):
+def withdraw_ore(lap, ore = 'mithril', gold = False):
     print('Starting withdraw_ore')
+    time.sleep(1)
     count = 0
     retry = 0
-    move_mouse(650, 665, 500, 515)  # move to first obj in inv (load coal sack)
-    random_wait(.15, .3)
-    click_object()
-    random_wait(.15, .3)
+    if lap != 1:
+        move_mouse(*f2.inventory_spots[0], click=True)  # move to first obj in inv (load coal sack)
+        random_wait(.1, .3)
+    move_mouse(*f2.inventory_spots[0], click = True)  # move to first obj in inv (load coal sack)
+    time.sleep(.5)
     while count < 27:
-        if ore == 'mithril':
-            if lap > 3:
-                lap = lap - 3
-            if lap % 2 == 0 or lap % 3 == 0:
-                move_mouse(125, 140, 120,130) # move to first item in bank (grab mithril)
-                random_wait(.15, .3)
-                click_object()
-                random_wait(.15, .3)
-            else:
-                move_mouse(175, 190, 120, 130) # move to 2nd item in bank (grab coal)
-                random_wait(.15, .3)
-                click_object()
-                random_wait(.15, .3)
+        if not gold:
+            if ore == 'mithril':
+                if lap > 3:
+                    lap = lap - 3
+                if lap % 2 == 0 or lap % 3 == 0:
+                    move_mouse(*f2.bank_spots[0], click = True) # move to first item in bank (grab ore)
+                else:
+                    move_mouse(*f2.bank_spots[1], click = True) # move to 2nd item in bank (grab coal)
 
-        if ore == 'iron':
-            move_mouse(125, 140, 120, 130)  # move to first item in bank (grab mithril)
-            random_wait(.15, .3)
-            click_object()
-            random_wait(.15, .3)
+            if ore == 'iron':
+                move_mouse(*f2.bank_spots[0], click = True) # move to first item in bank (grab ore)
 
-        if ore == 'adamant':
-            if lap % 2==0:
-                move_mouse(125, 140, 120,130) # move to first item in bank (grab mithril)
-                random_wait(.15, .3)
-                click_object()
-                random_wait(.15, .3)
-            else:
-                move_mouse(175, 190, 120, 130) # move to 2nd item in bank (grab coal)
-                random_wait(.15, .3)
-                click_object()
-                random_wait(.15, .3)
+            if ore == 'adamant':
+                if lap % 2==0:
+                    move_mouse(*f2.bank_spots[0], click = True) # move to first item in bank (grab ore)
+                else:
+                    move_mouse(*f2.bank_spots[1], click = True) # move to first item in bank (grab ore)
 
-        if ore == 'rune':
-            if lap > 5:
-                lap = lap - 5
-            if lap % 3 == 0 or lap % 5 == 0:
-                move_mouse(125, 140, 120, 130)  # move to first item in bank (grab mithril)
-                random_wait(.15, .3)
-                click_object()
-                random_wait(.15, .3)
-            else:
-                move_mouse(175, 190, 120, 130) # move to 2nd item in bank (grab coal)
-                random_wait(.15, .3)
-                click_object()
-                random_wait(.15, .3)
-        time.sleep(1)
-        count = inv_count('coal_ore')
-        print('We tried withdrawing ore and have: ', count)
-        retry += 1
-        if retry >= 5:
-            break
+            if ore == 'rune':
+                if lap > 5:
+                    lap = lap - 5
+                if lap % 3 == 0 or lap % 5 == 0:
+                    move_mouse(*f2.bank_spots[0], click = True) # move to first item in bank (grab ore)
+                else:
+                    move_mouse(*f2.bank_spots[1], click = True) # move to first item in bank (grab ore)
+            time.sleep(1)
+            count = inv_count('coal_ore')
+            print('We tried withdrawing ore and have: ', count)
+            retry += 1
+            if retry >= 5:
+                break
+        else:
+            if ore == 'mithril':
+                # if lap > 3:
+                #     lap = lap - 3
+                if lap % 2 == 0:
+                    move_mouse(*f2.bank_spots[0], click = True) # move to first item in bank (grab ore)
+                else:
+                    move_mouse(*f2.bank_spots[2], click = True) # move to 2nd item in bank (grab gold)
+
+            # if ore == 'iron':
+            #     if lap % 2 == 0:
+            #         move_mouse(*f2.bank_spots[0], click = True)  # move to first item in bank (grab ore)
+            #     else:
+            #         move_mouse(*f2.bank_spots[2], click = True) # move to 2nd item in bank (grab gold)
+
+            if ore == 'adamant':
+                if lap % 3 == 0:
+                    move_mouse(*f2.bank_spots[0], click = True)  # move to first item in bank (grab ore)
+                else:
+                    move_mouse(*f2.bank_spots[2], click = True)  # move to 2nd item in bank (grab gold)
+
+            if ore == 'rune':
+                # if lap > 5:
+                #     lap = lap - 5
+                if lap % 4 == 0:
+                    move_mouse(*f2.bank_spots[0], click = True)  # move to first item in bank (grab ore)
+                else:
+                    move_mouse(*f2.bank_spots[2], click = True)  # move to 2nd item in bank (grab gold)
+            time.sleep(1)
+            count = inv_count('coal_ore') + inv_count('gold_ore')
+            print('We tried withdrawing ore and have: ', count)
+            retry += 1
+            if retry >= 5:
+                break
     pyautogui.press('escape')
     print('Ending withdraw_ore')
     return lap
 
-def conveyor_belt():
+def conveyor_belt(gold = False):
     print('Starting conveyor_belt')
+    if gold:
+        f2.move_mouse(*f2.inventory_spots[1], click = True)
+        time.sleep(.5)
     # Finding conveyor belt
     click_color_bgr_in_region(
         target_bgr=(255,173,0),
@@ -352,7 +364,7 @@ def conveyor_belt():
         morph_kernel=3,  # 3 or 5
         debug=False  # write dbg_deposit_region.png/dbg_deposit_mask.png
     )
-    time.sleep(8)
+    time.sleep(6)
     count = inv_count('coal_ore')
     print('Count is: ', count)
     retry = 0
@@ -371,28 +383,46 @@ def conveyor_belt():
                 morph_kernel=3,  # 3 or 5
                 debug=False  # write dbg_deposit_region.png/dbg_deposit_mask.png
             )
-            time.sleep(6)
+            time.sleep(5.4)
             count = inv_count('coal_ore')
             print('Retry count is: ', count)
             if retry >= 5:
                 print('Retries failed, breaking!')
                 break
 
+    # time.sleep(1)
     #Withdraw coal from sack and drop on belt
     move_mouse(650, 665, 500, 515)  # move to first obj in inv (next box)
     random_wait(.05, .2)
     click_object()
     random_wait(.05, .2)
 
-    click_color_bgr_in_region(
-        target_bgr=(255, 173, 0),
-        tol=30,  # try 30–45 if needed
-        region=[0, 0, 600, 750],
-        min_area=50,  # try 60–120
-        max_tries=3,
-        morph_kernel=3,  # 3 or 5
-        debug=False  # write dbg_deposit_region.png/dbg_deposit_mask.png
-    )
+    count = inv_count('coal_ore')
+    print('Count is: ', count)
+    retry = 0
+    # Checking to ensure we deposited, retry if not
+    if count != 0:
+        while count != 0:
+            retry += 1
+            print('We couldnt deposit for some reason, retrying! Number: ', retry)
+            # time.sleep(3)
+            click_color_bgr_in_region(
+                target_bgr=(255, 173, 0),
+                tol=30,  # try 30–45 if needed
+                region=[0, 0, 600, 750],
+                min_area=50,  # try 60–120
+                max_tries=3,
+                morph_kernel=3,  # 3 or 5
+                debug=False  # write dbg_deposit_region.png/dbg_deposit_mask.png
+            )
+            time.sleep(5.4)
+            count = inv_count('coal_ore')
+            print('Retry count is: ', count)
+            if retry >= 5:
+                print('Retries failed, breaking!')
+                break
+
+    time.sleep(.6)
     count = inv_count('coal_ore')
     print('Count is: ', count)
     retry = 0
@@ -420,9 +450,12 @@ def conveyor_belt():
 
     print('Ending conveyor_belt')
 
-def pickup_bars():
+def pickup_bars(gold = False):
     print('Starting pickup_bars')
-    time.sleep(2)
+    time.sleep(1)
+    if gold:
+        f2.move_mouse(*f2.inventory_spots[1], click = True)
+        time.sleep(2)
     click_color_bgr_in_region(
         target_bgr=(240, 0, 255),
         tol=30,  # try 30–45 if needed
@@ -432,10 +465,10 @@ def pickup_bars():
         morph_kernel=3,  # 3 or 5
         debug=False  # write dbg_deposit_region.png/dbg_deposit_mask.png
     )
-    time.sleep(6)
+    time.sleep(5.2)
     pyautogui.press('space')
     time.sleep(1)
-    bars = inv_count('bar')
+    bars = max(inv_count('bar'), inv_count('gold_bar'))
     retry = 0
     print('Bar count is: ', bars)
 
@@ -455,12 +488,14 @@ def pickup_bars():
             time.sleep(3)
             pyautogui.press('space')
             time.sleep(1)
-            bars = inv_count('bar')
+            bars = max(inv_count('bar'), inv_count('gold_bar'))
             print('Retry count for bars is is: ', bars)
             if retry >= 5:
                 print('Retries failed, breaking!')
-                break
+                return True
+                # break
     print('Ending pickup_bars')
+    return False
 
 def deposit():
     icon = 0
@@ -475,7 +510,7 @@ def deposit():
         morph_kernel=3,  # 3 or 5
         debug=True  # write dbg_deposit_region.png/dbg_deposit_mask.png
     )
-    time.sleep(6)
+    time.sleep(4.5)
     icon = icon_check()
     if icon >= 1:
         move_mouse(480, 490, 625, 635)  # empty all
@@ -516,19 +551,27 @@ time_left = 0
 
 if __name__ == "__main__":
     # --------- CHANGE TO RUN FOR AMOUNT OF HOURS ----------------
-    Run_Duration_hours = .5
+    # while True:
+    #     count = inv_count('coal_ore') + inv_count('gold_ore')
+    #     print(count)
+    print('Must have coal sack for this to work.')
+    print('Ensure ore is in first slot, coal in second, gold in third (if applicable)')
+    print('Start in the bank interface with ice gloves equipped (gold gaunts in inv)')
+    print('If gold is enabled, ensure a batch (26 coal) is already inside')
+    Run_Duration_hours = v.run_duration_hours
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
-    ore = 'mithril'
+    ore = v.ore
     lap = 1
-    while time.time() < t_end:
+    failsafe = False
+    while time.time() < t_end and not failsafe:
         print('Starting lap ', lap)
     # Withdraw ore
-        lap = withdraw_ore(lap=lap, ore=ore)
+        lap = withdraw_ore(lap=lap, ore=ore, gold=v.gold)
         ## In bank, Click Coal
         ## Fill on coal sack
         ## Click other ore, esc
     # Click turn in
-        conveyor_belt()
+        conveyor_belt(gold=v.gold)
         ## Find teal (FF00ADFF, 255, 173, 0) and click it
         ## Ensure ore deposited check
         ## Withdraw coal from coal sack
@@ -536,24 +579,29 @@ if __name__ == "__main__":
         ## Ensure coal deposited check
         ## Wait for ore to land
     # Pickup bars
-        if ore == 'mithril':
-            if lap > 3:
-                lap = lap - 3
-            if lap % 2 == 0 or lap % 3 == 0:
-                pickup_bars()
+        if not v.gold:
+            if ore == 'mithril':
+                if lap > 3:
+                    lap = lap - 3
+                if lap % 2 == 0 or lap % 3 == 0:
+                    pickup_bars(gold=v.gold)
 
-        if ore == 'iron':
-            pickup_bars()
+            if ore == 'iron':
+                pickup_bars(gold=v.gold)
 
-        if ore == 'adamant':
-            if lap % 2 == 0:
-                pickup_bars()
+            if ore == 'adamant':
+                if lap % 2 == 0:
+                    pickup_bars(gold=v.gold)
 
-        if ore == 'rune':
-            if lap > 5:
-                lap = lap - 5
-            if lap % 3 == 0 or lap % 5 == 0:
-                pickup_bars()
+            if ore == 'rune':
+                if lap > 5:
+                    lap = lap - 5
+                if lap % 3 == 0 or lap % 5 == 0:
+                    pickup_bars(gold=v.gold)
+        else:
+            failsafe = pickup_bars(gold=v.gold)
+
+
 
 
 
