@@ -26,31 +26,31 @@ SEARCH_REGION = [0, 180, 600, 635]
 ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
 inventory_spots = [
-    (631, 668, 467, 500),  # Spot 1
-    (693, 703, 467, 500),  # Spot 2
-    (736, 746, 467, 500),  # Spot 3
-    (779, 789, 467, 500),  # Spot 4
-    (631, 668, 533, 540),  # Spot 5
+    (641, 668, 495, 500),  # Spot 1
+    (693, 703, 495, 500),  # Spot 2
+    (736, 746, 495, 500),  # Spot 3
+    (779, 789, 495, 500),  # Spot 4
+    (641, 668, 533, 540),  # Spot 5
     (693, 703, 533, 540),  # Spot 6
     (736, 746, 533, 540),  # Spot 7
     (779, 789, 533, 540),  # Spot 8
-    (631, 668, 568, 575),  # Spot 9
+    (641, 668, 568, 575),  # Spot 9
     (693, 703, 568, 575),  # Spot 10
     (736, 746, 568, 575),  # Spot 11
     (779, 789, 568, 575),  # Spot 12
-    (631, 668, 603, 610),  # Spot 13
+    (641, 668, 603, 610),  # Spot 13
     (693, 703, 603, 610),  # Spot 14
     (736, 746, 603, 610),  # Spot 15
     (779, 789, 603, 610),  # Spot 16
-    (631, 668, 638, 645),  # Spot 17
+    (641, 668, 638, 645),  # Spot 17
     (693, 703, 638, 645),  # Spot 18
     (736, 746, 638, 645),  # Spot 19
     (779, 789, 638, 645),  # Spot 20
-    (631, 668, 673, 680),  # Spot 21
+    (641, 668, 673, 680),  # Spot 21
     (693, 703, 673, 680),  # Spot 22
     (736, 746, 673, 680),  # Spot 23
     (779, 789, 673, 680),  # Spot 24
-    (631, 668, 708, 715),  # Spot 25
+    (641, 668, 708, 715),  # Spot 25
     (693, 703, 708, 715),  # Spot 26
     (736, 746, 708, 715),  # Spot 27
     (779, 789, 708, 715),  # Spot 28
@@ -81,7 +81,8 @@ worlds = [303, 304, 305, 306, 307, 310, 311, 312, 313, 314, 315, 317, 319, 320, 
           528, 529, 531, 532, 534, 535]
 
 INVENT_CAPACITY = 28
-INV_LEFT, INV_TOP, INV_RIGHT, INV_BOTTOM = 620, 460, 812, 735
+INV_LEFT, INV_TOP, INV_RIGHT, INV_BOTTOM = 620, 460, 814, 737
+inv_region = (620, 460, 814, 737)
 
 def gfindWindow(data):  # find window name returns PID of the window
     global hwnd
@@ -158,6 +159,24 @@ def random_afk_roll(max = 50):
         print('Afk roll success. Pausing for: ', wait)
         time.sleep(wait)
 
+def region_around_match(template_name: str, threshold: float = 0.70, pad: int = 25, debug: bool = False):
+    """
+    Find the best match for template_name in the whole client (region=None),
+    then return a small padded region [l,t,r,b] around that match bbox.
+    """
+    matches = find_image(
+        template_name=template_name,
+        threshold=threshold,
+        region=None,
+        max_results=1,
+        debug=debug
+    )
+    if not matches:
+        return None
+
+    x1, y1, x2, y2 = matches[0]["bbox"]
+    return [max(0, x1 - pad), max(0, y1 - pad), x2 + pad, y2 + pad]
+
 def grab_client_region(region=None):
     x0, y0 = get_client_origin()
     ww = globals().get('w_win', 0)
@@ -176,8 +195,6 @@ def grab_client_region(region=None):
     rgb = np.asarray(im)          # RGB
     bgr = rgb[..., ::-1].copy()   # BGR faster than cvtColor for this conversion
     return bgr, (left, top)
-
-
 
 def grab_client_region_bkp(region=None):
     x0, y0 = get_client_origin()
@@ -291,7 +308,6 @@ def find_image(
         print(f"[find_image] {template_name} best score={best['score']:.3f} rel=({best['rel_x']},{best['rel_y']})")
 
     return out
-
 
 def click_image(
     template_name: str,
@@ -648,17 +664,30 @@ def resizeImage(image=None):
 
 def inv_slot_empty(slot = 27):
     left, right, top, bottom = inventory_spots[slot]
+    time.sleep(0.12)  # small settle for tab redraw
     count = Image_count(object = 'empty_slot.png', image='slot.png', threshold=0.8, left=left, top=top, right=right, bottom=bottom)
     if count >= 1:
         return True  # Slot is empty
     else:
         return False  # Slot is not empty
 
-def open_inventory_menu():
-    pyautogui.press('F1')
-    time.sleep(.1)
+# ---- Tab state helpers (cache regions so we don't relocalize every time) ----
+
+_TAB_REGIONS = {}  # e.g. {"inventory": [l,t,r,b], "magic": [l,t,r,b]}
+
+def open_inventory_menu(safe = True):
+    if safe:
+        pyautogui.press('f1')
+        time.sleep(.2)
     pyautogui.press('escape')
     time.sleep(.1)
+
+def open_magic_menu(safe=True):
+    if safe:
+        pyautogui.press('f1')
+        time.sleep(.15)
+    pyautogui.press('f6')
+    time.sleep(.05)
 
 def spot_to_bbox_xyxy(spot_xx_yy):
     x1, x2, y1, y2 = spot_xx_yy
@@ -723,3 +752,62 @@ def withdraw():
     coords = {1:(125, 140, 120, 130),
               2: (175, 190, 120, 130),
               'empty':(480, 490, 625, 635)}
+
+
+def alch_all_of_item(
+    item_img: str,
+    inv_region=inv_region,
+    threshold=0.80,
+    debug=True
+) -> int:
+    state = True
+    item = False
+    while state:
+        alch_icon, info = click_image(
+            'high_alch.png',
+            threshold=threshold,
+            region=list(inv_region),
+            debug=debug
+        )
+        time.sleep(.05)
+        pyautogui.moveRel(-250, -250)
+        if not alch_icon:
+            print('Had an issue finding alch icon, opening menu')
+            move_mouse(705, 706, 758, 759, click=True)
+            time.sleep(.1)
+            open_magic_menu(safe=False)
+            time.sleep(.5)
+            alch_icon, info = click_image(
+                'high_alch.png',
+                threshold=threshold,
+                region=list(inv_region),
+                debug=debug
+            )
+            time.sleep(.1)
+            pyautogui.moveRel(-250, -250)
+            time.sleep(.3)
+            item, info = click_image(
+                item_img,
+                threshold=threshold,
+                region=list(inv_region),
+                debug=debug
+            )
+            time.sleep(2.5)
+        else:
+            time.sleep(.3)
+            item, info = click_image(
+                item_img,
+                threshold=threshold,
+                region=list(inv_region),
+                debug=debug
+            )
+            time.sleep(2.5)
+
+
+
+        if item:
+            pass
+        else:
+            # No item found, click away to exit high alch
+            move_mouse(610, 611, 765, 766, click=True)
+            state = False

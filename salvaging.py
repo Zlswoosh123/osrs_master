@@ -59,7 +59,7 @@ def clean_loot():
         f2.click_color_bgr_in_region(target_bgr=f2.BLUE_BGR, region=f2.SEARCH_REGION, click=True, debug=True, tol=60)
 
 
-def drop_loot(count = 28, exclude = []):
+def drop_loot(count = 28, exclude = v.exclude):
     print('Starting drop loot!')
     nums = [0, 1, 4, 5, 8, 9, 12, 13, 16, 17, 20, 21, 24, 25]
     f2.open_inventory_menu()
@@ -68,16 +68,44 @@ def drop_loot(count = 28, exclude = []):
     for i in range(count):  # pattern 1
         if i in nums and i not in exclude:
             s = random.uniform(0, 0.07)
-            f2.move_mouse(*f2.inventory_spots[i], min_wait=.1, max_wait=.2, click=True, type='left')
+            f2.move_mouse(*f2.inventory_spots[i], min_wait=.05, max_wait=.12, click=True, type='left')
     for i in range(count):  # pattern 2
         if i not in nums and i not in exclude:
             s = random.uniform(0, 0.07)
-            f2.move_mouse(*f2.inventory_spots[i], min_wait=.1, max_wait=.2, click = True, type= 'left')
+            f2.move_mouse(*f2.inventory_spots[i], min_wait=.05, max_wait=.12, click = True, type= 'left')
     pyautogui.keyUp('shift')
     time.sleep(1)
     salvage()
 print('Ending drop loot!')
 
+def alch_loot(image = 'bracelet.png'):
+    pyautogui.press('f6')
+    time.sleep(.2)
+    high_alch, info = f2.click_image(
+        'high_alch.png',
+        threshold=0.80,
+        region=[624, 465, 814, 737],  # inventory bbox (client-relative)
+        debug=False
+    )
+    time.sleep(1)
+    if not high_alch:
+        pyautogui.press('f6')
+        time.sleep(.2)
+        high_alch, info = f2.click_image(
+            'high_alch.png',
+            threshold=0.80,
+            region=[624, 465, 814, 737],  # inventory bbox (client-relative)
+            debug=False
+        )
+        time.sleep(1)
+
+    time.sleep(.2)
+    ok, info = f2.click_image(
+        image,
+        threshold=0.80,
+        region=[624, 465, 814, 737],  # inventory bbox (client-relative)
+        debug=True
+    )
 
 if __name__ == "__main__":
     # print('Startup Directions: Ensure Crab is tagged pink (all versions) and the entrances (3) are tagged Blue')
@@ -96,16 +124,17 @@ if __name__ == "__main__":
     SALVAGE_DELAY = v.SALVAGE_DELAY  # seconds
     salvage_item = v.salvage
     stuck = 0
-    exclude = [27, 26, 25]
+    exclude = v.exclude
     salvage()
+    f2.open_inventory_menu()
     while time.time() < t_end:
         count = f2.Image_count(salvage_item)
         empty_count = f2.Image_count('empty_slot.png')
         # print('count is: ', count)
         print('empty_count is: ', empty_count)
-        if empty_count == 0:
+        if empty_count == 0 and count == 0:
             f2.open_inventory_menu()
-            time.sleep(.6)
+            time.sleep(0.20)
             empty_count = f2.Image_count('empty_slot.png')
         if f2.click_color_bgr_in_region(target_bgr=f2.PINK_BGR, click=False)[0]:
 
@@ -135,12 +164,27 @@ if __name__ == "__main__":
                 f2.hop_worlds()
                 time.sleep(10)
         if empty_count == 0:
+            time.sleep(1)
+            pyautogui.press('space')
             clean_loot()
-            a = 54 - (2.4 * len(exclude))
-            b = 60 - (2.4 * len(exclude))
+
+            time.sleep(0.15)
+
+            a = 56 - (2.4 * len(exclude))
+            b = 64 - (2.4 * len(exclude))
             f2.random_wait(a, b)
+
+            # Alch pass (optional: only if you actually want to keep these items)
+            f2.open_magic_menu()
+            for obj in v.alch_list:
+                f2.alch_all_of_item(obj, debug=True)
+            # After alching, get back to inventory tab for counts / cleanup
+            f2.move_mouse(705, 706, 758, 759, click=True)
+            time.sleep(.1)
+            f2.open_inventory_menu()
+
             drop_loot(exclude=exclude)
-            f2.random_afk_roll(max = 6)
+            f2.random_afk_roll(max=6)
         time.sleep(.6)
         # If (while?) seeing pink, click yellow to start salvage
             # If full, cleanup action
