@@ -12,7 +12,8 @@ import yaml
 import requests
 import simplejson
 
-from functions2 import TEAL_BGR
+import functions2
+from functions2 import TEAL_BGR, move_mouse
 
 global hwnd
 global iflag
@@ -142,9 +143,9 @@ def create_potion(potion_code):
                 time.sleep(10000000)
                 break
             if iter == 0:
-                time.sleep(3.8)
+                time.sleep(5.2)
             else:
-                f.random_wait(.25,.5)
+                f.random_wait(.4,.65)
             iter +=1
         while retry <= 1 and not pink_check():
             print('Trying to create potion (purple). Retry:', retry)
@@ -196,20 +197,41 @@ def color_check(color=PINK_BGR, click = False):
         # print(color, ' not found!')
         return False
 
+def add_paste():
+    f.click_color_bgr_in_region(f.DARK_YELLOW_BGR, region=f.SEARCH_REGION,tol=0)
+    time.sleep(8)
+    pyautogui.press('space')
+
+def herb_check():
+    if f.Image_count('digweed.png') > 0:
+        ok, info = f.click_image('digweed.png', click_all=True, debug=True)
+        time.sleep(1)
+        move_mouse(*f.inventory_spots[1], click=True)
+        time.sleep(1)
+        if f.Image_count('digweed.png') > 0:
+            ok, info = f.click_image('digweed.png',
+                                     threshold=.8, click_all=True, debug=True)
+            time.sleep(.6)
+            move_mouse(*f.inventory_spots[2], click=True)
+            time.sleep(1)
+
+
 if __name__ == "__main__":
     print('Ensure this script is started zoomed very far out with black background for the text')
     # Colors (B, G, R)
-
-
     SEARCH_REGION = [0, 180, 600, 635]
     ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
 
     Run_Duration_hours = v.run_duration_hours
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
-
+    refill_timer = time.time() + (60 * 30)
+    add_paste()
     while time.time() < t_end:
         # count = f.inv_count('potion_unf', threshhold=.8)
         # print(count)
+        if time.time() > refill_timer:
+            add_paste()
+            refill_timer = time.time() + (60 * 30)
         p1, p2, p3 =  see_order()
         if p1 != 'DONE':
             create_potion(p1)
@@ -224,5 +246,7 @@ if __name__ == "__main__":
             if pink_check():
                 process_potion()
         else:
+            herb_check()
             deposit_potions()
+            functions2.random_afk_roll(10)
 

@@ -5,7 +5,7 @@ import yaml
 import core
 import functions2 as f2
 import runtime_vars as v
-from functions2 import SEARCH_REGION
+from functions2 import SEARCH_REGION, Image_count
 import random
 
 
@@ -167,17 +167,24 @@ if __name__ == "__main__":
             time.sleep(1)
             pyautogui.press('space')
             clean_loot()
-
             time.sleep(0.15)
 
             a = 56 - (2.4 * len(exclude))
             b = 64 - (2.4 * len(exclude))
             f2.random_wait(a, b)
 
+            new_dict = {}
+            for obj in v.alch_list:
+                amount = f2.Image_count(obj)
+                new_dict[obj] = amount
             # Alch pass (optional: only if you actually want to keep these items)
             f2.open_magic_menu()
             for obj in v.alch_list:
-                f2.alch_all_of_item(obj, debug=True)
+                if new_dict[obj] > 0:
+                    f2.alch_all_of_item(obj, debug=True)
+                else:
+                    print(obj, ' not found in inv, skipping')
+                    pass
             # After alching, get back to inventory tab for counts / cleanup
             f2.move_mouse(705, 706, 758, 759, click=True)
             time.sleep(.1)
