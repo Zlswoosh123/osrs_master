@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
         if text_local.strip().lower().replace(",", "") not in ('woodcutting', 'woodcuttin'):
             find_tree()
-            time.sleep(3)
+            time.sleep(10)
 
         if empty_count != last_count:
             last_count = empty_count
@@ -119,7 +119,7 @@ if __name__ == "__main__":
             find_tree()
             last_change_time = time.time()  # reset timer after clicking
             stuck += 1
-            time.sleep(6)
+            time.sleep(15)
 
         if empty_count == 0:
             if v.log_basket:
