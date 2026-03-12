@@ -317,7 +317,7 @@ def click_image(
     which: int = 0,              # 0 = best match, 1 = 2nd best, etc.
     click_all: bool = False,
     click_type: str = "left",    # "left" | "right"
-    jitter: int = 2,
+    jitter: int = 0,
     move_dur=(0.01, 0.04),
     post_click_sleep=(0.05, 0.15),
     debug: bool = False,
@@ -633,7 +633,7 @@ def click_color_bgr_in_region(
             print(f"[color] click @ client-rel [{rel_x}, {rel_y}] area={area:.1f} found={len(cnts)}")
 
         if click:
-            click_client(rel_x, rel_y, jitter=0, move_dur=(.001, .002))
+            click_client(rel_x, rel_y, jitter=0, move_dur=(.0001, .0002))
         # time.sleep(random.uniform(*post_click_sleep))
 
         last_info["click_x"] = rel_x
