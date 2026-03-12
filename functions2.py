@@ -8,6 +8,7 @@ import pyautogui
 import random
 from PIL import Image, ImageGrab
 import functions
+import runtime_vars as v
 
 DEBUG = True  # flip False to quiet logs
 
@@ -21,6 +22,7 @@ TEAL_BGR = (255, 255, 0)
 ORANGE_BGR = (0, 130, 255)
 DARK_YELLOW_BGR = (4, 143, 143)
 DARK_BLUE_BGR = (181, 0, 0)
+DARK_PINK = (153, 1 , 162)
 
 SEARCH_REGION = [0, 180, 600, 635]
 ACTIVE_BOUNDS = (SEARCH_REGION[0], SEARCH_REGION[1], SEARCH_REGION[2], SEARCH_REGION[3])
@@ -675,12 +677,12 @@ def inv_slot_empty(slot = 27):
 
 _TAB_REGIONS = {}  # e.g. {"inventory": [l,t,r,b], "magic": [l,t,r,b]}
 
-def open_inventory_menu(safe = True):
+def open_inventory_menu(safe = True, post_action_sleep = .6):
     if safe:
         pyautogui.press('f1')
         time.sleep(.2)
     pyautogui.press('escape')
-    time.sleep(.1)
+    time.sleep(post_action_sleep)
 
 def open_magic_menu(safe=True):
     if safe:
@@ -693,7 +695,7 @@ def spot_to_bbox_xyxy(spot_xx_yy):
     x1, x2, y1, y2 = spot_xx_yy
     return (x1, y1, x2, y2)
 
-def drop_loot(count = 28, exclude = []):
+def drop_loot(count = 28, exclude = [v.exclude]):
     print('Starting drop loot!')
     nums = [0, 1, 4, 5, 8, 9, 12, 13, 16, 17, 20, 21, 24, 25]
     open_inventory_menu()

@@ -74,7 +74,7 @@ if __name__ == "__main__":
     last_count = -1
     last_change_time = time.time()
     stuck = 0
-    exclude = []
+    exclude = v.exclude
     while time.time() < t_end and stuck <= 6:
         f2.screen_Image(18, 48, 142, 71, 'wc_action.png')
         time.sleep(.1)

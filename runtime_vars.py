@@ -1,7 +1,10 @@
 # General
-run_duration_hours = 2
+run_duration_hours = 4.5
 breaks = True
-exclude = [27, 26, 25, 24, 23, 22, 21]
+exclude = [0,1,2,3]
+
+#Processing Params
+amount_to_do = 5000
 
 # Herb Params
 potion_mixing_type = 2 # 1 for unf, 2 for potions
@@ -30,3 +33,7 @@ wc_spec= True
 # Blast Furnace Params
 gold = True
 ore = 'adamant'
+
+# Fishing
+fish_barrel = False
+fishing_action = 'bank'
