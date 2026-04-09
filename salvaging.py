@@ -112,6 +112,7 @@ if __name__ == "__main__":
     # print('Zoom out far for safety')
     # Colors (B, G, R)
     Run_Duration_hours = v.run_duration_hours
+
     t_end = time.time() + (60 * 60 * Run_Duration_hours)
     failsafe = 0
     local_check = time.time() - 1
